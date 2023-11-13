@@ -1,0 +1,86 @@
+.card{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.25rem;
+}
+.btn-dark:hover {
+    color: #fff;
+    background-color: #23272b!important;
+    border-color: #1d2124!important;
+}
+.btn-dark{
+    color: #fff!important;
+    border-color: #000!important;
+    background-color: #000!important;
+}
+.btn-outline-dark {
+    color: #000!important;
+    border-color: #000!important;;
+    font-size:14px;
+    font-weight: 500;
+}
+.btn-outline-dark:hover{
+    color: #fff!important;
+    border-color: #000!important;
+    background-color: #000!important;
+    font-weight: 600;
+}
+.nav-dashboard .nav-link:hover, .nav-dashboard .nav-link:focus, .nav-dashboard .nav-link.active {
+    color: #000!important;
+    border-bottom: 1px solid #000!important;
+    font-weight: 900!important;
+}
+.form-control{
+    color:#000!important;
+    font-weight: 500;
+}
+.form-element{
+    width:330px;
+    margin-top: 4px;
+}
+.form-element input{
+    display: none;
+}
+.form-element img {
+    width: 97%;
+    height: 200px;
+}
+.form-element div {
+    position: relative;
+    height: 40px;
+    background:#000000;
+    text-align: center;
+    line-height: 40px;
+    font-size: 13px;
+    color: #ffffff;
+    font-weight: 600;
+    width:97%
+}
+.form-element div span {
+    font-size: 40px;
+}
+label{
+    width:100%;
+}
+.modal-body{
+    margin-top: 23px;
+    margin-left: 10%;
+    max-width: 80%;
+    margin-right: 10%;
+}
+.table{
+    color: #000!important;
+    font-weight: 500!important;
+}
+.table .thead-dark th {
+    color: #fff!important;
+    background-color: #000!important;
+    border-color: #000!important;
+    font-weight: 500!important;
+}

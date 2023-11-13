@@ -1,0 +1,193 @@
+.update-modal {
+    max-width: 1000px !important;
+}
+
+.custom-modal {
+    max-width: 800px;
+}
+
+.modal-sm {
+    max-width: 400px;
+}
+
+.add-modal {
+    max-width: 1000px;
+}
+
+.footer1 {
+    border-top: none;
+}
+
+.header1 {
+    border-bottom: none;
+}
+
+.modal-body {
+    padding: 5% !important;
+}
+
+.btn-outline-dark {
+    font-size: 15px !important;
+    min-width: 97px !important;
+}
+
+.btn-outline-dark:hover,
+.btn-outline-dark:focus,
+.btn-outline-dark.focus,
+.btn-outline-dark:not(:disabled):not(.disabled):active,
+.btn-outline-dark:not(:disabled):not(.disabled).active,
+.show>.btn-outline-dark.dropdown-toggle {
+    color: #fff !important;
+    background-color: #000 !important;
+    border-color: #000 !important;
+}
+
+.btn-toggle {
+    padding: 0.85rem 1.5rem;
+    border: 1px solid #000;
+    margin: 5px;
+    font-size: 15px !important;
+    min-width: 97px !important;
+}
+
+.btn-toggle.active {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+}
+
+.checkbox {
+    display: none;
+}
+
+.card-body .card-img {
+    display: none;
+}
+
+.card-body .plusIcon {
+    position: relative;
+    height: 35px;
+    background: #000000;
+    text-align: center;
+    line-height: 40px;
+    font-size: 13px;
+    color: #ffffff;
+    font-weight: 600;
+    width: 100%
+}
+
+.card-body .plusIcon span {
+    font-size: 35px;
+}
+
+.form-control {
+    color: #000;
+    font-size: 14px;
+    border: 1px solid #000;
+}
+
+.img-responsive {
+    margin-top: 14px !important;
+    display: inline !important;
+    max-width: 161px !important;
+    height: 131px !important;
+    width: 161px;
+}
+
+.review {
+    margin-top: 14px !important;
+    display: inline !important;
+    max-width: 205px !important;
+    height: 171px !important;
+}
+
+.error-container p {
+    color: red;
+}
+
+.products {
+    min-width: 0 !important;
+}
+
+.footer {
+    border-top: none;
+    background-color: #fff !important;
+}
+
+.header {
+    border-bottom: none !important;
+}
+
+.checkbox-products {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #000;
+}
+
+.nav-dashboard .nav-link:hover,
+.nav-dashboard .nav-link:focus,
+.nav-dashboard .nav-link.active {
+    color: #000 !important;
+    border-bottom: 1px solid #000 !important;
+    font-weight: 900 !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
+}
+
+.icon-minus {
+    display: none;
+}
+
+.icon-plus {
+    display: none;
+}
+
+.preview-item img {
+    width: 211px;
+    height: 211px;
+}
+
+.preview-item video {
+    width: 211px;
+    height: 300px;
+    margin-top: -89px;
+}
+
+.form-element {
+    width: 330px;
+    margin-top: 4px;
+}
+
+.form-element input {
+    display: none;
+}
+
+.form-element img {
+    width: 97%;
+    height: 200px;
+}
+
+.form-element div {
+    position: relative;
+    height: 40px;
+    background: #000000;
+    text-align: center;
+    line-height: 40px;
+    font-size: 13px;
+    color: #ffffff;
+    font-weight: 600;
+    width: 97%
+}
+
+.form-element div span {
+    font-size: 40px;
+}
+
+label {
+    width: 100%;
+}
