@@ -29,11 +29,11 @@ if (!isset($_SESSION['id'])) {
 				<div class="container">
 					<form action="../Controller/shopController.php" method="POST">
 						<input type="hidden" name="lats" id="lats" value="<?=$saveAddress['latitude']?>">
-						<input type="hidden" name="longs" id="longs"value="<?=$saveAddress['longitude']?>">
+						<input type="hidden" name="longs" id="longs" value="<?=$saveAddress['longitude']?>">
 						<button type="submit" name="NEARESTSHOP"
 							style="border:none;background-color:transparent;font-size:16px;"><i
-								class="icon-bars"></i>Near
-							Me</button>
+								class="icon-bars"></i>Nearest
+							Shop</button>
 					</form>
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item"><a href="index.php">Home</a></li>

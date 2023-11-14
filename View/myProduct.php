@@ -52,9 +52,16 @@ if (!isset($_SESSION['id'])) {
 								</ul>
 	                		</aside><!-- End .col-lg-3 -->
 	                		<div class="col-10">
+                                
                                 <?php $users = mysqli_fetch_assoc(getrecord('users','id', $_SESSION['id'])); 
-                                if($users['isSubscribe'] == 'Yes') {?>
+                                if($users['isSubscribe'] == 'Yes') {
+                                    if($user['gcash_name'] == '' || $user['gcash_number'] == ''){?>
+                                        <form action="../Controller/shopController.php" method="POST">
+                                            <button name="BINDGCASH" class="btn btn-dark float-right" style="margin-top: 5px;">Add Product</button>
+                                        </form>
+                                    <?php } else{ ?>?>
                                     <a href="#addProduct-modal" data-toggle="modal" class="btn btn-dark float-right" >Add Product</a>
+                                    <?php } ?>
                                 <?php } else { ?>
                                     <a href="subscription.php" class="btn btn-dark float-right" >Add product</a>
                                 <?php } ?>
@@ -295,11 +302,12 @@ if (!isset($_SESSION['id'])) {
                                                                             </div>
                                                                             <div class="col-sm-3 col-lg-2">
                                                                                 <label>Price</label>
-                                                                                <input type="text" class="form-control" name="price[]" value="<?php echo $pqe['price']?>" >
+                                                                                <input type="text" class="form-control" name="price[]" value="<?php echo $pqe['price']?>" readonly>
                                                                             </div>
                                                                             <div class="col-sm-3 col-lg-2">
                                                                                 <label>Stock</label>
                                                                                 <input type="text" class="form-control" name="stock[]" value="<?php echo $pqe['quantity']?>">
+                                                                                <button>Add Stock</button>
                                                                             </div>
                                                                         </div>
                                                                     <?php endwhile; ?>

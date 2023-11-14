@@ -252,10 +252,7 @@ if (!isset($_SESSION['id'])) {
                                                                     <label for="rating">Rate the product *</label>
                                                                     <div class="d-flex">
                                                                         <div class="text-primary rating">
-
-                                                                            
                                                                             <?php
-                                                                            
                                                                             if ($check > 0) {
                                                                                 for ($j = 0; $j < $check['rate']; $j++) {
                                                                                 ?>

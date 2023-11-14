@@ -12,13 +12,15 @@
     <style>
         #map {
             height: 50vh;
-            width: 100%;
+            width: 70%;
         }
     </style>
 </head>
 
 <body onload="getLocation()">
+    <div class="contanier">
     <div id="map"></div>
+    </div>
     <?php
     include("../layouts/jsfile.layout.php");
     include("toastr.php");
