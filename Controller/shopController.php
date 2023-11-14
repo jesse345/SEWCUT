@@ -13,8 +13,8 @@ if (isset($_POST['CREATESHOP'])) {
     // SHOPS
     CreateShop(
         'shops',
-        array('user_id', 'shop_name', 'address','canCustomize','canAlter', 'latitude', 'longitude'),
-        array($user_id, $shop_name, $address['address'],$can_alter,$can_customize, $address['latitude'], $address['longitude'])
+        array('user_id', 'shop_name', 'address', 'canCustomize', 'canAlter', 'latitude', 'longitude'),
+        array($user_id, $shop_name, $address['address'], $can_alter, $can_customize, $address['latitude'], $address['longitude'])
     );
     $last_id = mysqli_insert_id($conn);
     // SHOP_DETAILS
@@ -23,8 +23,8 @@ if (isset($_POST['CREATESHOP'])) {
         foreach ($Categorycustomize as $category) {
             CreateShop(
                 'shop_details',
-                array('shop_id','category'),
-                array($last_id,$category)
+                array('shop_id', 'category'),
+                array($last_id, $category)
             );
         }
     }
@@ -34,9 +34,11 @@ if (isset($_POST['CREATESHOP'])) {
 } elseif (isset($_POST['NEARESTSHOP'])) {
     $v1 = $_POST['lats'];
     $v2 = $_POST['longs'];
-    header("location: ../View/nearestShop.php?lat=$v1&long=$v2");
+    header("location: ../View/map.php?lat=$v1&long=$v2");
 } elseif (isset($_POST['BINDGCASH'])) {
     flash("msg", "success", "Set Up Gcash Details First");
     header("Location: ../View/gcash_info.php");
     exit();
 }
+?>
+
