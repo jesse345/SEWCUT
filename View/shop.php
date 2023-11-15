@@ -42,7 +42,8 @@ if (!isset($_SESSION['id'])) {
 				</div>
 			</nav>
 			<?php $shop = displayShop();
-			while ($row = mysqli_fetch_array($shop)): ?>
+			while ($row = mysqli_fetch_array($shop)): 
+					?>
 					<div class="container">
 						<div class="page-header text-center mb-5" style="background-image: url('../assets/images/backgrounds/login-bg.jpg')">
 							<h1 class="page-title mb-5" style="color:#000; font-size:5rem!important; font-weight:500;">
@@ -50,7 +51,11 @@ if (!isset($_SESSION['id'])) {
 									<?= $row['address'] ?>
 								</span>
 							</h1>
-							<button class="btn btn-info"><a href="storeShop.php?shop_id=<?= $row['id'] ?>" class="text-white"> Visit Shop </a></button>
+							<?php if($row['user_id'] == $user['id']){?>
+								<button class="btn btn-info"><a class="text-white"> Your Shop </a></button>
+							<?php }else{?>
+								<button class="btn btn-info"><a href="storeShop.php?shop_id=<?= $row['id'] ?>" class="text-white"> Visit Shop </a></button>
+							<?php }?>
 						</div>
 					</div>
 			<?php endwhile; ?>

@@ -29,14 +29,23 @@ if (!isset($_SESSION['id'])) {
         <?php include("../layouts/header_layout.php"); ?>
         <main class="main">
             <nav aria-label="breadcrumb" class="breadcrumb-nav mb-2">
-                <div class="container-fluid">
+                <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.php">Home</a></li>
                         <li class="breadcrumb-item"><a href="shop.php">Shop</a></li>
                         <li class="breadcrumb-item active" aria-current="page">
                             <?= $user1['shop_name'] ?>
                         </li>
+                        <div style="position:absolute;right:0;margin-right:111px">
+                            <?php if($user1['canCustomize'] == 'Yes'){?>
+                               <a class=" btn btn-info text-white" href="customize.php?shop_id=<?=$_GET['shop_id']?>">Customize Product</a>
+                            <?php } ?>
+                            <?php if($user1['canAlter'] == 'Yes'){?>
+                                <a class=" btn btn-info text-white" href="alter.php?shop_id=<?=$_GET['shop_id']?>">Alter Product</a>
+                            <?php } ?>
+                        </div>
                     </ol>
+                    
                 </div><!-- End .container-fluid -->
             </nav><!-- End .breadcrumb-nav -->
 
