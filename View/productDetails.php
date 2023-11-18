@@ -1,8 +1,11 @@
 <?php
 include("../Model/db.php");
 session_start();
+error_reporting(0);
+include '../includes/toastr.inc.php';
 
 if (!isset($_SESSION['id'])) {
+    flash("msg", "success", "Login First");
     header("Location: ../index.php");
     exit();
 }
@@ -94,15 +97,6 @@ if (!isset($_SESSION['id'])) {
                                     <h1 class="product-title">
                                         <?php echo $productDetails['product_name'] ?>
                                     </h1><!-- End .product-title -->
-
-                                    <div class="ratings-container">
-                                        <div class="ratings">
-                                            <div class="ratings-val" style="width: 80%;"></div><!-- End .ratings-val -->
-                                        </div><!-- End .ratings -->
-                                        <a class="ratings-text" href="#product-accordion" id="review-link">( 2 Reviews
-                                            )</a>
-                                    </div><!-- End .rating-container -->
-
                                     <div class="product-price">
                                         <span class="new-price">P
                                             <?php echo minPrice($_GET['product_id'])['price'] ?> - P

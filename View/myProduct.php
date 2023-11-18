@@ -55,12 +55,12 @@ if (!isset($_SESSION['id'])) {
                                 
                                 <?php $users = mysqli_fetch_assoc(getrecord('users','id', $_SESSION['id'])); 
                                 if($users['isSubscribe'] == 'Yes') {
-                                    if($user['gcash_name'] == '' || $user['gcash_number'] == ''){?>
+                                    if($user['gcash_name'] == '' || $user['gcash_number'] == ''){ ?>
                                         <form action="../Controller/shopController.php" method="POST">
                                             <button name="BINDGCASH" class="btn btn-dark float-right" style="margin-top: 5px;">Add Product</button>
                                         </form>
-                                    <?php } else{ ?>?>
-                                    <a href="#addProduct-modal" data-toggle="modal" class="btn btn-dark float-right" >Add Product</a>
+                                    <?php } else{ ?>
+                                        <a href="#addProduct-modal" data-toggle="modal" class="btn btn-dark float-right" >Add Product</a>
                                     <?php } ?>
                                 <?php } else { ?>
                                     <a href="subscription.php" class="btn btn-dark float-right" >Add product</a>
@@ -78,7 +78,7 @@ if (!isset($_SESSION['id'])) {
                                     <tbody>
                                         <?php
                                         $count = 0;
-                                        $productData = displayProductInShop('products', 'user_id', $_SESSION['id'],'No');
+                                        $productData = displayProductInShop('products', 'user_id', $_SESSION['id']);
                                             if(mysqli_num_rows($productData) > 0){
                                                 while($product = mysqli_fetch_assoc($productData)):
                                                 $productDetails = mysqli_fetch_assoc(displayDetails('product_details', 'id', $product['id']));
@@ -307,7 +307,6 @@ if (!isset($_SESSION['id'])) {
                                                                             <div class="col-sm-3 col-lg-2">
                                                                                 <label>Stock</label>
                                                                                 <input type="text" class="form-control" name="stock[]" value="<?php echo $pqe['quantity']?>">
-                                                                                <button>Add Stock</button>
                                                                             </div>
                                                                         </div>
                                                                     <?php endwhile; ?>

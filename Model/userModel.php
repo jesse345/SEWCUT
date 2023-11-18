@@ -182,7 +182,7 @@ function deleteUser($table, $field, $value)
 function subscriptionForFree($user_id){
     global $conn;
     connect();
-    $query = mysqli_query($conn, "SELECT * FROM `subscription` WHERE `user_id` = '$user_id' && `type` = 'Free'");
+    $query = mysqli_query($conn, "SELECT * FROM `subscription` WHERE `user_id` = '$user_id'");
     disconnect();
     return $query;
 }
@@ -198,10 +198,31 @@ function isUserSubscribe($user_id){
 function ExtendSubscription($user_id){
     global $conn;
     connect();
-    $query = mysqli_query($conn, "SELECT * FROM `subscription` WHERE `user_id` = '$user_id' GROUP BY id ASC LIMIT 1;");
+    $query = mysqli_query($conn, "SELECT * FROM `subscription` WHERE `user_id` = '$user_id' AND `status` IN ('Approve', 'Pending') ORDER BY date_expire DESC LIMIT 1");
     disconnect();
     return $query;
 }
+
+function extendUserSubscription($id, $months) {
+    global $conn;
+    connect();
+
+    $query = "UPDATE subscription SET date_expire = DATE_ADD(date_expire, INTERVAL ? MONTH) WHERE id = ?";
+    $stmt = mysqli_prepare($conn, $query);
+
+    if ($stmt === false) {
+        die("Error in prepared statement: " . mysqli_error($conn));
+    }
+
+    mysqli_stmt_bind_param($stmt, "ii", $months, $id);
+    mysqli_stmt_execute($stmt);
+
+    disconnect();
+
+    return $stmt->affected_rows;
+}
+
+
 
 ?>
 

@@ -18,7 +18,6 @@ if (!empty($_SESSION['id'])) {
         $price = $_POST['price'];
         $quantity = $_POST['stock'];
 
-      
         $product_fields = array('id', 'category', 'product_name', 'description', 'additional_info', 'brand');
         $product_values = array($category, $product_name, $description, $add_info, $brand);
 
@@ -126,12 +125,23 @@ if (!empty($_SESSION['id'])) {
             );
 
             foreach ($color as $i => $c) {
-                updateProduct(
-                    'product_details_etc',
-                    array('id', 'color', 'size', 'price', 'quantity'),
-                    array($pde_id[$i], $c, $size[$i], $price[$i], $quantity[$i])
-                );
+                $data = mysqli_fetch_assoc(getrecord('product_details_etc', 'id', $pde_id[$i]));
+                $currentQuantity = $data['quantity'];
+                $newQuantity = $quantity[$i];
+
+                if ($newQuantity >= $currentQuantity) {
+                    updateProduct(
+                        'product_details_etc',
+                        array('id', 'color', 'size', 'price', 'quantity'),
+                        array($pde_id[$i], $c, $size[$i], $price[$i], $newQuantity)
+                    );
+                } else {
+                    flash("msg", "error", "Unable to update to a quantity lower than the current stock.");
+                    header("Location: ../View/myProduct.php");
+                    exit();
+                }
             }
+
             $targetDir = "../images/";
             $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
             $img_id = $_POST['image_id'];
@@ -159,64 +169,7 @@ if (!empty($_SESSION['id'])) {
             header("Location: ../View/myProduct.php");
             exit();
         }
-    } elseif (isset($_POST['ADDPRODUCTINSHOP'])) {
-        $category = $_POST['category'];
-        $product_name = $_POST['product_name'];
-        $description = $_POST['description'];
-        $add_info = $_POST['add_info'];
-        $brand = $_POST['brand'];
-
-        $color = $_POST['color'];
-        $size = $_POST['size'];
-        $price = $_POST['price'];
-        $quantity = $_POST['stock'];
-
-        $product_fields = array('id', 'category', 'product_name', 'description', 'additional_info', 'brand');
-        $product_values = array($category, $product_name, $description, $add_info, $brand);
-
-        addProduct(
-            'products',
-            array('user_id', 'inShop'),
-            array($_SESSION['id'], 'Yes'),
-            'product_details',
-            $product_fields,
-            $product_values
-        );
-
-        // Get the product ID that was just inserted
-        $product_id = mysqli_insert_id($conn);
-
-        // Loop through color, size, price, and quantity arrays and insert into product_details_etc
-        foreach ($color as $i => $c) {
-            insertProduct(
-                'product_details_etc',
-                array('product_id', 'color', 'size', 'price', 'quantity'),
-                array($product_id, $c, $size[$i], $price[$i], $quantity[$i])
-            );
-        }
-        $targetDir = "../images/";
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
-
-        foreach ($_FILES['image']['name'] as $key => $name) {
-            $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
-            $targetPath = $targetDir . basename($name);
-
-            if (in_array($fileType, $allowedTypes)) {
-                move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath);
-                insertProduct(
-                    'product_images',
-                    array('product_id', 'image'),
-                    array($product_id, $targetPath)
-                );
-            } else {
-                echo "Invalid file type: $name<br>";
-            }
-        }
-
-        flash("msg", "success", "Successfully Added");
-        header("Location: ../View/myShop.php");
-        exit();
-    }
+    } 
 } else {
     echo "<script>
             alert('Login First');

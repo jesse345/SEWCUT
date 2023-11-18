@@ -54,7 +54,7 @@ if (!isset($_SESSION['id'])) {
                     <div class="products">
                         <div class="row">
                             <?php
-                            $product = displayProductInShop('products', 'user_id', $user1['user_id'], 'Yes');
+                            $product = displayProductInShop('products', 'user_id', $user1['user_id']);
                             while ($products = mysqli_fetch_assoc($product)):
                                 $productImage = mysqli_fetch_assoc(displayDetails('product_images', 'product_id', $products['id']));
                                 $productDetails = mysqli_fetch_assoc(displayDetails('product_details', 'id', $products['id']));

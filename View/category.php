@@ -51,9 +51,6 @@ if (!isset($_SESSION['id'])) {
                                 <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
                                     <div class="product">
                                         <figure class="product-media">
-                                            <?php if($products['inShop'] == 'Yes'){?>
-                                                <span class="product-label label-new">Shop</span>
-                                            <?php } ?>
                                             <a href="#">
                                                 <img src="<?php echo $productImage['image']?>" alt="Product image" class="product-image">
                                             </a>

@@ -1,6 +1,7 @@
 <?php
 include("../Model/db.php");
 session_start();
+error_reporting(0);
 
 ?>
 <!DOCTYPE html>
@@ -60,59 +61,25 @@ session_start();
 
                 <span class="slider-loader"></span><!-- End .slider-loader -->
             </div><!-- End .intro-slider-container -->
-
-            <div class="pt-2 pb-3">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="banner banner-overlay">
-                                <a href="#">
-                                    <img src="../assets/images/demos/demo-6/banners/banner-1.jpg" alt="Banner">
-                                </a>
-
-                                <div class="banner-content banner-content-center">
-                                    <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4><!-- End .banner-subtitle -->
-                                    <h3 class="banner-title text-white"><a href="#"><strong>Women’s</strong></h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
-                                </div><!-- End .banner-content -->
-                            </div><!-- End .banner -->
-                        </div><!-- End .col-sm-6 -->
-
-                        <div class="col-sm-6">
-                            <div class="banner banner-overlay">
-                                <a href="#">
-                                    <img src="../assets/images/demos/demo-6/banners/banner-2.jpg" alt="Banner">
-                                </a>
-
-                                <div class="banner-content banner-content-center">
-                                    <h4 class="banner-subtitle text-white"><a href="#">New in</a></h4><!-- End .banner-subtitle -->
-                                    <h3 class="banner-title text-white"><a href="#"><strong>Men’s</strong></a></h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
-                                </div><!-- End .banner-content -->
-                            </div><!-- End .banner -->
-                        </div><!-- End .col-sm-6 -->
-                    </div><!-- End .row -->
-                    <hr class="mt-0 mb-0">
-                </div><!-- End .container -->
-            </div><!-- End .bg-gray -->
-
             <div class="mb-5"></div><!-- End .mb-5 -->
             <div class="container">
                 <div class="heading heading-center mb-3">
-                    <h2 class="title">Trending</h2><!-- End .title -->
+                    <h2 class="title">Recently Added product</h2><!-- End .title -->
 
                     <ul class="nav nav-pills justify-content-center" role="tablist">
+                        
                         <li class="nav-item">
                             <a class="nav-link active" id="trending-all-link" data-toggle="tab" href="#trending-all-tab" role="tab" aria-controls="trending-all-tab" aria-selected="true">All</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="trending-women-link" data-toggle="tab" href="#trending-women-tab" role="tab" aria-controls="trending-women-tab" aria-selected="false">Women</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="trending-men-link" data-toggle="tab" href="#trending-men-tab" role="tab" aria-controls="trending-men-tab" aria-selected="false">Men</a>
-                        </li>
+                        <?php 
+                        $categories = getallrecord('categories');
+                        while($category = mysqli_fetch_assoc($categories)){?>
+                            <li class="nav-item">
+                                <a class="nav-link" id="trending-women-link" data-toggle="tab" href="#<?=$category['category']?>" role="tab" aria-controls="<?=$category['category']?>" aria-selected="false"><?=$category['category']?></a>
+                            </li>
+                        <?php } ?>
                     </ul>
-                </div><!-- End .heading -->
+                </div>
 
                 <div class="tab-content tab-content-carousel">
                     <div class="tab-pane p-0 fade show active" id="trending-all-tab" role="tabpanel" aria-labelledby="trending-all-link">
@@ -142,179 +109,54 @@ session_start();
                                     }
                                 }
                             }'>
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-1-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-1-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
+                            <?php 
+                            $all = getallrecord('product_details');
 
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
+                            if ($all) {
+                                while ($categoryAll = mysqli_fetch_assoc($all)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryAll['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryAll['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryAll['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
 
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryAll['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryAll['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryAll['id'])['price']?> - P<?php echo maxPrice($categoryAll['id'])['price']?>
+                                            </div><!-- End .product-price -->
 
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Denim jacket</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $19.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-3-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-2-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-2-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Shoes</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Sandals</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $24.99
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <span class="product-label label-sale">sale</span>
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-3-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-3-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Printed sweatshirt</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        <span class="new-price">Now $7.99</span>
-                                        <span class="old-price">Was $12.99</span>
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-4-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-4-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Linen-blend paper bag trousers</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $17.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="..//images/demos/demo-6/products/product-4-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-4-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-1-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-1-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Denim jacket</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $19.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-3-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                            
-                        </div><!-- End .owl-carousel -->
-                    </div><!-- .End .tab-pane -->
-                    <div class="tab-pane p-0 fade" id="trending-women-tab" role="tabpanel" aria-labelledby="trending-women-link">
+                                            
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Dresses" role="tabpanel" aria-labelledby="trending-all-link">
                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
                             data-owl-options='{
                                 "nav": false, 
@@ -323,7 +165,7 @@ session_start();
                                 "loop": false,
                                 "responsive": {
                                     "0": {
-                                        "items":0
+                                        "items":2
                                     },
                                     "480": {
                                         "items":2
@@ -341,114 +183,52 @@ session_start();
                                     }
                                 }
                             }'>
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <span class="product-label label-sale">sale</span>
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-3-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-3-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Dresses');
 
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
 
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Printed sweatshirt</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        <span class="new-price">Now $7.99</span>
-                                        <span class="old-price">Was $12.99</span>
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-4-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-4-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Linen-blend paper bag trousers</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $17.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="../assets/images/demos/demo-6/products/product-4-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-4-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-1-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-1-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Denim jacket</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $19.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-1-3-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .owl-carousel -->
-                    </div><!-- .End .tab-pane -->
-
-                    <div class="tab-pane p-0 fade" id="trending-men-tab" role="tabpanel" aria-labelledby="trending-men-link">
-                        <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="T-Shirts" role="tabpanel" aria-labelledby="trending-all-link">
+                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
                             data-owl-options='{
                                 "nav": false, 
                                 "dots": true,
@@ -456,7 +236,7 @@ session_start();
                                 "loop": false,
                                 "responsive": {
                                     "0": {
-                                        "items":0
+                                        "items":2
                                     },
                                     "480": {
                                         "items":2
@@ -474,613 +254,558 @@ session_start();
                                     }
                                 }
                             }'>
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <span class="product-label label-sale">sale</span>
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-3-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-3-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'T-Shirts');
 
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
 
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Jeans" role="tabpanel" aria-labelledby="trending-all-link">
+                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
+                                }
+                            }'>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Jeans');
 
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Printed sweatshirt</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        <span class="new-price">Now $7.99</span>
-                                        <span class="old-price">Was $12.99</span>
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .owl-carousel -->
-                    </div><!-- .End .tab-pane -->
-                </div><!-- End .tab-content -->
-            </div><!-- End .container -->
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Jackets" role="tabpanel" aria-labelledby="trending-all-link">
+                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
+                                }
+                            }'>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Jackets');
+
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Bag" role="tabpanel" aria-labelledby="trending-all-link">
+                          <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
+                                }
+                            }'>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Bag');
+
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Sportswears" role="tabpanel" aria-labelledby="trending-all-link">
+                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
+                                }
+                            }'>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Sportswears');
+
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Shoes" role="tabpanel" aria-labelledby="trending-all-link">
+                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
+                                }
+                            }'>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Shoes');
+
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                    <div class="tab-pane p-0 fade" id="Jumpers" role="tabpanel" aria-labelledby="trending-all-link">
+                         <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
+                                }
+                            }'>
+                            <?php 
+                            $dresses = getrecord('product_details', 'category', 'Jumpers');
+
+                            if ($dresses) {
+                                while ($categoryDress = mysqli_fetch_assoc($dresses)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryDress['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryDress['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                
+                                                    <a href="productDetails.php?product_id=<?php echo $categoryDress['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                                
+                                                   
+                                                
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
+
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryDress['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryDress['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryDress['id'])['price']?> - P<?php echo maxPrice($categoryDress['id'])['price']?>
+                                            </div><!-- End .product-price -->
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Products Added Yet in This Category
+                                </div>
+                                <?php
+                            }
+                            ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="mb-5"></div><!-- End .mb-5 -->
-
-            <div class="deal bg-image pt-8 pb-8" style="background-image: url(../assets/images/demos/demo-6/deal/bg-1.jpg);">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-sm-12 col-md-8 col-lg-6">
-                            <div class="deal-content text-center">
-                                <h4>Limited quantities. </h4>
-                                <h2>Deal of the Day</h2>
-                                <div class="deal-countdown" data-until="+10h"></div><!-- End .deal-countdown -->
-                            </div><!-- End .deal-content -->
-                            <div class="row deal-products">
-                                <div class="col-6 deal-product text-center">
-                                    <figure class="product-media">
-                                        <a href="product.html">
-                                            <img src="../assets/images/demos/demo-6/deal/product-1.jpg" alt="Product image" class="product-image">
-                                        </a>
-
-                                    </figure><!-- End .product-media -->
-
-                                    <div class="product-body">
-                                        <h3 class="product-title"><a href="product.html">Elasticated cotton shorts</a></h3><!-- End .product-title -->
-                                        <div class="product-price">
-                                            <span class="new-price">Now $24.99</span>
-                                            <span class="old-price">Was $30.99</span>
-                                        </div><!-- End .product-price -->
-                                    </div><!-- End .product-body -->
-                                    <a href="category.html" class="action">shop now</a>
-                                </div>
-                                <div class="col-6 deal-product text-center">
-                                    <figure class="product-media">
-                                        <a href="product.html">
-                                            <img src="../assets/images/demos/demo-6/deal/product-2.jpg" alt="Product image" class="product-image">
-                                        </a>
-
-                                    </figure><!-- End .product-media -->
-
-                                    <div class="product-body">
-                                        <h3 class="product-title"><a href="product.html">Fine-knit jumper</a></h3><!-- End .product-title -->
-                                        <div class="product-price">
-                                            <span class="new-price">Now $8.99</span>
-                                            <span class="old-price">Was $17.99</span>
-                                        </div><!-- End .product-price -->
-                                    </div><!-- End .product-body -->
-                                    <a href="category.html" class="action">shop now</a>
-                                </div>
-                            </div>
-                        </div><!-- End .col-lg-5 -->
-                    </div><!-- End .row -->
-                </div><!-- End .container -->
-            </div><!-- End .deal -->
-
-            <div class="pt-4 pb-3" style="background-color: #222;">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="icon-box text-center">
-                                <span class="icon-box-icon">
-                                    <i class="icon-truck"></i>
-                                </span>
-                                <div class="icon-box-content">
-                                    <h3 class="icon-box-title">Payment & Delivery</h3><!-- End .icon-box-title -->
-                                    <p>Free shipping for orders over $50</p>
-                                </div><!-- End .icon-box-content -->
-                            </div><!-- End .icon-box -->
-                        </div><!-- End .col-lg-3 col-sm-6 -->
-
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="icon-box text-center">
-                                <span class="icon-box-icon">
-                                    <i class="icon-rotate-left"></i>
-                                </span>
-                                <div class="icon-box-content">
-                                    <h3 class="icon-box-title">Return & Refund</h3><!-- End .icon-box-title -->
-                                    <p>Free 100% money back guarantee</p>
-                                </div><!-- End .icon-box-content -->
-                            </div><!-- End .icon-box -->
-                        </div><!-- End .col-lg-3 col-sm-6 -->
-
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="icon-box text-center">
-                                <span class="icon-box-icon">
-                                    <i class="icon-unlock"></i>
-                                </span>
-                                <div class="icon-box-content">
-                                    <h3 class="icon-box-title">Secure Payment</h3><!-- End .icon-box-title -->
-                                    <p>100% secure payment</p>
-                                </div><!-- End .icon-box-content -->
-                            </div><!-- End .icon-box -->
-                        </div><!-- End .col-lg-3 col-sm-6 -->
-
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="icon-box text-center">
-                                <span class="icon-box-icon">
-                                    <i class="icon-headphones"></i>
-                                </span>
-                                <div class="icon-box-content">
-                                    <h3 class="icon-box-title">Quality Support</h3><!-- End .icon-box-title -->
-                                    <p>Alway online feedback 24/7</p>
-                                </div><!-- End .icon-box-content -->
-                            </div><!-- End .icon-box -->
-                        </div><!-- End .col-lg-3 col-sm-6 -->
-                    </div><!-- End .row -->
-                </div><!-- End .container -->
-            </div><!-- End .bg-light pt-2 pb-2 -->
-
-            <div class="mb-6"></div><!-- End .mb-5 -->
-
             <div class="container">
-                <h2 class="title text-center mb-4">New Arrivals</h2><!-- End .title text-center -->
-
-                <div class="products">
-                    <div class="row justify-content-center">
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <span class="product-label label-sale">Sale</span>
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-5-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-5-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Tie-detail top</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        <span class="new-price">Now $3.99</span>
-                                        <span class="old-price">Was $6.99</span>
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-6-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-6-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Shoes</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Sandals</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $12.99
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-7-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-7-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Bags</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Small bucket bag</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $14.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="../assets/images/demos/demo-6/products/product-7-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-7-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-8-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-8-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Denim jacket</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $34.99
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-9-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-9-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">BShort wrap dress</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $17.99
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-10-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-10-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Biker jacket</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $34.99
-                                    </div><!-- End .product-price -->
-
-                                    <div class="product-nav product-nav-thumbs">
-                                        <a href="#" class="active">
-                                            <img src="../assets/images/demos/demo-6/products/product-10-thumb.jpg" alt="product desc">
-                                        </a>
-                                        <a href="#">
-                                            <img src="../assets/images/demos/demo-6/products/product-10-2-thumb.jpg" alt="product desc">
-                                        </a>
-                                    </div><!-- End .product-nav -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-11-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-11-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Shoes</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Loafers</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        $9.99
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-
-                        <div class="col-6 col-md-4 col-lg-3">
-                            <div class="product product-7 text-center">
-                                <figure class="product-media">
-                                    <span class="product-label label-sale">sale</span>
-                                    <a href="product.html">
-                                        <img src="../assets/images/demos/demo-6/products/product-12-1.jpg" alt="Product image" class="product-image">
-                                        <img src="../assets/images/demos/demo-6/products/product-12-2.jpg" alt="Product image" class="product-image-hover">
-                                    </a>
-
-                                    <div class="product-action-vertical">
-                                        <a href="#" class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                                    </div><!-- End .product-action-vertical -->
-
-                                    <div class="product-action">
-                                        <a href="#" class="btn-product btn-cart"><span>add to cart</span></a>
-                                    </div><!-- End .product-action -->
-                                </figure><!-- End .product-media -->
-
-                                <div class="product-body">
-                                    <div class="product-cat">
-                                        <a href="#">Clothing</a>
-                                    </div><!-- End .product-cat -->
-                                    <h3 class="product-title"><a href="product.html">Super Skinny High Jeggings</a></h3><!-- End .product-title -->
-                                    <div class="product-price">
-                                        <span class="new-price">Now $12.99</span>
-                                        <span class="old-price">Was $17.99</span>
-                                    </div><!-- End .product-price -->
-                                </div><!-- End .product-body -->
-                            </div><!-- End .product -->
-                        </div><!-- End .col-sm-6 col-md-4 col-lg-3 -->
-                    </div><!-- End .row -->
-                </div><!-- End .products -->
-
-                <div class="more-container text-center mt-2">
-                    <a href="#" class="btn btn-outline-dark-2 btn-more"><span>show more</span></a>
-                </div><!-- End .more-container -->
-            </div><!-- End .container -->
-
-            <div class="pb-3">
-                <div class="container brands pt-5 pt-lg-7 ">
-
-                    <h2 class="title text-center mb-4">shop by brands</h2><!-- End .title text-center -->
-
-                    <div class="owl-carousel owl-simple" data-toggle="owl" 
-                        data-owl-options='{
-                            "nav": false, 
-                            "dots": false,
-                            "margin": 30,
-                            "loop": false,
-                            "responsive": {
-                                "0": {
-                                    "items":2
-                                },
-                                "420": {
-                                    "items":3
-                                },
-                                "600": {
-                                    "items":4
-                                },
-                                "900": {
-                                    "items":5
-                                },
-                                "1024": {
-                                    "items":6
+                <div class="heading heading-center mb-3">
+                    <h2 class="title">Available Shops</h2>
+                     <div class="owl-carousel owl-simple carousel-equal-height carousel-with-shadow" data-toggle="owl" 
+                            data-owl-options='{
+                                "nav": false, 
+                                "dots": true,
+                                "margin": 20,
+                                "loop": false,
+                                "responsive": {
+                                    "0": {
+                                        "items":2
+                                    },
+                                    "480": {
+                                        "items":2
+                                    },
+                                    "768": {
+                                        "items":3
+                                    },
+                                    "992": {
+                                        "items":4
+                                    },
+                                    "1200": {
+                                        "items":4,
+                                        "nav": true,
+                                        "dots": false
+                                    }
                                 }
-                            }
-                        }'>
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/1.png" alt="Brand Name">
-                        </a>
+                            }'>
+                            <?php 
+                            $all = getallrecord('product_details');
 
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/2.png" alt="Brand Name">
-                        </a>
+                            if ($all) {
+                                while ($categoryAll = mysqli_fetch_assoc($all)) {
+                                $image = mysqli_fetch_assoc(getrecord('product_images','product_id',$categoryAll['id']));
+                                $product = mysqli_fetch_assoc(getrecord('products','id',$categoryAll['id']));
+                                ?>
+                                    <div class="product product-7 text-center">
+                                        <figure class="product-media">
+                                            <a href="product.html">
+                                                <img src="<?=$image['image']?>" alt="Product image" class="product-image" style="height:300px;">
+                                            </a>
+                                            <div class="product-action">
+                                                <a href="productDetails.php?product_id=<?php echo $categoryAll['id']?>" class="btn-product btn-cart"><span>add to cart</span></a>
+                                            </div><!-- End .product-action -->
+                                        </figure><!-- End .product-media -->
 
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/3.png" alt="Brand Name">
-                        </a>
+                                        <div class="product-body">
+                                            <div class="product-cat">
+                                                <a href="#"><?=$categoryAll['category']?></a>
+                                            </div><!-- End .product-cat -->
+                                            <h3 class="product-title"><a href="product.html"><?=$categoryAll['product_name']?></a></h3><!-- End .product-title -->
+                                            <div class="product-price">
+                                                P<?php echo minPrice($categoryAll['id'])['price']?> - P<?php echo maxPrice($categoryAll['id'])['price']?>
+                                            </div><!-- End .product-price -->
 
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/4.png" alt="Brand Name">
-                        </a>
-
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/5.png" alt="Brand Name">
-                        </a>
-
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/6.png" alt="Brand Name">
-                        </a>
-
-                        <a href="#" class="brand">
-                            <img src="../assets/images/brands/7.png" alt="Brand Name">
-                        </a>
-                    </div><!-- End .owl-carousel -->
-                </div><!-- End .container -->
-
-                <div class="mb-5 mb-lg-7"></div><!-- End .mb-5 -->
-
-                <div class="container newsletter">
-                    <div class="row">
-                        <div class="col-lg-6 banner-overlay-div">
-                            <div class="banner banner-overlay">
-                                <a href="#">
-                                    <img src="../assets/images/demos/demo-6/banners/banner-3.jpg" alt="Banner">
-                                </a>
-
-                                <div class="banner-content banner-content-center">
-                                    <h4 class="banner-subtitle text-white"><a href="#">Limited time only.</a></h4><!-- End .banner-subtitle -->
-                                    <h3 class="banner-title text-white"><a href="#">End of Season<br>save 50% off</a></h3><!-- End .banner-title -->
-                                    <a href="#" class="btn btn-outline-white banner-link underline">Shop Now</a>
-                                </div><!-- End .banner-content -->
-                            </div><!-- End .banner -->
-                        </div><!-- End .col-lg-6 -->
-
-                        <div class="col-lg-6 d-flex align-items-stretch subscribe-div">
-                            <div class="cta cta-box">
-                                <div class="cta-content">
-                                    <h3 class="cta-title">Subscribe To Our Newsletter</h3><!-- End .cta-title -->
-                                    <p>Sign up now for <span class="primary-color">10% discount</span> on first order. Customise my news:</p>
-
-                                    <form action="#">
-                                        <input type="email" class="form-control" placeholder="Enter your Email Address" aria-label="Email Adress" required>
-                                        <div class="text-center">
-                                            <button class="btn btn-outline-dark-2" type="submit"><span>subscribe</span></i></button>
-                                        </div><!-- End .text-center -->
-                                    </form>
-                                </div><!-- End .cta-content -->
-                            </div><!-- End .cta -->
-                        </div><!-- End .col-lg-6 -->
-                    </div><!-- End .row -->
-                </div><!-- End .container -->
-            </div><!-- End .bg-gray -->
-
-            <div class="mb-2"></div><!-- End .mb-5 -->
-            
-            <div class="container">
-            </div><!-- End .container -->
-            
-            <div class="blog-posts mb-5">
-                <div class="container">
-                    <h2 class="title text-center mb-4">From Our Blog</h2><!-- End .title text-center -->
-
-                    <div class="owl-carousel owl-simple mb-3" data-toggle="owl" 
-                        data-owl-options='{
-                            "nav": false, 
-                            "dots": true,
-                            "items": 3,
-                            "margin": 20,
-                            "loop": false,
-                            "responsive": {
-                                "0": {
-                                    "items":1
-                                },
-                                "600": {
-                                    "items":2
-                                },
-                                "992": {
-                                    "items":3
+                                            
+                                        </div><!-- End .product-body -->
+                                    </div>
+                                <?php
                                 }
+                            } else {
+                                ?>
+                                <div class="text-center">
+                                    No Shops
+                                </div>
+                                <?php
                             }
-                        }'>
-                        <article class="entry">
-                            <figure class="entry-media">
-                                <a href="single.html">
-                                    <img src="../assets/images/demos/demo-6/blog/post-1.jpg" alt="image desc">
-                                </a>
-                            </figure><!-- End .entry-media -->
-
-                            <div class="entry-body text-center">
-                                <div class="entry-meta">
-                                    <a href="#">Nov 22, 2018</a>, 1 Comments
-                                </div><!-- End .entry-meta -->
-
-                                <h3 class="entry-title">
-                                    <a href="single.html">Sed adipiscing ornare.</a>
-                                </h3><!-- End .entry-title -->
-
-                                <div class="entry-content">
-                                    <a href="single.html" class="read-more">Read More</a>
-                                </div><!-- End .entry-content -->
-                            </div><!-- End .entry-body -->
-                        </article><!-- End .entry -->
-
-                        <article class="entry">
-                            <figure class="entry-media">
-                                <a href="single.html">
-                                    <img src="../assets/images/demos/demo-6/blog/post-2.jpg" alt="image desc">
-                                </a>
-                            </figure><!-- End .entry-media -->
-
-                            <div class="entry-body text-center">
-                                <div class="entry-meta">
-                                    <a href="#">Dec 12, 2018</a>, 0 Comments
-                                </div><!-- End .entry-meta -->
-
-                                <h3 class="entry-title">
-                                    <a href="single.html">Fusce lacinia arcuet nulla.</a>
-                                </h3><!-- End .entry-title -->
-
-                                <div class="entry-content">
-                                    <a href="single.html" class="read-more">Read More</a>
-                                </div><!-- End .entry-content -->
-                            </div><!-- End .entry-body -->
-                        </article><!-- End .entry -->
-
-                        <article class="entry">
-                            <figure class="entry-media">
-                                <a href="single.html">
-                                    <img src="../assets/images/demos/demo-6/blog/post-3.jpg" alt="image desc">
-                                </a>
-                            </figure><!-- End .entry-media -->
-
-                            <div class="entry-body text-center">
-                                <div class="entry-meta">
-                                    <a href="#">Dec 19, 2018</a>, 2 Comments
-                                </div><!-- End .entry-meta -->
-
-                                <h3 class="entry-title">
-                                    <a href="single.html">Quisque volutpat mattis eros.</a>
-                                </h3><!-- End .entry-title -->
-
-                                <div class="entry-content">
-                                    <a href="single.html" class="read-more">Read More</a>
-                                </div><!-- End .entry-content -->
-                            </div><!-- End .entry-body -->
-                        </article><!-- End .entry -->
-                    </div><!-- End .owl-carousel -->
-                </div><!-- End .container -->
-            </div><!-- End .blog-posts -->
+                            ?>
+                        </div>
+                </div>
+            </div>
         </main><!-- End .main -->
         <?php include("../layouts/footer.layout.php")?>
     </div><!-- End .page-wrapper -->
     <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
-
     <!-- Mobile Menu -->
     <div class="mobile-menu-overlay"></div><!-- End .mobil-menu-overlay -->
-
     <div class="mobile-menu-container">
         <div class="mobile-menu-wrapper">
             <span class="mobile-menu-close"><i class="icon-close"></i></span>
@@ -1249,122 +974,6 @@ session_start();
             </div><!-- End .social-icons -->
         </div><!-- End .mobile-menu-wrapper -->
     </div><!-- End .mobile-menu-container -->
-
-    <!-- Sign in / Register Modal -->
-    <div class="modal fade" id="signin-modal" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true"><i class="icon-close"></i></span>
-                    </button>
-
-                    <div class="form-box">
-                        <div class="form-tab">
-                            <ul class="nav nav-pills nav-fill" role="tablist">
-                                <li class="nav-item">
-                                    <a class="nav-link active" id="signin-tab" data-toggle="tab" href="#signin" role="tab" aria-controls="signin" aria-selected="true">Sign In</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" id="register-tab" data-toggle="tab" href="#register" role="tab" aria-controls="register" aria-selected="false">Register</a>
-                                </li>
-                            </ul>
-                            <div class="tab-content" id="tab-content-5">
-                                <div class="tab-pane fade show active" id="signin" role="tabpanel" aria-labelledby="signin-tab">
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <label for="singin-email">Username or email address *</label>
-                                            <input type="text" class="form-control" id="singin-email" name="singin-email" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-group">
-                                            <label for="singin-password">Password *</label>
-                                            <input type="password" class="form-control" id="singin-password" name="singin-password" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>LOG IN</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="signin-remember">
-                                                <label class="custom-control-label" for="signin-remember">Remember Me</label>
-                                            </div><!-- End .custom-checkbox -->
-
-                                            <a href="#" class="forgot-link">Forgot Your Password?</a>
-                                        </div><!-- End .form-footer -->
-                                    </form>
-                                    <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-g">
-                                                    <i class="icon-google"></i>
-                                                    Login With Google
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-f">
-                                                    <i class="icon-facebook-f"></i>
-                                                    Login With Facebook
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                                <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
-                                    <form action="#">
-                                        <div class="form-group">
-                                            <label for="register-email">Your email address *</label>
-                                            <input type="email" class="form-control" id="register-email" name="register-email" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-group">
-                                            <label for="register-password">Password *</label>
-                                            <input type="password" class="form-control" id="register-password" name="register-password" required>
-                                        </div><!-- End .form-group -->
-
-                                        <div class="form-footer">
-                                            <button type="submit" class="btn btn-outline-primary-2">
-                                                <span>SIGN UP</span>
-                                                <i class="icon-long-arrow-right"></i>
-                                            </button>
-
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox" class="custom-control-input" id="register-policy" required>
-                                                <label class="custom-control-label" for="register-policy">I agree to the <a href="#">privacy policy</a> *</label>
-                                            </div><!-- End .custom-checkbox -->
-                                        </div><!-- End .form-footer -->
-                                    </form>
-                                    <div class="form-choice">
-                                        <p class="text-center">or sign in with</p>
-                                        <div class="row">
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login btn-g">
-                                                    <i class="icon-google"></i>
-                                                    Login With Google
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                            <div class="col-sm-6">
-                                                <a href="#" class="btn btn-login  btn-f">
-                                                    <i class="icon-facebook-f"></i>
-                                                    Login With Facebook
-                                                </a>
-                                            </div><!-- End .col-6 -->
-                                        </div><!-- End .row -->
-                                    </div><!-- End .form-choice -->
-                                </div><!-- .End .tab-pane -->
-                            </div><!-- End .tab-content -->
-                        </div><!-- End .form-tab -->
-                    </div><!-- End .form-box -->
-                </div><!-- End .modal-body -->
-            </div><!-- End .modal-content -->
-        </div><!-- End .modal-dialog -->
-    </div><!-- End .modal -->
-
-    
     <?php 
     include("../layouts/jsfile.layout.php");
     include("toastr.php");

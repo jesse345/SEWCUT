@@ -72,6 +72,7 @@ if (!isset($_SESSION['id'])) {
 <body>
     <?php
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+    $admin = mysqli_fetch_assoc(getallrecord('admin'));
     ?>
     <div class="page-wrapper">
         <?php include("../layouts/header_layout.php"); ?>
@@ -116,38 +117,44 @@ if (!isset($_SESSION['id'])) {
                             </aside>
                             <?php 
                             $currentDateTime = time();
+
                             $subscription = ExtendSubscription($_SESSION['id']);
                             $userSubscribed = isUserSubscribe($_SESSION['id']);
+                            $subscriptionData = mysqli_fetch_assoc($subscription);
+                            $dateExpire = strtotime($subscriptionData['date_expire']);
+                            $timeDifference = $dateExpire - $currentDateTime;
+                            
                             if(mysqli_num_rows($subscription) > 0){ 
                                 ?>
                                 <div class="col-10">
                                     <?php
-                                    $subscriptionData = mysqli_fetch_assoc($subscription);
-                                    $dateExpire = strtotime($subscriptionData['date_expire']);
-                                    $timeDifference = $dateExpire - $currentDateTime;
                                     if(mysqli_num_rows($userSubscribed) > 0){
-                                        ?>
-                                        <div class="countdown-container">
-                                            <a style="position:absolute;right:0;" href="#extend_modal" data-toggle="modal" class="btn btn-info">Extend Subscription</a>
-                                            <div class="wrapper">
-                                                <h5>Subscriptions Durations:</h5>
-                                                <div class="countdown" data-date="<?php echo date('Y-m-d H:i:s', strtotime($subscriptionData['date_expire'])) ?>">
-                                                    <div class="day">
-                                                        <span class="num"></span><span class="word">days</span>
-                                                    </div>
-                                                    <div class="hour">
-                                                        <span class="num"></span><span class="word">hours</span>
-                                                    </div>
-                                                    <div class="min">
-                                                        <span class="num"></span><span class="word">minutes</span>
-                                                    </div>
-                                                    <div class="sec">
-                                                        <span class="num"></span><span class="word">seconds</span>
+                                        if ($subscriptionData['date_expire'] != '0000-00-00 00:00:00') {
+                                            ?>
+                                            <div class="countdown-container">
+                                                <a style="position:absolute;right:0;" href="#extend_modal" data-toggle="modal" class="btn btn-info">Extend Subscription</a>
+                                                <div class="wrapper">
+                                                    <h5>Subscriptions Durations:</h5>
+                                                    <div class="countdown" data-date="<?php echo date('Y-m-d H:i:s', strtotime($subscriptionData['date_expire'])) ?>">
+                                                        <div class="day">
+                                                            <span class="num"></span><span class="word">days</span>
+                                                        </div>
+                                                        <div class="hour">
+                                                            <span class="num"></span><span class="word">hours</span>
+                                                        </div>
+                                                        <div class="min">
+                                                            <span class="num"></span><span class="word">minutes</span>
+                                                        </div>
+                                                        <div class="sec">
+                                                            <span class="num"></span><span class="word">seconds</span>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>  
-                                    <?php } ?>            
+                                            </div> 
+                                        <?php } ?>
+                                    <?php }else{ ?>   
+                                         <a href="subscription.php"><button class="btn btn-info">Subscribe now</button></a>
+                                    <?php } ?>         
                                     <table class="table table-hover text-center mt-5">
                                         <thead class="thead-dark">
                                             <tr>
@@ -160,8 +167,8 @@ if (!isset($_SESSION['id'])) {
                                         </thead>
                                         <tbody>
                                             <?php 
-                                            mysqli_data_seek($subscription, 0);
-                                            while($sub = mysqli_fetch_assoc($subscription)):?>
+                                            $data = getrecord('subscription','user_id',$_SESSION['id']);
+                                            while($sub = mysqli_fetch_assoc($data)):?>
                                             <tr>
                                                 <td><?=$sub['id']?></td>
                                                 <td><?=$sub['type']?></td>
@@ -379,16 +386,65 @@ if (!isset($_SESSION['id'])) {
             </div>
         </div>
     </div>
+    <div class="modal fade" id="modal-payment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Extend Subscription Using Gcash Payment</h5>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="post" action="../Controller/subscriptionController.php" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div>
+                            <img src="https://mcdn.pybydl.com/lco/assets/payment/logo/gcash-353da48c3e4788d6e671a2aa05f783ea08cb6f8547713212ca7d6daf636e959c.svg"
+                                class="mx-auto d-block" style="width:50%;height:150px;" alt="">
+                        </div>
+                        <div style="margin-left:40px;margin-right:40px;">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Gcash Name</label>
+                                <input type="text" class="form-control" id="exampleFormControlInput1"
+                                    value="<?= $admin['gcash_name'] ?>" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Gcash Number</label>
+                                <input type="text" class="form-control" value="<?= $admin['gcash_number'] ?>" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Amount</label>
+                                <input type="text" class="form-control" name="amount" id="amount" value="" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Upload Receipt</label><br>
+                                <input type="file" name="image" id="image" required>
+                            </div>
+                            <img id="image-preview" src="" alt="Image Preview"
+                                style="max-width: 100%; max-height: 200px;display:none;">
+
+                            <div class="form-group">
+                                <label class="form-label">Reference No</label>
+                                <input type="text" class="form-control" name="ref" id="reference-no"
+                                    placeholder="Enter Reference No" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" name="EXTEND" id="subscribe">Extend</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     
 
     <?php
     include("../layouts/jsfile.layout.php");
     include("toastr.php");
-    include('../assets/js/prod.php');
     ?>
 
 </body>
 <script>
+    
     const countdownContainer = document.querySelector('.countdown');
 
     function updateCountdown() {
@@ -420,13 +476,34 @@ if (!isset($_SESSION['id'])) {
     updateCountdown();
 </script>
 <script>
+    autoUpdateSubscribe()
+    
     $(document).ready(function () {
-        $("#UPDATE #add_product_btn").one('click', function (event) {
-            event.preventDefault();
-            //do something
-            $(this).prop('disabled', true);
+        $("#btn_Subscribe ,#btn_Subscribe2 ,#btn_Subscribe3").on("click", function () {
+            var dataValue = $(this).data("value");
+            var dataType = $(this).data("type");
+
+            $("#amount").val(dataValue);
+            $("#type").val(dataType);
+            $("#modal-payment").modal("show");
         });
     });
+
+    function autoUpdateSubscribe(){
+        $.ajax({
+            type: "POST",
+            url: "../Controller/subscriptionController.php",
+            data: {
+                AUTOMATICUPDATE: true, 
+            },
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", error);
+            }
+        });
+    }
 </script>
 
 </html>

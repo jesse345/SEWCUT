@@ -28,74 +28,103 @@ if (isset($_POST['REJECT'])) {
               </script>";
 }elseif (isset($_POST['ACCEPT'])){
     $id = $_POST['subscription_id'];
-    $subscription = mysqli_fetch_assoc(getrecord('subscription','id',$id));
+    $currentDateTime = time();
+    $subscription = mysqli_fetch_assoc(getrecord('subscription', 'id', $id));
 
-    if($subscription['type'] == "Free"){
-        $currentDate = time();
-        $oneWeek = 7 * 24 * 60 * 60;
-        $dateexpire = $currentDate + $oneWeek; 
-        $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
-        updateUser('subscription',
-                array('id','status','date_start','date_expire'),
-                array($id,'Approve',$date,$expirationDateFormatted));
+    $subscriptionTimeLeft = mysqli_fetch_assoc(ExtendSubscription($subscription['user_id']));
+    $dateLeftInTime = strtotime($subscriptionTimeLeft['date_expire']);
 
-        updateUser('users',
-                array('id','isSubscribe'),
-                array($subscription['user_id'],'Yes'));
-        echo "<script>
-                alert('Accepted Successfully');
-                window.location.href = '../View/subscribe.php';
-              </script>";
-    }elseif($subscription['type'] == "Standard"){
-        $currentDate = time();
-        $threeMonths = 3 * 30 * 24 * 60 * 60;
-        $dateexpire = $currentDate + $threeMonths;
-        $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
-        updateUser('subscription',
-                    array('id','status','date_start','date_expire'),
-                    array($id,'Approve',$date,$expirationDateFormatted));
+    if ($dateLeftInTime < $currentDateTime) {
+        if($subscription['type'] == "Standard"){
+            $threeMonths = 3 * 30 * 24 * 60 * 60;
+            $dateexpire = $currentDateTime+ $threeMonths;
+            $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
+            updateUser('subscription',
+                        array('id','status','date_start','date_expire'),
+                        array($id,'Approve',$date,$expirationDateFormatted));
 
-            updateUser('users',
-                    array('id','isSubscribe'),
-                    array($subscription['user_id'],'Yes'));
-            echo "<script>
-                    alert('Accepted Successfully');
-                    window.location.href = '../View/subscribe.php';
-                </script>";
-    }elseif($subscription['type'] == "Advance"){
-        $currentDate = time();
-        $sixMonths = (3 * 30 * 24 * 60 * 60) * 2; 
-        $dateexpire = $currentDate + $sixMonths; 
-        $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
-        updateUser('subscription',
-                    array('id','status','date_start','date_expire'),
-                    array($id,'Approve',$date,$expirationDateFormatted));
+                updateUser('users',
+                        array('id','isSubscribe'),
+                        array($subscription['user_id'],'Yes'));
+                echo "<script>
+                        alert('Accepted Successfully');
+                        window.location.href = '../View/subscribe.php';
+                    </script>";
+        } elseif($subscription['type'] == "Advance") {
+            
+            $sixMonths = (3 * 30 * 24 * 60 * 60) * 2; 
+            $dateexpire = $currentDateTime+ $sixMonths; 
+            $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
+            updateUser('subscription',
+                        array('id','status','date_start','date_expire'),
+                        array($id,'Approve',$date,$expirationDateFormatted));
 
-            updateUser('users',
-                    array('id','isSubscribe'),
-                    array($subscription['user_id'],'Yes'));
-            echo "<script>
-                    alert('Accepted Successfully');
-                    window.location.href = '../View/subscribe.php';
-                </script>";
-    }elseif($subscription['type'] == "Premium"){
-       $currentDate = time();
-        $oneYear = 365 * 24 * 60 * 60;
-        $dateexpire = $currentDate + $oneYear;
-        $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
-        updateUser('subscription',
-                    array('id','status','date_start','date_expire'),
-                    array($id,'Approve',$date,$expirationDateFormatted));
+                updateUser('users',
+                        array('id','isSubscribe'),
+                        array($subscription['user_id'],'Yes'));
+                echo "<script>
+                        alert('Accepted Successfully');
+                        window.location.href = '../View/subscribe.php';
+                    </script>";
+        } elseif($subscription['type'] == "Premium") {
+            
+            $oneYear = 365 * 24 * 60 * 60;
+            $dateexpire = $currentDateTime+ $oneYear;
+            $expirationDateFormatted = date("Y-m-d H:i:s", $dateexpire);
+            updateUser('subscription',
+                        array('id','status','date_start','date_expire'),
+                        array($id,'Approve',$date,$expirationDateFormatted));
 
-            updateUser('users',
-                    array('id','isSubscribe'),
-                    array($subscription['user_id'],'Yes'));
-            echo "<script>
-                    alert('Accepted Successfully');
-                    window.location.href = '../View/subscribe.php';
-                </script>";
+                updateUser('users',
+                        array('id','isSubscribe'),
+                        array($subscription['user_id'],'Yes'));
+                echo "<script>
+                        alert('Accepted Successfully');
+                        window.location.href = '../View/subscribe.php';
+                    </script>";
+        }
+    } else {
+        $timeLeft = $dateLeftInTime - $currentDateTime;
+        
+        if($subscription['type'] == "Standard"){
+            $threeMonths = 3 * 30 * 24 * 60 * 60;
+            $dateexpire = $currentDateTime + $threeMonths;
+            $a = $timeLeft + $dateexpire;
+            $expirationDateFormatted = date("Y-m-d H:i:s", $a);
+            updateUser('subscription',
+                        array('id','status','date_start','date_expire'),
+                        array($id,'Approve',$date,$expirationDateFormatted));
+                echo "<script>
+                        alert('Accepted Successfully');
+                        window.location.href = '../View/subscribe.php';
+                    </script>";
+        } 
+        elseif($subscription['type'] == "Advance") {
+            $sixMonths = (3 * 30 * 24 * 60 * 60) * 2; 
+            $dateexpire = $currentDateTime+ $sixMonths; 
+            $a = $timeLeft + $dateexpire;
+            $expirationDateFormatted = date("Y-m-d H:i:s", $a);
+            updateUser('subscription',
+                        array('id','status','date_start','date_expire'),
+                        array($id,'Approve',$date,$expirationDateFormatted));
+                echo "<script>
+                        alert('Accepted Successfully');
+                        window.location.href = '../View/subscribe.php';
+                    </script>";
+        } elseif($subscription['type'] == "Premium") {
+            $oneYear = 365 * 24 * 60 * 60;
+            $dateexpire = $currentDateTime+ $oneYear;
+            $a = $timeLeft + $dateexpire;
+            $expirationDateFormatted = date("Y-m-d H:i:s", $a);
+            updateUser('subscription',
+                        array('id','status','date_start','date_expire'),
+                        array($id,'Approve',$date,$expirationDateFormatted));
+                echo "<script>
+                        alert('Accepted Successfully');
+                        window.location.href = '../View/subscribe.php';
+                    </script>";
+        }
     }
-    
 }
 
 
