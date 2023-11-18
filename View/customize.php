@@ -83,6 +83,7 @@ if (!isset($_SESSION['id'])) {
                                 <input type="radio" name="category" value="<?= $shop_details['id'] ?>" required> <?= $shop_details['category'] ?>
                             </div>
                         <?php } ?>
+                        <br>
                         <label class="mt-2">Please Upload Image(s) of your chosen Design</label>
                         <div class="form-group">
                             <input type="file">

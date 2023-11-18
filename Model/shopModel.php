@@ -44,8 +44,37 @@ function distance($v1, $v2)
                         HAVING 
                         distance 
                         < 25 ORDER BY distance
-                        LIMIT 0, 10");
+                        LIMIT 0, 5");
     ;
     disconnect();
     return $query;
 }
+function distance1($v1, $v2)
+{
+    global $conn;
+    connect();
+    $query = mysqli_query($conn, "SELECT id, user_id, shop_name, latitude,longitude, address, (3959 * acos(cos(radians($v1))
+                    * cos(radians(latitude)) 
+                    * cos(radians(longitude) 
+                    - radians($v2)) 
+                    + sin(radians($v1)) 
+                    * sin(radians(latitude)))) 
+                    AS distance 
+                    FROM shops
+                    HAVING 
+                    distance 
+                    < 25 ORDER BY distance
+                    LIMIT 0, 5");
+    
+    $resultArray = array(); // Initialize an array to store results
+
+    // Fetch the results into an associative array
+    while ($row = mysqli_fetch_assoc($query)) {
+        $resultArray[] = $row;
+    }
+
+    disconnect();
+    return $resultArray;
+}
+
+

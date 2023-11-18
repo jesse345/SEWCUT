@@ -24,9 +24,10 @@ if (!isset($_SESSION['id'])) {
     </style>
 </head>
 
-<body onload="getLocation()">
+<body>
     <?php
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+    $users = mysqli_fetch_assoc(getrecord('users', 'id', $_SESSION['id']));
     ?>
     <div class="page-wrapper">
         <?php include("../layouts/header_layout.php"); ?>
@@ -52,9 +53,8 @@ if (!isset($_SESSION['id'])) {
             $v1 = $_GET['lat'];
             $v2 = $_GET['long'];
             $shop = distance($v1, $v2);
-            while ($row = mysqli_fetch_array($shop)): ?>
-                
-                    
+            while ($row = mysqli_fetch_array($shop)): 
+                if($users['id'] != $row['user_id']){?>
                     <div class="container">
                         <h6>Distance :
                         <?= number_format($row['distance'], 2) ?> km
@@ -68,7 +68,7 @@ if (!isset($_SESSION['id'])) {
 							<button class="btn btn-info"><a href="storeShop.php?shop_id=<?= $row['id'] ?>" class="text-white"> Visit Shop </a></button>
 						</div>
 					</div>
-               
+               <?php } ?>
             <?php endwhile; ?>
         </main>
         <br>
@@ -76,16 +76,30 @@ if (!isset($_SESSION['id'])) {
     </div>
     <?php
     include("../layouts/jsfile.layout.php");
-    include("toastr.php");
-    include('../assets/js/prod.php');
     ?>
      <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""> </script>
     <script>
+        var lat = <?php echo $_GET['lat']; ?>;
+        var long = <?php echo $_GET['long']; ?>;
+
+        getNearestShop();
         var map = L.map('map').setView([10.3157, 123.8854], 11);
+
+
+        var iconOption = {
+            iconUrl: '../images/current_location.png',
+            iconSize: [30,50]
+        }
+        var customIcon = L.icon(iconOption);
+        var markerOption = {
+            icon: customIcon,
+            title: "Your Here"
+        }
+
         
-        var marker = L.marker([10.3, 123.9070829]).addTo(map);
-        var popup = marker.bindPopup('Sample Shop 13km away from your current location');
-        popup.openPopup();
+        var marker = L.marker([lat,long],markerOption).addTo(map);
+        var currentlocation = marker.bindPopup('Your Here');
+        currentlocation.openPopup();
         
 
         var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -123,35 +137,35 @@ if (!isset($_SESSION['id'])) {
         };
         L.control.layers(baseLayers, overlays).addTo(map);
 
-        var latitude, longitude;
-
-        function getLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(showPosition);
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
+        function getNearestShop() {
+            $.ajax({
+                type: "POST",
+                url: "../Controller/shopController.php",
+                data: {
+                    NEAR: true,
+                    lat: lat,
+                    long: long
+                },
+                success: function (response) {
+                    var shops = JSON.parse(response);
+                    for (var i = 0; i < shops.length; i++) {
+                        var shopMarker = L.marker([parseFloat(shops[i].latitude), parseFloat(shops[i].longitude)],{
+                                title: shops[i].shop_name
+                            }).addTo(map);
+                        var shopPopup = shopMarker.bindPopup(shops[i].shop_name);
+                        
+                        // Open the popup immediately after adding the marker to the map
+                        shopPopup.openPopup();
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", error);
+                }
+            });
         }
 
-        function showPosition(position) {
-            latitude = position.coords.latitude;
-            longitude = position.coords.longitude;
-            console.log("Latitude: " + latitude + " Longitude: " + longitude)
 
-            map.setView([latitude, longitude], 13);
-
-            marker.unbindPopup();
-            marker.setLatLng([latitude, longitude]);
-            popup = marker.bindPopup('Your Current Location');
-            popup.openPopup();
-
-            // Call the function to find the nearest shop
-            neareastShop();
-        }
 
     </script>
 </body>
-
-
-
 </html>

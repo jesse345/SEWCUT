@@ -28,8 +28,8 @@ if (!isset($_SESSION['id'])) {
 			<nav aria-label="breadcrumb" class="breadcrumb-nav breadcrumb-with-filter">
 				<div class="container">
 					<form action="../Controller/shopController.php" method="POST">
-						<input type="hidden" name="lats" id="lats" value="<?=$saveAddress['latitude']?>">
-						<input type="hidden" name="longs" id="longs" value="<?=$saveAddress['longitude']?>">
+						<input type="hidden" name="lats" id="lats" value="">
+        				<input type="hidden" name="longs" id="longs" value="">
 						<button type="submit" name="NEARESTSHOP"
 							style="border:none;background-color:transparent;font-size:16px;"><i
 								class="icon-bars"></i>Nearest
@@ -68,18 +68,43 @@ if (!isset($_SESSION['id'])) {
 	<?php
 	include("../layouts/jsfile.layout.php");
 	?>
+	 <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition);
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // function showError(error) {
+		// 	console.error(error.message);
+		// 	switch (error.code) {
+		// 		case error.PERMISSION_DENIED:
+		// 			alert("To use this feature, please enable location services for this site. Check your browser settings to allow access to your location.");
+		// 			break;
+		// 		case error.POSITION_UNAVAILABLE:
+		// 			alert("Location information is unavailable. Please make sure your device's location services are enabled.");
+		// 			break;
+		// 		case error.TIMEOUT:
+		// 			alert("The request to get your location timed out. Please try again.");
+		// 			break;
+		// 		case error.UNKNOWN_ERROR:
+		// 			alert("An unknown error occurred. Please try again later.");
+		// 			break;
+		// 	}
+		// }
+
+
+        function showPosition(position) {
+            $("#lats").val(position.coords.latitude);
+            $("#longs").val(position.coords.longitude);
+        }
+
+        $(document).ready(function () {
+            getLocation();
+        });
+    </script>
 </body>
-<script>
-	function getLocation() {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(showPosition);
-		} else {
-			alert("Geolocation is not supported by this browser.");
-		}
-	}
-	function showPosition(position) {
-		document.getElementById("lats").value = + position.coords.latitude;
-		document.getElementById("longs").value = + position.coords.longitude;
-	}
-</script>
+
 </html>

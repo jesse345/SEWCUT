@@ -97,21 +97,21 @@ if (!isset($_SESSION['id'])) {
                                     </div>
                                    
                                     <table class="table table-hover text-center mt-5">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>ID</th>
-                                            <th>ID</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>asda</td>
-                                            <td>asda</td>
-                                            <td>asda</td>
-                                        </tr>
-                                    </tbody>
-                                   
+                                        <thead class="thead-dark">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>TYPE</th>
+                                                <th>STATUS</th>
+                                                <th>ACTIONS</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>asda</td>
+                                                <td>asda</td>
+                                                <td>asda</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 <?php } ?>
                             </div>

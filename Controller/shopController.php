@@ -39,6 +39,13 @@ if (isset($_POST['CREATESHOP'])) {
     flash("msg", "success", "Set Up Gcash Details First");
     header("Location: ../View/gcash_info.php");
     exit();
+} if (isset($_POST['NEAR'])) {
+    $nearestShops = distance1($_POST['lat'], $_POST['long']);
+    if($nearestShops){
+        echo json_encode($nearestShops); 
+    }else{
+        echo "error";
+    }
 }
 ?>
 
