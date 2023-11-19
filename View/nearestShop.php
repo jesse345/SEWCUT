@@ -148,6 +148,7 @@ if (!isset($_SESSION['id'])) {
                 },
                 success: function (response) {
                     var shops = JSON.parse(response);
+                    console.log(response);
                     for (var i = 0; i < shops.length; i++) {
                         var shopMarker = L.marker([parseFloat(shops[i].latitude), parseFloat(shops[i].longitude)],{
                                 title: shops[i].shop_name

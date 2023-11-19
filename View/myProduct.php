@@ -255,7 +255,7 @@ if (!isset($_SESSION['id'])) {
                                                                     <div class="form-group">
                                                                         <label>Product Name</label>
                                                                         <input type="hidden" name="product_id" value="<?php echo $product['id'] ?>">
-                                                                        <input type="text" class="form-control" name="product_name" value="<?php echo $productDetails['product_name'] ?>">
+                                                                        <input type="text" class="form-control" name="product_name" value="<?php echo $productDetails['product_name'] ?>" readonly>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="comment">Descriptions</label>
@@ -273,32 +273,12 @@ if (!isset($_SESSION['id'])) {
                                                                             <div class="col-sm-3 col-lg-3">
                                                                                 <label>Color</label>
                                                                                 <input type="hidden" name="pqe_id[]" value="<?php echo $pqe['id']?>">
-                                                                                <select class="form-control" name="color[]">
-                                                                                    <option value="<?php echo $pqe['color']?>" selected><?php echo $pqe['color']?></option>
-                                                                                    <?php 
-                                                                                    mysqli_data_seek($color, 0);
-                                                                                    while($c = mysqli_fetch_assoc($color)):
-                                                                                        if ($c['color_name'] != $pqe['color']){
-                                                                                        ?>
-                                                                                        <option value="<?php echo $c['color_name']?>"><?php echo $c['color_name']?></option>
-                                                                                        <?php } ?>
-                                                                                        
-                                                                                    <?php endwhile; ?>
-                                                                                </select>
+                                                                                <input type="text" class="form-control" name="color[]" value="<?php echo $pqe['color']?>" readonly>
+                                                                                
                                                                             </div>
                                                                             <div class="col-sm-3 col-lg-3">
                                                                                 <label>Size</label>
-                                                                                <select class="form-control" name="size[]">
-                                                                                    <option value="<?php echo $pqe['size']?>" selected><?php echo $pqe['size']?></option>
-                                                                                    <?php 
-                                                                                    mysqli_data_seek($size, 0);
-                                                                                    while($s = mysqli_fetch_assoc($size)):
-                                                                                        if ($s['size'] != $pqe['size']){
-                                                                                            ?>
-                                                                                            <option value="<?php echo $s['size']?>"><?php echo $s['size']?></option>
-                                                                                        <?php } ?>
-                                                                                    <?php endwhile; ?>
-                                                                                </select>
+                                                                                <input type="text" class="form-control" name="size[]" value="<?php echo $pqe['size']?>" readonly>
                                                                             </div>
                                                                             <div class="col-sm-3 col-lg-2">
                                                                                 <label>Price</label>
@@ -311,19 +291,11 @@ if (!isset($_SESSION['id'])) {
                                                                         </div>
                                                                     <?php endwhile; ?>
                                                                     <label for="">Category<span style="color:red">*</span></label>
-                                                                    <select class="form-control" name="category" require>
-                                                                        <option value="<?php echo $productDetails['category'];?>" selected><?php echo $productDetails['category'];?></option>
-                                                                        <?php
-                                                                        mysqli_data_seek($category, 0);
-                                                                        while($c = mysqli_fetch_assoc($category)):?>
-                                                                            <?php if ($c['category'] != $productDetails['category']) {?>
-                                                                                <option value="<?php echo $c['category']?>"><?php echo $c['category']?></option>
-                                                                            <?php } ?>
-                                                                        <?php endwhile; ?>
-                                                                    </select>
+                                                                    <input type="text" class="form-control" name="category" value="<?php echo $productDetails['category'];?>" readonly>
+                                                                    
                                                                     <div class="form-group">
                                                                         <label>Product Brand</label>
-                                                                        <input type="text" class="form-control" name="brand" value="<?php echo $productDetails['brand'] ?>" >
+                                                                        <input type="text" class="form-control" name="brand" value="<?php echo $productDetails['brand'] ?>" readonly>
                                                                     </div>
                                                                     <div class="card-body">
                                                                         <label>Images</label>

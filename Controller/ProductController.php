@@ -77,21 +77,15 @@ if (!empty($_SESSION['id'])) {
 
     } elseif (isset($_POST['DELETEPRODUCT'])) {
         $id = $_POST['id'];
-        $deleteOrder = mysqli_fetch_assoc(getrecord('orders', 'product_id', $id));
+        $deleteOrder = getrecord('orders', 'product_id', $id);
 
-        if ($deleteOrder['status'] != 'Approved') {
-            deleteProduct($id);
-            flash("msg", "success", "Success");
+        if(mysqli_num_rows($deleteOrder) > 0){
+            flash("msg", "info", "Can`t Delete Already Ordered");
             header("Location: ../View/myProduct.php");
             exit();
-
-        } else {
-            updateProduct(
-                'product_quantity',
-                array('product_id', 'quantity'),
-                array($id, 0)
-            );
-            flash("msg", "success", "Stock at 0");
+        }else{
+            deleteProduct($id);
+            flash("msg", "success", "Success");
             header("Location: ../View/myProduct.php");
             exit();
         }
