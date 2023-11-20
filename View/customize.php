@@ -14,8 +14,54 @@ if (!isset($_SESSION['id'])) {
     <?php include("../layouts/head.layout.php") ?>
     
     <style>
+        .imagePreviews img {
+            max-width: 100px;
+            max-height: 100px;
+            margin: 5px;
+        }
         .form-control{
             border:1px solid #000;
+        }
+        .image-upload > input
+        {
+            display: none;
+        }
+        .upload-icon{
+        width: 100px;
+        height: 97px;
+        border: 2px solid #5642BE;
+        border-style: dotted;
+        border-radius: 18px;
+        }
+        .upload-icon img{
+        width: 60px;
+        height: 60px;
+        margin:19px;
+        cursor: pointer;
+        }
+        .upload-icon.has-img {
+            width: 100px;
+            height: 97px;
+            border: none;
+        }
+        .upload-icon.has-img img {
+            width: 100%;
+            height: auto;
+            border-radius: 18px;
+            margin:0px;
+        }
+        .image-upload {
+            position: relative;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        .upload-icon {
+            cursor: pointer;
+        }
+
+        .has-img {
+            /* Add styling for elements with an image here */
         }
     </style>
 </head>
@@ -43,7 +89,7 @@ if (!isset($_SESSION['id'])) {
         </main><!-- End .main -->
         <div class="container">
             <div class="mx-auto" style="border: 1px solid #000; padding: 40px; width: 80%;">
-                <form action="../Controller/shopController.php" method="POST">
+                <form action="../Controller/shopController.php" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="shop_id" value="<?=$_GET['shop_id']?>">
                     <div id="page1" class="form-page">
                         <div class="row">
@@ -77,10 +123,9 @@ if (!isset($_SESSION['id'])) {
                             </div>
                         <?php } ?>
                         <br>
-                        <label class="mt-2">Please Upload Image(s) of your chosen Design</label>
-                        <div class="form-group">
-                            <input type="file">
-                        </div>
+                        <label class="mt-2">Please Upload Image(s) of your chosen Design</label><br>
+                        <input type="file" name="image[]" id="fileInput" multiple>
+                        <div class="imagePreviews" style="display: flex;"></div>
                         <div class="form-group">
                             <label>Special Instruction to the Tailor/Dressmaker, Like the fabric you want etc.</label>
                             <textarea class="form-control" rows="5" name="instruction"></textarea>
@@ -116,49 +161,49 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">NECK(CM)</label>
-                                                    <input type="text" class="form-control" name="neck">
+                                                    <input type="text" class="form-control men"  name="men_neck">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SHOULDER(CM)</label>
-                                                    <input type="text" class="form-control" name="shoulder">
+                                                    <input type="text" class="form-control men" name="men_shoulder">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SLEEVE(CM)</label>
-                                                    <input type="text" class="form-control" name="sleeve">
+                                                    <input type="text" class="form-control men" name="men_sleeve">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">CHEST(CM)</label>
-                                                    <input type="text" class="form-control" name="chest">
+                                                    <input type="text" class="form-control men" name="men_chest">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">WAIST(CM)</label>
-                                                    <input type="text" class="form-control" name="waist">
+                                                    <input type="text" class="form-control men" name="men_waist">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HIPS(CM)</label>
-                                                    <input type="text" class="form-control" name="hips">
+                                                    <input type="text" class="form-control men" name="men_hips">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">INSEAM(CM)</label>
-                                                    <input type="text" class="form-control" name="inseam">
+                                                    <input type="text" class="form-control men" name="men_inseam">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">THIGH(CM)</label>
-                                                    <input type="text" class="form-control" name="thigh">
+                                                    <input type="text" class="form-control men" name="men_thigh">
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -167,19 +212,19 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HEIGHT FEET AND INCHES</label>
-                                                    <input type="text" class="form-control" name="height">
+                                                    <input type="text" class="form-control men" name="men_height">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">BODICE LENGTH</label>
-                                                    <input type="text" class="form-control" name="bodice">
+                                                    <input type="text" class="form-control men" name="men_bodice">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- .End .tab-pane -->
+                            </div>
                             <div class="tab-pane fade" id="tab-10" role="tabpanel" aria-labelledby="tab-10-tab">
                                 <div class="row">
                                     <div class="col-4">
@@ -194,49 +239,49 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">NECK(CM)</label>
-                                                    <input type="text" class="form-control" name="neck">
+                                                    <input type="text" class="form-control women" name="neck">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SHOULDER(CM)</label>
-                                                    <input type="text" class="form-control" name="shoulder">
+                                                    <input type="text" class="form-control women" name="shoulder">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SLEEVE(CM)</label>
-                                                    <input type="text" class="form-control" name="sleeve">
+                                                    <input type="text" class="form-control women" name="sleeve">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">CHEST(CM)</label>
-                                                    <input type="text" class="form-control" name="chest">
+                                                    <input type="text" class="form-control women" name="chest">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">WAIST(CM)</label>
-                                                    <input type="text" class="form-control" name="waist">
+                                                    <input type="text" class="form-control women" name="waist">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HIPS(CM)</label>
-                                                    <input type="text" class="form-control" name="hips">
+                                                    <input type="text" class="form-control women" name="hips">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">INSEAM(CM)</label>
-                                                    <input type="text" class="form-control" name="inseam">
+                                                    <input type="text" class="form-control women" name="inseam">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">THIGH(CM)</label>
-                                                    <input type="text" class="form-control" name="thigh">
+                                                    <input type="text" class="form-control women" name="thigh">
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -245,26 +290,26 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HEIGHT FEET AND INCHES</label>
-                                                    <input type="text" class="form-control" name="height">
+                                                    <input type="text" class="form-control women" name="height">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">BODICE LENGTH</label>
-                                                    <input type="text" class="form-control" name="bodice">
+                                                    <input type="text" class="form-control women" name="bodice">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">UNDER BUST(CM)</label>
-                                                    <input type="text" class="form-control" name="under_bust">
+                                                    <input type="text" class="form-control women" name="under_bust">
                                                 </div>
                                             </div>
 
                                         </div>
                                     </div>
                                 </div>
-                            </div><!-- .End .tab-pane -->
+                            </div>
                              <div class="tab-pane fade" id="tab-11" role="tabpanel" aria-labelledby="tab-11-tab">
                                 <div class="form-group">
                                     <label for="">Address:</label>
@@ -274,7 +319,7 @@ if (!isset($_SESSION['id'])) {
                                     <label for="">Schedule</label>
                                     <input type="date" name="schedule" class="form-control">
                                 </div>
-                            </div><!-- .End .tab-pane -->
+                            </div>
                         </div><!-- End .tab-content -->
                         <br>
                         <button type="button" class="btn btn-secondary btn_PreviousPage2">Previous</button>
@@ -288,7 +333,6 @@ if (!isset($_SESSION['id'])) {
                 </form>
             </div>
         </div>
-
         <br>
         <?php include("../layouts/footer.layout1.php"); ?>
     </div>
@@ -298,33 +342,57 @@ if (!isset($_SESSION['id'])) {
     ?>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
-    function downloadImage() {
-        html2canvas(document.querySelector('.mx-auto')).then(function(canvas) {
-            var link = document.createElement('a');
-            document.body.appendChild(link);
-            link.download = 'receipt.png';
-            link.href = canvas.toDataURL();
-            link.target = '_blank';
-            link.click();
+        function downloadImage() {
+            html2canvas(document.querySelector('.mx-auto')).then(function(canvas) {
+                var link = document.createElement('a');
+                document.body.appendChild(link);
+                link.download = 'receipt.png';
+                link.href = canvas.toDataURL();
+                link.target = '_blank';
+                link.click();
+            });
+        }
+        $(document).ready(function() {
+            $('.btn_page1').on('click', function (e) {
+                $('#page2').removeClass('d-none');
+                $('#page1').addClass('d-none');
+            });
+            // SECOND PAGE
+            $('.btn_PreviousPage2').on('click', function (e) {
+                $('#page2').addClass('d-none');
+                $('#page1').removeClass('d-none');
+            });
+            // CLEAR FORM
+            $('.btn_Clearform').on('click', function (e) {
+                $('.form-control').val('');
+            });
+            $('#tab-10-tab').on('click', function (e) {
+                $('.men').val('');
+            });
+            $('#tab-9-tab').on('click', function (e) {
+                $('.women').val('');
+            });
+            $('#tab-11-tab').on('click', function (e) {
+                $('.women').val('');
+                $('.men').val('');
+            });
+            $('#fileInput').on('change', function (e) {
+                var files = e.target.files;
+
+                $('.imagePreviews').empty(); // Clear previous previews
+
+                for (var i = 0; i < files.length; i++) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('.imagePreviews').append('<img src="' + e.target.result + '" alt="Image Preview">');
+                    };
+                    reader.readAsDataURL(files[i]);
+                }
+            });
         });
-    }
-    $(document).ready(function() {
-        $('.btn_page1').on('click', function (e) {
-            $('#page2').removeClass('d-none');
-            $('#page1').addClass('d-none');
-        });
-        // SECOND PAGE
-        $('.btn_PreviousPage2').on('click', function (e) {
-            $('#page2').addClass('d-none');
-            $('#page1').removeClass('d-none');
-        });
-        // CLEAR FORM
-        $('.btn_Clearform').on('click', function (e) {
-             $('.form-control').val('');
-        });
-        
-     });
-</script>
+       
+         
+    </script>
 
 
 </body>

@@ -2,6 +2,7 @@
 session_start();
 include("../Model/db.php");
 include '../includes/toastr.inc.php';
+error_reporting(0);
 
 if (isset($_POST['CREATESHOP'])) {
     $user_id = $_SESSION['id'];
@@ -51,7 +52,8 @@ if (isset($_POST['CREATESHOP'])) {
     // shop CustomOrAlter
     $shop_id = $_POST['shop_id'];
     $user_id = $_SESSION['id'];
-    $type = "Customization";
+    $status = "Pending";
+    $type = "Customize";
     
     // SHOP INFO
     $name = $_POST['customer_name'];
@@ -61,26 +63,26 @@ if (isset($_POST['CREATESHOP'])) {
     $instruction = $_POST['instruction'];
 
     // MEASUREMENTS
-    $neck = $_POST['neck'];
-    $shoulder = $_POST['shoulder'];
-    $sleeve = $_POST['sleeve'];
-    $chest = $_POST['chest'];
-    $waist = $_POST['waist'];
-    $hips = $_POST['hips'];
-    $inseam = $_POST['inseam'];
-    $thigh = $_POST['thigh'];
-    $height = $_POST['height'];
-    $bodice = $_POST['bodice'];
+    $neck = empty($_POST['men_neck']) ? $_POST['neck'] : $_POST['men_neck'];
+    $shoulder = empty($_POST['men_shoulder']) ? $_POST['shoulder'] : $_POST['men_shoulder'];
+    $sleeve = empty($_POST['men_sleeve']) ? $_POST['sleeve'] : $_POST['men_sleeve'];
+    $chest =  empty($_POST['men_chest']) ? $_POST['chest'] : $_POST['men_chest'];
+    $waist = empty($_POST['men_waist']) ? $_POST['waist'] : $_POST['men_waist'];
+    $hips =  empty($_POST['men_hips']) ? $_POST['hips'] : $_POST['men_hips'];
+    $inseam = empty($_POST['men_inseam']) ? $_POST['inseam'] : $_POST['men_inseam'];
+    $thigh = empty($_POST['men_thigh']) ? $_POST['thigh'] : $_POST['men_thigh'];
+    $height = empty($_POST['men_height']) ? $_POST['height'] : $_POST['men_height'];
+    $bodice = empty($_POST['men_bodice']) ? $_POST['bodice'] : $_POST['men_bodice'];
     $bust = $_POST['under_bust'];
-
+   
     // SHOP_HOMESERVICE
     $address = $_POST['address'];
     $schedule = $_POST['schedule'];
 
     $shopCustomize = CreateShop(
         'shop_customoralter',
-        array('shop_id', 'user_id', 'type'),
-        array($shop_id,$user_id,$type)
+        array('shop_id', 'user_id','status', 'type'),
+        array($shop_id,$user_id,$status,$type)
     );
     $shop_customoralter_id = mysqli_insert_id($conn);
     
@@ -92,19 +94,179 @@ if (isset($_POST['CREATESHOP'])) {
         );
         $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust');
         $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
-        CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
+        $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
+
+        if($address != '' && $schedule !='')
         CreateShop(
             'shop_homeservice',
             array('shop_customoralter_id','address' ,'schedule'),
             array($shop_customoralter_id,$address,$schedule)
         );
-        // flash("msg", "success", "Success");
-        // header("Location: " . $_SERVER['HTTP_REFERER']);
-        // exit();
+        $targetDir = "../images/";
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
+
+        foreach ($_FILES['image']['name'] as $key => $name) {
+            $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
+            $targetPath = $targetDir . basename($name);
+
+            if (in_array($fileType, $allowedTypes)) {
+                move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath);
+                insertProduct(
+                    'shop_images',
+                    array('shop_customoralter_id', 'images'),
+                    array($shop_customoralter_id, $targetPath)
+                );
+            } else {
+                echo "Invalid file type: $name<br>";
+            }
+        }
+
+        $shop1 = mysqli_fetch_assoc(getrecord('shops', 'id', $shop_id));
+        $getUser = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+        $desc = $getUser['firstname'] . " " . $getUser['lastname'] . " Wants to Customize a product";
+        $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop1['user_id'], $date, 'No', 'myShop.php'));
+        $last_id = mysqli_insert_id($conn);
+        sendNotif(
+            'notification_details',
+            array('notification_id', 'title', 'Description'),
+            array($last_id, 'Product Order', $desc)
+        );
+        flash("msg", "success", "Success");
+        header("Location:../View/customAndAlter.php");
+        exit();
     }else{
-        // flash("msg", "error", "Theres in an error");
-        // header("Location: " . $_SERVER['HTTP_REFERER']);
-        // exit();
+        flash("msg", "error", "Theres in an error");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+
+    
+    
+} elseif (isset($_POST['BTN_APPROVE'])) {
+    $id = $_POST['id'];
+
+    $status = "Approved";
+    updateUser(
+        'shop_customoralter',
+        array('id', 'status'),
+        array($id, $status)
+    );
+
+    $shop_customoralter = mysqli_fetch_assoc(getrecord('shop_customoralter', 'id', $id));
+    $shop = mysqli_fetch_assoc(getrecord('shops', 'id',$shop_customoralter['shop_id'] ));
+    $desc = $shop['shop_name'] . "Apprroved your Custimization product";
+    $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop_customoralter['user_id'], $date, 'No', 'customAndAlter.php'));
+    $last_id = mysqli_insert_id($conn);
+    sendNotif(
+        'notification_details',
+        array('notification_id', 'title', 'Description'),
+        array($last_id, 'Product Order', $desc)
+    );
+    flash("msg", "success", "Success");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+} elseif (isset($_POST['BTN_DISAPPROVE'])) {
+    $id = $_POST['id'];
+    $status = "DisApproved";
+    updateUser(
+        'shop_customoralter',
+        array('id', 'status'),
+        array($id, $status)
+    );
+
+    $shop_customoralter = mysqli_fetch_assoc(getrecord('shop_customoralter', 'id', $id));
+    $shop = mysqli_fetch_assoc(getrecord('shops', 'id',$shop_customoralter['shop_id'] ));
+    $desc = $shop['shop_name'] . "DisApprroved your Custimization product";
+    $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop_customoralter['user_id'], $date, 'No', 'customAndAlter.php'));
+    $last_id = mysqli_insert_id($conn);
+    sendNotif(
+        'notification_details',
+        array('notification_id', 'title', 'Description'),
+        array($last_id, 'Product Order', $desc)
+    );
+    
+    flash("msg", "success", "Success");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+} elseif (isset($_POST['ALTERSUBMIT'])) {
+    // shop CustomOrAlter
+    $shop_id = $_POST['shop_id'];
+    $user_id = $_SESSION['id'];
+    $status = "Pending";
+    $type = "Alter";
+    
+    // SHOP INFO
+    $name = $_POST['customer_name'];
+    $phone = $_POST['phoneNumber'];
+    $email = $_POST['email'];
+    $instruction = $_POST['instruction'];
+
+    // MEASUREMENTS
+    $neck = empty($_POST['men_neck']) ? $_POST['neck'] : $_POST['men_neck'];
+    $shoulder = empty($_POST['men_shoulder']) ? $_POST['shoulder'] : $_POST['men_shoulder'];
+    $sleeve = empty($_POST['men_sleeve']) ? $_POST['sleeve'] : $_POST['men_sleeve'];
+    $chest =  empty($_POST['men_chest']) ? $_POST['chest'] : $_POST['men_chest'];
+    $waist = empty($_POST['men_waist']) ? $_POST['waist'] : $_POST['men_waist'];
+    $hips =  empty($_POST['men_hips']) ? $_POST['hips'] : $_POST['men_hips'];
+    $inseam = empty($_POST['men_inseam']) ? $_POST['inseam'] : $_POST['men_inseam'];
+    $thigh = empty($_POST['men_thigh']) ? $_POST['thigh'] : $_POST['men_thigh'];
+    $height = empty($_POST['men_height']) ? $_POST['height'] : $_POST['men_height'];
+    $bodice = empty($_POST['men_bodice']) ? $_POST['bodice'] : $_POST['men_bodice'];
+    $bust = $_POST['under_bust'];
+   
+    $shopCustomize = CreateShop(
+        'shop_customoralter',
+        array('shop_id', 'user_id','status', 'type'),
+        array($shop_id,$user_id,$status,$type)
+    );
+    $shop_customoralter_id = mysqli_insert_id($conn);
+    
+    if($shopCustomize){
+        CreateShop(
+            'shop_info',
+            array('shop_customoralter_id','name' ,'phone', 'email','instruction'),
+            array($shop_customoralter_id,$name,$phone,$email,$instruction)
+        );
+        $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust');
+        $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
+        $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
+
+        $targetDir = "../images/";
+        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
+
+        foreach ($_FILES['image']['name'] as $key => $name) {
+            $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
+            $targetPath = $targetDir . basename($name);
+
+            if (in_array($fileType, $allowedTypes)) {
+                move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath);
+                insertProduct(
+                    'shop_images',
+                    array('shop_customoralter_id', 'images'),
+                    array($shop_customoralter_id, $targetPath)
+                );
+            } else {
+                echo "Invalid file type: $name<br>";
+            }
+        }
+        $shop1 = mysqli_fetch_assoc(getrecord('shops', 'id', $shop_id));
+        $getUser = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+        $desc = $getUser['firstname'] . " " . $getUser['lastname'] . " Wants to Alter a product";
+        $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop1['user_id'], $date, 'No', 'myShop.php'));
+        $last_id = mysqli_insert_id($conn);
+        sendNotif(
+            'notification_details',
+            array('notification_id', 'title', 'Description'),
+            array($last_id, 'Product Order', $desc)
+        );
+
+        flash("msg", "success", "Success");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }else{
+        flash("msg", "error", "Theres in an error");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
     }
 
     

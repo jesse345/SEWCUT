@@ -69,6 +69,9 @@ if (!isset($_SESSION['id'])) {
                                         <a href="myShop.php" class="nav-link active">My shop</a>
                                     </li>
                                     <li class="nav-item">
+                                        <a href="customAndAlter.php" class="nav-link">Custom & Alter Transaction</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="mySubscription.php" class="nav-link">Manage Subscription</a>
                                     </li>
                                 </ul>
@@ -95,24 +98,202 @@ if (!isset($_SESSION['id'])) {
                                             </h1>
                                         </div>
                                     </div>
-                                   
+                                  
                                     <table class="table table-hover text-center mt-5">
                                         <thead class="thead-dark">
                                             <tr>
-                                                <th>ID</th>
+                                                <th style="width:2%">#</th>
+                                                <th style="width:15%">NAME</th>
                                                 <th>TYPE</th>
                                                 <th>STATUS</th>
                                                 <th>ACTIONS</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>asda</td>
-                                                <td>asda</td>
-                                                <td>asda</td>
-                                            </tr>
+                                        <?php 
+                                        $count = 0 ;
+                                        $customize = displayProduct('shop_customoralter');
+                                        while($data = mysqli_fetch_assoc($customize)){
+                                            $count++;
+                                            $shopOwner = mysqli_fetch_assoc(getrecord('shops','id',$data['shop_id']));
+                                            $customer = mysqli_fetch_assoc(getrecord('user_details','id',$data['user_id']));
+                                            $shopInfo = mysqli_fetch_assoc(getrecord('shop_info','shop_customoralter_id',$data['id']));
+                                            $shopHomeService = getrecord('shop_homeservice','shop_customoralter_id',$data['id']);
+                                            $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
+                                            $dataImage = getrecord('shop_images','shop_customoralter_id',$data['id']);
+                                            if($shopOwner['user_id'] == $_SESSION['id']){
+                                                ?>
+                                                <tr>
+                                                    <td><?=$count?></td>
+                                                    <td><?=ucfirst($customer['firstname']) . ' ' . ucfirst($customer['lastname'])?></td>
+                                                    <td><button class="btn btn-warning"><?=$data['type']?></button></td>
+                                                    <td><button class="btn btn-warning"><?=$data['status']?></button></td>
+                                                    <td>
+                                                        <div class="d-flex">
+                                                            <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View More</a>
+                                                            <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
+                                                            <?php if($data['status'] == 'Pending') {?>
+                                                                <form action="../Controller/shopController.php" method="POST">
+                                                                    <input type="hidden" name="id" value="<?=$data['id']?>">
+                                                                    <button type="submit" class="btn btn-info mx-2" name="BTN_APPROVE">Approve</button>
+                                                                </form>
+                                                                <form action="../Controller/shopController.php" method="POST">
+                                                                    <input type="hidden" name="id" value="<?=$data['id']?>">
+                                                                <button class="btn btn-danger mx-2" name="BTN_DISAPPROVE">Disapprove</button>
+                                                                </form>
+                                                            <?php } ?>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <div class="modal fade" id="viewmore-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog custom-modal" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <p>View More</p>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true"><i class="icon-close"></i></span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <label>INFO</label> 
+                                                                <div class="form-group mt-2">
+                                                                    <label>Name</label>
+                                                                    <input type="text" class="form-control" value="<?=$shopInfo['name'] ?>"  readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Phone Number</label>
+                                                                    <input type="text" class="form-control" value="<?=$shopInfo['phone'] ?>"  readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Email</label>
+                                                                    <input type="text" class="form-control" value="<?=$shopInfo['email'] ?>"  readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Category</label>
+                                                                    <input type="text" class="form-control" value="<?=$shopInfo['category'] ?>"  readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Instruction</label>
+                                                                    <input type="text" class="form-control" value="<?=$shopInfo['instruction'] ?>"  readonly>
+                                                                </div>
+                                                                 <div class="form-group mb-2">
+                                                                    <label>Image Design</label>
+                                                                    <div class="preview-item">
+                                                                        <div class="row">
+                                                                            <?php while($images = mysqli_fetch_assoc( $dataImage)){?>
+                                                                                <div class="col-3">
+                                                                                    <img src="<?php echo $images['images']; ?>">
+                                                                                </div>
+                                                                            <?php } ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <hr>
+                                                                <?php if(mysqli_num_rows($shopHomeService) > 0 ){
+                                                                    $homeservice = mysqli_fetch_assoc($shopHomeService);
+                                                                    ?>
+                                                                    
+                                                                    <label>Home Service Info</label> 
+                                                                    <div class="row mt-2">
+                                                                        <div class="col-6">
+                                                                            <div class="form-group">
+                                                                                <label>Address</label>
+                                                                                <input type="text" class="form-control" value="<?=$homeservice['address'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-group">
+                                                                                <label>Schedule</label>
+                                                                                <input type="text" class="form-control" value="<?=$homeservice['schedule'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                <?php }else{?>
+                                                                    <label>MEASUREMENTS</label> 
+                                                                    <div class="row">
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Neck</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['neck'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Shoulder</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['shoulder'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Sleeve</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['sleeve'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Chest</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['chest'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Waist</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['waist'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Hips</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['hips'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Inseam</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['inseam'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Thigh</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['thigh'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Height</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['height'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                         <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Bodice</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['bodice'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Bust</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['bust'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                <?php } ?>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                    Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php } ?>
+                                        <?php } ?>
                                         </tbody>
                                     </table>
+                                            
                                 <?php } ?>
                             </div>
                         </div>

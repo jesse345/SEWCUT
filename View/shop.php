@@ -52,7 +52,7 @@ if (!isset($_SESSION['id'])) {
 								</span>
 							</h1>
 							<?php if($row['user_id'] == $user['id']){?>
-								<button class="btn btn-info"><a class="text-white"> Your Shop </a></button>
+								<button class="btn btn-info"><a class="text-white" href="myShop.php"> Your Shop </a></button>
 							<?php }else{?>
 								<button class="btn btn-info"><a href="storeShop.php?shop_id=<?= $row['id'] ?>" class="text-white"> Visit Shop </a></button>
 							<?php }?>

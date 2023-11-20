@@ -111,6 +111,9 @@ if (!isset($_SESSION['id'])) {
                                         <a href="myShop.php" class="nav-link">My shop</a>
                                     </li>
                                     <li class="nav-item">
+                                        <a href="customAndAlter.php" class="nav-link">Custom & Alter Transaction</a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="mySubscription.php" class="nav-link">Manage Subscription</a>
                                     </li>
                                 </ul>

@@ -191,12 +191,12 @@ if (isset($_POST['UPDATESHIPPING'])) {
     $order_id = $_POST['order_id'];
     $getOrder = mysqli_fetch_assoc(getrecord('orders', 'id', $order_id));
     $cart = mysqli_fetch_assoc(getrecord('carts', 'id', $getOrder['cart_id']));
-    $product_details_etc = mysqli_fetch_assoc(getrecord('product_details_etc', 'product_id', $getOrder['product_id']));
+    $product_details_etc = getQuantity($getOrder['product_id'], $cart['color'], $cart['size']);
     $newQuantity =  $product_details_etc['quantity'] - $cart['quantity'];
-
+    
     if($getOrder){
         updateUser('orders', array('id', 'status'), array($order_id, 'Shipped'));
-        updateUser('product_details_etc', array('product_id', 'quantity'), array($getOrder['product_id'],$newQuantity));
+        updateUser('product_details_etc', array('id', 'quantity'), array($product_details_etc['id'],$newQuantity));
 
         $desc = 'Your Order with reference Order of ' . $getOrder['reference_order'] . ' was Shipped';
         $notif = sendNotif('notification', 

@@ -42,55 +42,58 @@ if (!isset($_SESSION['id'])) {
                         <div class="row">
                             <?php 
                            $product = displayProduct('products');
-                            while($products = mysqli_fetch_assoc($product)): 
+                            while($products = mysqli_fetch_assoc($product)):
+                                $isUserSubscribe = mysqli_fetch_assoc(getrecord('users','id',$products['user_id']));
                                 $productImage = mysqli_fetch_assoc(displayDetails('product_images','product_id',$products['id']));
                                 $productDetails = mysqli_fetch_assoc(displayDetails('product_details','id',$products['id']));
                                 $minPrice = minPrice($products['id']);
-                                 ?>
-                                <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
-                                    <div class="product">
-                                        <figure class="product-media">
-                                            <a href="#">
-                                                <img src="<?php echo $productImage['image']?>" alt="Product image" class="product-image">
-                                            </a>
-                                            <?php if($products['user_id'] != $_SESSION['id']){?>
-                                                <div class="product-action action-icon-top" style="display:flex;justify-content:center;align-items:center;">
-                                                    <form action="">
-                                                        <a href="productDetails.php?product_id=<?php echo $products['id']?>" class="btn-product btn-cart" name="ADDCART" style="border:none;background-color:transparent;margin-right:10px;" title="Add to Cart"><span>Add to Cart</span></a>
-                                                    </form>
-                                                    <form action="../Controller/wishlistController.php" method="POST">
-                                                        <?php $checkWishlist = getRecordWishlist('wishlists',$_SESSION['id'], $products['id']);
-                                                        if (mysqli_num_rows($checkWishlist) > 0) {
-                                                        ?>
-                                                            <input type="hidden" name="product_id" value="<?php echo $products['id']?>">
-                                                            <button class="btn-product btn-wishlist" name="REMOVEWISHLIST" style="border:none;background-color:transparent;" title="Remove From Wishlist"><span>Remove From Wishlist</span></button>
-                                                        <?php } else {?>
-                                                            <input type="hidden" name="product_id" value="<?php echo $products['id']?>">
-                                                            <button class="btn-product btn-wishlist" name="ADDWISHLIST" style="border:none;background-color:transparent;" title="Add to Wishlist"><span>Add to Wishlist</span></button>
-                                                        <?php } ?>
-                                                    </form>
-                                                </div>
-                                            <?php } else {?>
-                                                <div class="product-action action-icon-top">
-                                                    <a href="myProduct.php" class="btn-product"><span>Manager My Product</span></a>
-                                                </div>
-                                            <?php } ?>
-                                        </figure><!-- End .product-media -->
+                                if($isUserSubscribe['isSubscribe'] == 'Yes'){
+                                    ?>
+                                    <div class="col-6 col-md-4 col-lg-4 col-xl-3 col-xxl-2">
+                                        <div class="product">
+                                            <figure class="product-media">
+                                                <a href="#">
+                                                    <img src="<?php echo $productImage['image']?>" alt="Product image" class="product-image">
+                                                </a>
+                                                <?php if($products['user_id'] != $_SESSION['id']){?>
+                                                    <div class="product-action action-icon-top" style="display:flex;justify-content:center;align-items:center;">
+                                                        <form action="">
+                                                            <a href="productDetails.php?product_id=<?php echo $products['id']?>" class="btn-product btn-cart" name="ADDCART" style="border:none;background-color:transparent;margin-right:10px;" title="Add to Cart"><span>Add to Cart</span></a>
+                                                        </form>
+                                                        <form action="../Controller/wishlistController.php" method="POST">
+                                                            <?php $checkWishlist = getRecordWishlist('wishlists',$_SESSION['id'], $products['id']);
+                                                            if (mysqli_num_rows($checkWishlist) > 0) {
+                                                            ?>
+                                                                <input type="hidden" name="product_id" value="<?php echo $products['id']?>">
+                                                                <button class="btn-product btn-wishlist" name="REMOVEWISHLIST" style="border:none;background-color:transparent;" title="Remove From Wishlist"><span>Remove From Wishlist</span></button>
+                                                            <?php } else {?>
+                                                                <input type="hidden" name="product_id" value="<?php echo $products['id']?>">
+                                                                <button class="btn-product btn-wishlist" name="ADDWISHLIST" style="border:none;background-color:transparent;" title="Add to Wishlist"><span>Add to Wishlist</span></button>
+                                                            <?php } ?>
+                                                        </form>
+                                                    </div>
+                                                <?php } else {?>
+                                                    <div class="product-action action-icon-top">
+                                                        <a href="myProduct.php" class="btn-product"><span>Manager My Product</span></a>
+                                                    </div>
+                                                <?php } ?>
+                                            </figure><!-- End .product-media -->
 
-                                        <div class="product-body">
-                                            <div class="product-cat">
-                                                <a href="#"><?php echo $productDetails['category']?></a>
-                                            </div><!-- End .product-cat -->
-                                            <h3 class="product-title"><a href="#"><?php echo $productDetails['product_name']?></a></h3><!-- End .product-title -->
-                                            <div class="product-price">
+                                            <div class="product-body">
+                                                <div class="product-cat">
+                                                    <a href="#"><?php echo $productDetails['category']?></a>
+                                                </div><!-- End .product-cat -->
+                                                <h3 class="product-title"><a href="#"><?php echo $productDetails['product_name']?></a></h3><!-- End .product-title -->
+                                                <div class="product-price">
 
-                                                P<?php echo minPrice($products['id'])['price']?> - P<?php echo maxPrice($products['id'])['price']?>
+                                                    P<?php echo minPrice($products['id'])['price']?> - P<?php echo maxPrice($products['id'])['price']?>
+                                                    
+                                                </div><!-- End .product-price -->
                                                 
-                                            </div><!-- End .product-price -->
-                                            
-                                        </div><!-- End .product-body -->
-                                    </div><!-- End .product -->
-                                </div><!-- End .col-sm-6 col-lg-4 col-xl-3 -->
+                                            </div><!-- End .product-body -->
+                                        </div><!-- End .product -->
+                                    </div>
+                                <?php } ?>
                             <?php endwhile; ?>
                         </div><!-- End .row -->
 

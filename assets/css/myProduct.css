@@ -159,7 +159,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .form-element {
-    width: 30%;
+    width: 100%;
     margin-top: 4px;
 }
 
@@ -181,7 +181,7 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 13px;
     color: #ffffff;
     font-weight: 600;
-    width: 97%
+    width: 100%
 }
 
 .form-element div span {

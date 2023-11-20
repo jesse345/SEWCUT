@@ -142,7 +142,7 @@ function getQuantity($product_id, $color, $size)
 {
     global $conn;
     connect();
-    $query = mysqli_query($conn, "SELECT quantity,price FROM product_details_etc 
+    $query = mysqli_query($conn, "SELECT id,quantity,price FROM product_details_etc 
                                     WHERE `product_id` = '$product_id'
                                     AND `color` = '$color'
                                     AND `size` = '$size' ");
@@ -159,4 +159,40 @@ function getQuanityUsingColor($product_id, $color)
     $row = mysqli_fetch_assoc($query);
     disconnect();
     return $row;
+}
+
+
+function getSizes($product_id, $color)
+{
+    global $conn;
+    connect();
+    
+    // Use prepared statements to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM `product_details_etc` WHERE product_id = ? AND color = ?");
+    $stmt->bind_param("ss", $product_id, $color);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    
+    disconnect();
+    
+    return $result->fetch_all(MYSQLI_ASSOC);
+}
+
+
+function getQuantity2($product_id,$color,$size)
+{
+    global $conn;
+    connect();
+    
+    // Use prepared statements to prevent SQL injection
+    $stmt = $conn->prepare("SELECT * FROM `product_details_etc` WHERE `product_id` = ? AND `color` = ? AND `size` = ?");
+    $stmt->bind_param("sss", $product_id, $color,$size);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    
+    disconnect();
+    
+    return $result->fetch_all(MYSQLI_ASSOC);
 }

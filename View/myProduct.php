@@ -12,8 +12,7 @@ if (!isset($_SESSION['id'])) {
 <head>
     <?php include("../layouts/head.layout.php")?>
     <title>My Product</title>
-    <link rel="stylesheet" href="../assets/css/my
-    css">
+    <link rel="stylesheet" href="../assets/css/myProduct.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
@@ -47,6 +46,9 @@ if (!isset($_SESSION['id'])) {
                                      <li class="nav-item">
 								        <a href="myShop.php" class="nav-link">My shop</a>
 								    </li>
+                                    <li class="nav-item">
+                                        <a href="customAndAlter.php" class="nav-link">Custom & Alter Transaction</a>
+                                    </li>
                                     <li class="nav-item">
                                         <a href="mySubscription.php" class="nav-link">Manage Subscription</a>
                                     </li>
@@ -300,7 +302,7 @@ if (!isset($_SESSION['id'])) {
                                                                     </div>
                                                                     <div class="card-body">
                                                                         <label>Images</label>
-                                                                        <div style="display:flex">
+                                                                        <div class="row">
                                                                             <?php mysqli_data_seek($productImages, 0); // Reset the pointer to the beginning of the result set
                                                                             $count = 0 ; ?>
                                                                             <?php while ($pi = mysqli_fetch_assoc($productImages)): ?>
@@ -311,17 +313,18 @@ if (!isset($_SESSION['id'])) {
                                                                                 if (in_array(strtolower($fileExtension), ['jpg', 'jpeg', 'png', 'gif'])):
                                                                                     // Display images
                                                                                 ?>
-                                                                                <div class="form-element">
-                                                                                    <input type="hidden" name="image_id[]" value="<?=$pi['id']?>">
-                                                                                    <input type="file" id="file-<?php echo $count?>" name="image[]" accept="image/*"
-                                                                                        >
-                                                                                    <label for="file-<?php echo $count?>" id="file-<?php echo $count?>-preview">
-                                                                                        <img src="<?php echo $imagePath; ?>"
-                                                                                            class="img-responsive">
-                                                                                        <div>
-                                                                                            <span>+</span>
-                                                                                        </div>
-                                                                                    </label>
+                                                                                <div class="col-3">
+                                                                                    <div class="form-element">
+                                                                                        <input type="hidden" name="image_id[]" value="<?=$pi['id']?>">
+                                                                                        <input type="file" id="file-<?php echo $count?>" name="image[]" accept="image/*">
+                                                                                        <label for="file-<?php echo $count?>" id="file-<?php echo $count?>-preview">
+                                                                                            <img src="<?php echo $imagePath; ?>"
+                                                                                                >
+                                                                                            <div>
+                                                                                                <span>+</span>
+                                                                                            </div>
+                                                                                        </label>
+                                                                                    </div>
                                                                                 </div>
                                                                                 <?php endif; ?>
                                                                             <?php endwhile; ?>

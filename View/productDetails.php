@@ -2,11 +2,9 @@
 include("../Model/db.php");
 session_start();
 error_reporting(0);
-include '../includes/toastr.inc.php';
 
 if (!isset($_SESSION['id'])) {
-    flash("msg", "success", "Login First");
-    header("Location: ../index.php");
+    header("Location: index.php");
     exit();
 }
 ?>
@@ -91,19 +89,17 @@ if (!isset($_SESSION['id'])) {
 
 
                             </div>
-
                             <div class="col-md-6">
                                 <div class="product-details sticky-content">
                                     <h1 class="product-title">
                                         <?php echo $productDetails['product_name'] ?>
-                                    </h1><!-- End .product-title -->
+                                    </h1>
                                     <div class="product-price">
                                         <span class="new-price">P
                                             <?php echo minPrice($_GET['product_id'])['price'] ?> - P
                                             <?php echo maxPrice($_GET['product_id'])['price'] ?>
                                         </span>
-                                    </div><!-- End .product-price -->
-
+                                    </div>
                                     <div class="product-content">
                                         <p>
                                             <?php echo $productDetails['description'] ?>.
@@ -179,13 +175,12 @@ if (!isset($_SESSION['id'])) {
                                                 <input type="hidden" name="product_id"
                                                     value="<?php echo $_GET['product_id'] ?>">
                                                 <button type="submit" name="REMOVECART"
-                                                    class="btn-product btn-cart"><span>remove to cart</span></button>
+                                                    class="btn btn-primary"><span>remove to cart</span></button>
                                             <?php } else { ?>
                                                 <div class="details-filter-row details-row-size">
                                                     <label>Color:</label>
                                                     <div class="select-custom">
-                                                        <select name="color" id="color" class="form-control"
-                                                            data-product-id="<?php echo $_GET['product_id'] ?>" required>
+                                                        <select name="color" id="color" class="form-control" required>
                                                             <option value="" selected="selected">Select Color</option>
                                                             <?php
                                                             $addedColors = array(); // Initialize an array to keep track of added colors
@@ -204,28 +199,7 @@ if (!isset($_SESSION['id'])) {
                                                         </select>
                                                     </div>
                                                 </div>
-                                                <div class="details-filter-row details-row-size">
-                                                    <label for="size">Size:</label>
-                                                    <div class="select-custom">
-                                                        <select name="size" id="size" class="form-control" required>
-                                                            <option value="" selected="selected">Select Size</option>
-                                                            <?php
-                                                            $addedSize = array();
-                                                            foreach ($product_details_etc as $pde):
-                                                                $size = $pde['size'];
-                                                                if (!in_array($size, $addedSize)) {
-                                                                    $addedSize[] = $size;
-                                                                    ?>
-                                                                    <option value="<?php echo $size ?>">
-                                                                        <?php echo $size ?>
-                                                                    </option>
-                                                                    <?php
-                                                                }
-                                                            endforeach;
-                                                            ?>
-                                                        </select>
-                                                    </div>
-                                                </div>
+                                                <div id="sizeAppend"></div>
                                                 <div class="details-filter-row details-row-size">
                                                     <label for="qty">Qty:</label>
                                                     <div class="product-details-quantity">
@@ -242,6 +216,8 @@ if (!isset($_SESSION['id'])) {
                                                 <div class="product-details-action">
                                                     <input type="hidden" name="product_id"
                                                         value="<?php echo $_GET['product_id'] ?>">
+
+                                                        
                                                     <button type="submit" name="ADDTOCART"
                                                         class="btn-product btn-cart"><span>add to cart</span></button>
                                                 <?php } ?>
@@ -380,9 +356,10 @@ if (!isset($_SESSION['id'])) {
                             </div><!-- End .product-details -->
                         </div><!-- End .col-md-6 -->
                     </div><!-- End .row -->
-                </div><!-- End .product-details-top -->
-                <hr class="mt-3 mb-5">
+                </div>
 
+
+                <hr class="mt-3 mb-5">
                 <h2 class="title text-center mb-4">Sample Videos</h2>
                 <div class="video-container">
                     <?php mysqli_data_seek($productImages, 0); ?>
@@ -399,8 +376,6 @@ if (!isset($_SESSION['id'])) {
                         <?php endif; ?>
                     <?php endwhile; ?>
                 </div>
-
-
             </div><!-- End .container -->
     </div><!-- End .page-content -->
     </main><!-- End .main -->
@@ -411,40 +386,81 @@ if (!isset($_SESSION['id'])) {
     include("../layouts/jsfile.layout.php");
     include("toastr.php");
     ?>
-</body>
-<script>
-    $(document).ready(function () {
-        $("#color, #size").on("change", function () {
+    <script>
+        var product_id = <?php echo json_encode(isset($_GET['product_id']) ? $_GET['product_id'] : null); ?>;
+        var sizeAppend = $('#sizeAppend');
+        var totalQuantity = $('#totalQuantity');
 
-            var totalQuantity = $('#totalQuantity');
+        $(document).ready(function () {
+            $("#color").change(function () {
+                var selectedColor = $("#color").val();
 
-            var newTotal = $('#newTotal')
-            var selectedColor = $("#color").val();
-            var selectedSize = $("#size").val();
-            var product_id = $("#color").data("product-id");
-
-
-            $.ajax({
-                url: "../Controller/quantityController.php",
-                method: "POST",
-                data: { product_id: product_id, color: selectedColor, size: selectedSize },
-                success: function (response) {
-                    if (response != 0) {
-                        $(".btn-increment").show();
-                        totalQuantity.text(response + " available pieces").show();
-                    } else {
-                        $(".btn-increment").hide();
-                        totalQuantity.text(response + " available pieces").show();
+                $.ajax({
+                    url: "../Controller/quantityController.php",
+                    method: "POST",
+                    data: {
+                        GETSIZES: true,
+                        product_id: product_id,
+                        color: selectedColor
+                    },
+                    success: function (response) {
+                        // Handle the data here, update the UI, etc.
+                        var size = JSON.parse(response);
+                        var rowHtml = '';
+                            rowHtml += `<div class="details-filter-row details-row-size">
+                                <label for="size">Size:</label>
+                                <div class="select-custom">
+                                    <select name="size" id="size" class="form-control" required>
+                                        <option value="" selected="selected">Select Size</option>`;
+                            for (var j = 0; j < size.length; j++) {
+                                rowHtml += `<option value="${size[j].size}">
+                                    ${size[j].size}
+                                </option>`;
+                            }
+                            rowHtml += `</select>
+                                </div>
+                            </div>`;
+                        sizeAppend.html(rowHtml);
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
                     }
-
-                },
-                error: function (error) {
-                    console.log("Error:", error);
-                }
+                });
             });
+            $(document).on("change", "#size", function () {
+                var selectedColor = $("#color").val();
+                var selectedSize = $("#size").val();
 
+                $.ajax({
+                    url: "../Controller/quantityController.php",
+                    method: "POST",
+                    data: {
+                        GETQUANTITY: true,
+                        product_id: product_id, // Make sure product_id is defined and has a value
+                        color: selectedColor,
+                        size: selectedSize
+                    },
+                    success: function (response) {
+                        var quantityData = JSON.parse(response);
+
+                        if (Array.isArray(quantityData) && quantityData.length > 0 && quantityData[0].quantity !== undefined) {
+                            if (quantityData[0].quantity == 0) {
+                                $(".btn-cart").prop("disabled", true);
+                                totalQuantity.text(quantityData[0].quantity + " available piece");
+                            } else {
+                                totalQuantity.text(quantityData[0].quantity + " available pieces");
+                                $(".btn-cart").prop("disabled", false);
+                            }
+                        } else {
+                            console.error("Invalid quantityData structure:", quantityData);
+                        }
+                    },
+                    error: function (error) {
+                        console.log("Error:", error);
+                    }
+                });
+            });
         });
-    });
-</script>
-
+    </script>
+</body>
 </html>
