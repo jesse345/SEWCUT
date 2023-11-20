@@ -12,7 +12,8 @@ if (!isset($_SESSION['id'])) {
 <head>
     <?php include("../layouts/head.layout.php")?>
     <title>My Product</title>
-    <link rel="stylesheet" href="../assets/css/myProduct.css">
+    <link rel="stylesheet" href="../assets/css/my
+    css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>

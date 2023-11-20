@@ -37,7 +37,6 @@ if (!isset($_SESSION['id'])) {
                             <?= $user1['shop_name'] ?>
                         </li>
                         <div style="position:absolute;right:0;margin-right:111px">
-                            <a class=" btn btn-info text-white" href="customize.php?shop_id=<?=$_GET['shop_id']?>">Request a Tailor</a>
                             <?php if($user1['canCustomize'] == 'Yes'){?>
                                <a class=" btn btn-info text-white" href="customize.php?shop_id=<?=$_GET['shop_id']?>">Customize Product</a>
                             <?php } ?>

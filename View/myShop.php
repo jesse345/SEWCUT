@@ -153,35 +153,42 @@ if (!isset($_SESSION['id'])) {
                         <div class="form-group mb-0">
                             <input type="checkbox" id="customize" name="can_customize"> Customize
                         </div>
-                        <div class="form-group">
+                            <div class="form-group" id="show_customize" style="margin-left:40px;">
+                                <label style="margin-bottom:0;">Shop Can Customize:</label>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Dresses"> Dresses
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="T-Shirts"> T-Shirts
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Jeans"> Jeans
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Jackets"> Jackets
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Bag"> Bag
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Sportswears"> Sportswears
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Shoes"> Shoes
+                                </div>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="Jumpers"> Jumpers
+                                </div>
+                            </div>
+                        <div class="form-group mb-0">
                             <input type="checkbox" name="can_alter"> Alter
                         </div>
+                        <div class="form-group">
+                            <input type="checkbox" name="homeservice"> Do Home Service
+                        </div>
                     
-                        <div class="form-group" id="show_customize">
-                        <label for="">Shop Can Customize:</label>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Dresses"> Dresses
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="T-Shirts"> T-Shirts
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Jeans"> Jeans
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Jackets"> Jackets
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Bag"> Bag
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Sportswears"> Sportswears
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Shoes"> Shoes
-                        </div>
-                        <div class="form-group mb-0">
-                            <input type="checkbox" name="can_customize[]" value="Jumpers"> Jumpers
+                        
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">

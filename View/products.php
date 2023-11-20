@@ -81,7 +81,7 @@ if (!isset($_SESSION['id'])) {
                                             <div class="product-cat">
                                                 <a href="#"><?php echo $productDetails['category']?></a>
                                             </div><!-- End .product-cat -->
-                                            <h3 class="product-title"><a href="product.html"><?php echo $productDetails['product_name']?></a></h3><!-- End .product-title -->
+                                            <h3 class="product-title"><a href="#"><?php echo $productDetails['product_name']?></a></h3><!-- End .product-title -->
                                             <div class="product-price">
 
                                                 P<?php echo minPrice($products['id'])['price']?> - P<?php echo maxPrice($products['id'])['price']?>
@@ -96,7 +96,6 @@ if (!isset($_SESSION['id'])) {
 
                        
                     </div><!-- End .products -->
-
                     <div class="sidebar-filter-overlay"></div><!-- End .sidebar-filter-overlay -->
                     <aside class="sidebar-shop sidebar-filter">
                         <div class="sidebar-filter-wrapper">
