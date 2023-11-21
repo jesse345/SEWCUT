@@ -129,7 +129,7 @@ if (!isset($_SESSION['id'])) {
                                 </div>
                             </div>
                         </div>
-                        <label class="mt-1">Please Upload Image(s) of your chosen Design</label><br>
+                        <label class="mt-1">Please Upload Image(s) of your garments.</label><br>
                         <input type="file" name="image[]" id="fileInput" multiple>
                         <div class="imagePreviews" style="display: flex;"></div>
                         <div class="form-group mt-1">
