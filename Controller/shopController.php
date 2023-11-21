@@ -261,7 +261,7 @@ if (isset($_POST['CREATESHOP'])) {
         );
 
         flash("msg", "success", "Success");
-        header("Location: " . $_SERVER['HTTP_REFERER']);
+        header("Location:../View/customAndAlter.php");
         exit();
     }else{
         flash("msg", "error", "Theres in an error");
