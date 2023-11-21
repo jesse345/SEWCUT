@@ -76,5 +76,12 @@ function distance1($v1, $v2)
     disconnect();
     return $resultArray;
 }
+function removeCustomOrAlter($id)
+{
+    global $conn;
+    connect();
+    mysqli_query($conn, "DELETE FROM `shop_customoralter` WHERE `id`= '$id' ");
+    disconnect();
+}
 
 

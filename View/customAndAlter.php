@@ -107,12 +107,16 @@ if (!isset($_SESSION['id'])) {
                                                 <td><button class="btn btn-warning"><?=$data['type']?></button></td>
                                                 <td><button class="btn btn-warning"><?=$data['status']?></button></td>
                                                 <td>
-                                                    
-                                                    <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View More</a>
-                                                    <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
-                                                    <?php if($data['status'] == 'Pending') {?>
-                                                        <a href="" class="btn btn-danger">Cancel</a>
-                                                    <?php } ?>
+                                                    <div class="d-flex">
+                                                        <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View More</a>
+                                                        <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
+                                                        <?php if($data['status'] == 'Pending') {?>
+                                                            <form action="../Controller/shopController.php" method="POST">
+                                                            <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
+                                                            <button type="submit" name="CANCEL" class="btn btn-danger">Cancel</a>
+                                                            </form>
+                                                        <?php } ?>
+                                                    </div>
                                                 </td>
                                             </tr>
                                             <div class="modal fade" id="viewmore-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">

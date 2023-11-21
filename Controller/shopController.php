@@ -271,6 +271,26 @@ if (isset($_POST['CREATESHOP'])) {
 
     
     
+} elseif (isset($_POST['CANCEL'])) {
+    $id =  $_POST['custom_alterid'];
+    $order = mysqli_fetch_assoc(getrecord('shop_customoralter', 'id', $id));
+
+    $created_at_timestamp = strtotime($order['created_at']);
+    $current_timestamp = time();
+    $time_difference = $current_timestamp - $created_at_timestamp;
+    $time_in_hours = $time_difference / 3600; 
+
+    if ($time_in_hours < 24) {
+        removeCustomOrAlter($id);
+        flash("msg", "success", "Cancelled");
+        header("Location: ../View/customAndAlter.php");
+        exit();
+    } else {
+       flash("msg", "error", "Cant Cancel over 24 hours");
+        header("Location: ../View/customAndAlter.php");
+        exit();
+    }
+
 }
 
 ?>
