@@ -109,7 +109,7 @@ if (!isset($_SESSION['id'])) {
                                                         <?php } ?>
                                                     </td>
                                                     <td>
-                                                        <a href="#viewmore-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-info products">View More</a>
+                                                        <a href="#viewmore-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-info products">View Details</a>
                                                         <a href="#update-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-success products">Update</a>
                                                         <a href="#delete-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-danger products">Delete</a>
                                                     </td>
@@ -148,7 +148,7 @@ if (!isset($_SESSION['id'])) {
                                                                         </div>
                                                                         <div class="col-sm-3 col-lg-2">
                                                                             <label>Price</label>
-                                                                            <input type="text" class="form-control" value="<?php echo $pqe['price']?>" readonly>
+                                                                            <input type="text" class="form-control" value="<?php echo number_format($pqe['price'], 2); ?>" readonly>
                                                                         </div>
                                                                         <div class="col-sm-3 col-lg-2">
                                                                             <label>Stock</label>
@@ -285,7 +285,7 @@ if (!isset($_SESSION['id'])) {
                                                                             </div>
                                                                             <div class="col-sm-3 col-lg-2">
                                                                                 <label>Price</label>
-                                                                                <input type="text" class="form-control" name="price[]" value="<?php echo $pqe['price']?>" readonly>
+                                                                                <input type="text" class="form-control" name="price[]" value="<?php echo number_format($pqe['price'], 2)?>" readonly>
                                                                             </div>
                                                                             <div class="col-sm-3 col-lg-2">
                                                                                 <label>Stock</label>

@@ -69,6 +69,7 @@ if (!isset($_SESSION['id'])) {
 <body>
     <?php
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+    $user1 = mysqli_fetch_assoc(getrecord('users', 'id', $_SESSION['id']));
     $shop = mysqli_fetch_assoc(getrecord('shops', 'id', $_GET['shop_id']));
     ?>
     <div class="page-wrapper">
@@ -96,7 +97,7 @@ if (!isset($_SESSION['id'])) {
                             <div class="col-12">
                                 <label>Name</label>
                                 <div class="form-group">
-                                    <input type="text" name="customer_name" class="form-control" >
+                                    <input type="text" name="customer_name" class="form-control" value="<?=ucfirst($user['firstname']) . ' ' . ucfirst($user['lastname'])?>">
                                 </div>
                             </div>
                         </div>
@@ -104,13 +105,13 @@ if (!isset($_SESSION['id'])) {
                             <div class="col-6">
                                 <label for="phoneNumber">Phone Number</label>
                                 <div class="form-group">
-                                    <input type="text" name="phoneNumber" class="form-control" >
+                                    <input type="text" name="phoneNumber" class="form-control" value="<?=$user['contact_number']?>">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <label for="email">Email Address</label>
                                 <div class="form-group">
-                                    <input type="text" name="email" class="form-control" >
+                                    <input type="text" name="email" class="form-control"  value="<?=$user1['email']?>">
                                 </div>
                             </div>
                         </div>
@@ -313,18 +314,18 @@ if (!isset($_SESSION['id'])) {
                              <div class="tab-pane fade" id="tab-11" role="tabpanel" aria-labelledby="tab-11-tab">
                                 <div class="form-group">
                                     <label for="">Address:</label>
-                                    <input type="text" name="address" class="form-control" placeholder="Enter your Address">
+                                    <input type="text" name="address" class="form-control address" placeholder="Enter your Address">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Schedule</label>
-                                    <input type="date" name="schedule" class="form-control">
+                                    <input type="date" name="schedule" class="form-control address">
                                 </div>
                             </div>
                         </div><!-- End .tab-content -->
                         <br>
                         <button type="button" class="btn btn-secondary btn_PreviousPage2">Previous</button>
                         <div class="float-right">
-                            <button type="button" class="btn btn-success btn_Print" onclick="downloadImage()">Download</button>
+                            <!-- <button type="button" class="btn btn-success btn_Print" onclick="downloadImage()">Download</button> -->
                             <button type="button" class="btn btn-secondary btn_Clearform">Clear Form</button>
                             <button type="submit" class="btn btn-info btn_page2" name="CUSTOMIZESUBMIT">Submit</button>
                         </div>
@@ -342,16 +343,16 @@ if (!isset($_SESSION['id'])) {
     ?>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
-        function downloadImage() {
-            html2canvas(document.querySelector('.mx-auto')).then(function(canvas) {
-                var link = document.createElement('a');
-                document.body.appendChild(link);
-                link.download = 'receipt.png';
-                link.href = canvas.toDataURL();
-                link.target = '_blank';
-                link.click();
-            });
-        }
+        // function downloadImage() {
+        //     html2canvas(document.querySelector('.mx-auto')).then(function(canvas) {
+        //         var link = document.createElement('a');
+        //         document.body.appendChild(link);
+        //         link.download = 'receipt.png';
+        //         link.href = canvas.toDataURL();
+        //         link.target = '_blank';
+        //         link.click();
+        //     });
+        // }
         $(document).ready(function() {
             $('.btn_page1').on('click', function (e) {
                 $('#page2').removeClass('d-none');
@@ -368,14 +369,24 @@ if (!isset($_SESSION['id'])) {
             });
             $('#tab-10-tab').on('click', function (e) {
                 $('.men').val('');
+                $('.address').val('');
+
             });
             $('#tab-9-tab').on('click', function (e) {
                 $('.women').val('');
+                $('.address').val('');
+                
             });
             $('#tab-11-tab').on('click', function (e) {
                 $('.women').val('');
                 $('.men').val('');
             });
+
+
+
+
+
+
             $('#fileInput').on('change', function (e) {
                 var files = e.target.files;
 

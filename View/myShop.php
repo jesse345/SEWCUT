@@ -103,9 +103,9 @@ if (!isset($_SESSION['id'])) {
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th style="width:2%">#</th>
-                                                <th style="width:15%">NAME</th>
                                                 <th>TYPE</th>
                                                 <th>STATUS</th>
+                                                <th>FEEDBACK</th>
                                                 <th>ACTIONS</th>
                                             </tr>
                                         </thead>
@@ -125,23 +125,16 @@ if (!isset($_SESSION['id'])) {
                                                 ?>
                                                 <tr>
                                                     <td><?=$count?></td>
-                                                    <td><?=ucfirst($customer['firstname']) . ' ' . ucfirst($customer['lastname'])?></td>
-                                                    <td><button class="btn btn-warning"><?=$data['type']?></button></td>
+                                                    <td><button class="btn btn-warning mr-2"><?=$data['type']?></button></td>
                                                     <td><button class="btn btn-warning"><?=$data['status']?></button></td>
+                                                    <td><button class="btn btn-warning">View Feedback</button></td>
                                                     <td>
                                                         <div class="d-flex">
-                                                            <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View More</a>
+                                                            <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View Details</a>
                                                             <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
-                                                            <?php if($data['status'] == 'Pending') {?>
-                                                                <form action="../Controller/shopController.php" method="POST">
-                                                                    <input type="hidden" name="id" value="<?=$data['id']?>">
-                                                                    <button type="submit" class="btn btn-info mx-2" name="BTN_APPROVE">Approve</button>
-                                                                </form>
-                                                                <form action="../Controller/shopController.php" method="POST">
-                                                                    <input type="hidden" name="id" value="<?=$data['id']?>">
-                                                                <button class="btn btn-danger mx-2" name="BTN_DISAPPROVE">Disapprove</button>
-                                                                </form>
-                                                            <?php } ?>
+                                                             <?php if($data['status'] == 'Approved') {?>
+                                                             <button class="btn btn-info mx-2">Add Feedback</button>
+                                                             <?php } ?>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -282,9 +275,20 @@ if (!isset($_SESSION['id'])) {
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
-                                                                    Close
-                                                                </button>
+                                                                <?php if($data['status'] == 'Pending') {?>
+                                                                    <form action="../Controller/shopController.php" method="POST">
+                                                                        <input type="hidden" name="id" value="<?=$data['id']?>">
+                                                                        <button type="submit" class="btn btn-info mx-2" name="BTN_APPROVE">Approve</button>
+                                                                    </form>
+                                                                    <form action="../Controller/shopController.php" method="POST">
+                                                                        <input type="hidden" name="id" value="<?=$data['id']?>">
+                                                                    <button class="btn btn-danger mx-2" name="BTN_DISAPPROVE">Disapprove</button>
+                                                                    </form>
+                                                                <?php }elseif($data['status'] == 'Approved'){  ?>
+                                                                    <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                        Close
+                                                                    </button>
+                                                                <?php } ?>
                                                             </div>
                                                         </div>
                                                     </div>

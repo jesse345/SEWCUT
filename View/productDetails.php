@@ -96,8 +96,8 @@ if (!isset($_SESSION['id'])) {
                                     </h1>
                                     <div class="product-price">
                                         <span class="new-price">P
-                                            <?php echo minPrice($_GET['product_id'])['price'] ?> - P
-                                            <?php echo maxPrice($_GET['product_id'])['price'] ?>
+                                            <?php echo number_format(minPrice($_GET['product_id'])['price'],2) ?> - P
+                                            <?php echo number_format(maxPrice($_GET['product_id'])['price'],2)?>
                                         </span>
                                     </div>
                                     <div class="product-content">

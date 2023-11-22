@@ -6,29 +6,29 @@ session_start();
 
 if (isset($_POST['UPDATE'])) {
     //global
-    $user_id = $_POST['user_id'];
-    // users
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+    // $user_id = $_POST['user_id'];
+    // // users
+    // $username = $_POST['username'];
+    // $email = $_POST['email'];
+    // $password = $_POST['password'];
 
-    updateUser(
-        'users',
-        array('id', 'username', 'email', 'email'),
-        array($user_id, $username, $email, $password)
-    );
-    // user_details
-    $firstname = $_POST['firstname'];
-    $lastname = $_POST['lastname'];
-    $address = $_POST['address'];
-    $contact = $_POST['contact'];
-    updateUser(
-        'user_details',
-        array('id', 'firstname', 'lastname', 'address', 'contact_number'),
-        array($user_id, $firstname, $lastname, $address, $contact)
-    );
+    // updateUser(
+    //     'users',
+    //     array('id', 'username', 'email', 'email'),
+    //     array($user_id, $username, $email, $password)
+    // );
+    // // user_details
+    // $firstname = $_POST['firstname'];
+    // $lastname = $_POST['lastname'];
+    // $address = $_POST['address'];
+    // $contact = $_POST['contact'];
+    // updateUser(
+    //     'user_details',
+    //     array('id', 'firstname', 'lastname', 'address', 'contact_number'),
+    //     array($user_id, $firstname, $lastname, $address, $contact)
+    // );
     echo "<script>
-                alert('Updated Successfully');
+                alert('Unable to edit user account');
                 window.location.href = '../View/user.php';
               </script>";
 

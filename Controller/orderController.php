@@ -144,7 +144,7 @@ if (isset($_POST['UPDATESHIPPING'])) {
     if($getOrder){
         updateUser('orders', array('id', 'status'), array($order_id, 'DisApprove'));
 
-        $desc = 'Your Order with reference Order of ' . $getOrder['reference_order'] . ' was Disapproved';
+        $desc = 'Your Order with reference Order of ' . $getOrder['reference_order'] . ' has been Disapproved';
         $notif = sendNotif('notification', 
                             array('user_id', 'date_send', 'isRead', 'redirect'), 
                             array($getOrder['user_id'], $date, 'No', 'myPurchase.php'));
@@ -169,7 +169,7 @@ if (isset($_POST['UPDATESHIPPING'])) {
     if($getOrder){
         updateUser('orders', array('id', 'status','isAccept'), array($order_id, 'Approve','No'));
 
-        $desc = 'Your Order with reference Order of ' . $getOrder['reference_order'] . ' was Approved';
+        $desc = 'Your order with reference number ' . $getOrder['reference_order'] . ' totaling P' . number_format($getOrder['total'], 2) . ' has been approved.';
         $notif = sendNotif('notification', 
                             array('user_id', 'date_send', 'isRead', 'redirect'), 
                             array($getOrder['user_id'], $date, 'No', 'myPurchase.php'));

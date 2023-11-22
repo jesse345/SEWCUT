@@ -108,7 +108,7 @@ if (!isset($_SESSION['id'])) {
                                                 <td><button class="btn btn-warning"><?=$data['status']?></button></td>
                                                 <td>
                                                     <div class="d-flex">
-                                                        <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View More</a>
+                                                        <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View Details</a>
                                                         <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
                                                         <?php if($data['status'] == 'Pending') {?>
                                                             <form action="../Controller/shopController.php" method="POST">
@@ -123,12 +123,12 @@ if (!isset($_SESSION['id'])) {
                                                 <div class="modal-dialog custom-modal" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <p>View More</p>
+                                                            <p>View Details</p>
                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                 <span aria-hidden="true"><i class="icon-close"></i></span>
                                                             </button>
                                                         </div>
-                                                        <div class="modal-body">
+                                                        <div class="modal-body" id="downlad_preview">
                                                             <label>INFO</label> 
                                                             <div class="form-group mt-2">
                                                                 <label>Name</label>
@@ -256,6 +256,7 @@ if (!isset($_SESSION['id'])) {
                                                             <?php } ?>
                                                         </div>
                                                         <div class="modal-footer">
+                                                             <button type="button" class="btn btn-success btn_Print" onclick="downloadImage()">Download</button>
                                                             <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
                                                                 Close
                                                             </button>
@@ -278,7 +279,19 @@ if (!isset($_SESSION['id'])) {
     <?php 
         include("../layouts/jsfile.layout.php");
         include("toastr.php");
-        include('../assets/js/prod.php');
     ?>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        function downloadImage() {
+            html2canvas(document.querySelector('#downlad_preview')).then(function(canvas) {
+                var link = document.createElement('a');
+                document.body.appendChild(link);
+                link.download = 'receipt.png';
+                link.href = canvas.toDataURL();
+                link.target = '_blank';
+                link.click();
+            });
+        }
+    </script>
 </body>
 </html>

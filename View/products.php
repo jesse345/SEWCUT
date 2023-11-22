@@ -86,7 +86,7 @@ if (!isset($_SESSION['id'])) {
                                                 <h3 class="product-title"><a href="#"><?php echo $productDetails['product_name']?></a></h3><!-- End .product-title -->
                                                 <div class="product-price">
 
-                                                    P<?php echo minPrice($products['id'])['price']?> - P<?php echo maxPrice($products['id'])['price']?>
+                                                    P<?php echo number_format(minPrice($products['id'])['price'],2)?> - P<?php echo number_format(maxPrice($products['id'])['price'],2)?>
                                                     
                                                 </div><!-- End .product-price -->
                                                 

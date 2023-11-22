@@ -96,12 +96,13 @@ if (isset($_POST['CREATESHOP'])) {
         $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
         $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
 
-        if($address != '' && $schedule !='')
-        CreateShop(
-            'shop_homeservice',
-            array('shop_customoralter_id','address' ,'schedule'),
-            array($shop_customoralter_id,$address,$schedule)
-        );
+        if($address != '' && $schedule !=''){
+            CreateShop(
+                'shop_homeservice',
+                array('shop_customoralter_id','address' ,'schedule'),
+                array($shop_customoralter_id,$address,$schedule)
+            );
+        }
         $targetDir = "../images/";
         $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
 

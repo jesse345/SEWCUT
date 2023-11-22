@@ -245,16 +245,39 @@ if (!isset($_SESSION['id'])) {
         <br>
         <?php include("../layouts/footer.layout1.php"); ?>
     </div>
-    <?php $shipping_info = getrecord('shipping_info','user_id',$_SESSION['id'])?>
+    <?php $shipping_info1 = getrecord('shipping_info','user_id',$_SESSION['id'])?>
     <div class="modal fade"
         id="ShippingInfo"
         tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog custom-modal add-modal"
-            role="document">
+        <div class="modal-dialog custom-modal"
+            role="document" style="max-width:1000px;">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="card-body">
-                        
+                        <?php 
+                        $count = 0;
+                        while($infos = mysqli_fetch_assoc($shipping_info1)) {
+                            $count++;
+                            echo $count;
+                            ?>
+                            <div class="row">
+                                <div class="col-3">
+                                    <label for="">FullName</label>
+                                    <input type="text" class="form-control" value="<?=$infos['name']?>">
+                                </div>
+                                <div class="col-3">
+                                    <label for="">Contact Number</label>
+                                    <input type="text" class="form-control" value="<?=$infos['contact']?>">
+                                </div>
+                                <div class="col-3">
+                                    <label for="">Address</label>
+                                    <input type="text" class="form-control" value="<?=$infos['addresss']?>">
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-info" style="margin-top:35px;">Select Shipping Info</button>
+                                </div>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="modal-footer">

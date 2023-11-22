@@ -144,7 +144,7 @@ if (!isset($_SESSION['id'])) {
 															</div><!-- End .product -->
 														</td>
 														<td class="price-col" id="cartPrice">
-															<?php echo $productPrice['price'] ?>
+															<?php echo number_format($productPrice['price'], 2)?>
 														</td>
 														<td class="quantity-col">
 															<div class="cart-product-quantity">
@@ -157,7 +157,7 @@ if (!isset($_SESSION['id'])) {
 														</td>
 														<?php $total = $productPrice['price'] * $c['quantity'] ?>
 														<td class="total-price-col">
-															<?= $total ?>
+															<?= number_format($total,2) ?>
 														</td>
 														<td class="remove-col">
 															<!-- <form action="../Controller/cartController.php" method="POST"> -->
@@ -179,7 +179,7 @@ if (!isset($_SESSION['id'])) {
 														<td class="subtotal-col" colspan="1"
 															style="font-size:18px;font-weight:500">SubTotal: <span
 																class="subtotal">
-																<?= $subtotal ?>
+																<?= number_format($subtotal,2) ?>
 															</span></td>
 														<input type="hidden" name="Subtotal" value="<?= $subtotal ?>">
 														<td colspan="1" style="margin-left:30px;"><button type="sumbit"

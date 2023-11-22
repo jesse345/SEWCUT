@@ -123,7 +123,7 @@ if (!isset($_SESSION['id'])) {
                                                     </button>
                                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                         <a class="btn btn-info dropdown-item" href="#viewmore-Modal<?php echo $c['id'] ?>"
-                                                        data-toggle="modal">View More
+                                                        data-toggle="modal">View Details
                                                         </a>
                                                             <a href="chat.php?user=<?php echo $c['user_id']?>" class="btn dropdown-item">Chat Seller</a>
                                                         <?php if($c['status'] != 'Approve' && $c['status'] != 'Shipped' && $c['status'] != 'Received'){?>
