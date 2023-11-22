@@ -17,6 +17,8 @@ if (isset($_POST['register'])) {
     $repassword = $_POST['repassword'];
     $checkUsername = getrecord('users', 'username', $username);
     $checkEmail = getrecord('users', 'email', $email);
+    
+    $selected_Address = mysqli_fetch_assoc(getrecord('address', 'id', $address));
 
     if (mysqli_num_rows($checkUsername) > 0) {
         flash("msg", "info", "Username already used");
@@ -50,7 +52,7 @@ if (isset($_POST['register'])) {
         createUser(
             'shipping_info',
             array('user_id', 'name', 'contact', 'address'),
-            array($id, $name, $contact, $address)
+            array($id, $name, $contact, $selected_Address['address'])
         );
 
         createUser(

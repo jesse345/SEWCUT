@@ -336,30 +336,14 @@ if (!isset($_SESSION['id'])) {
                         </div>
                             <div class="form-group" id="show_customize" style="margin-left:40px;">
                                 <label style="margin-bottom:0;">Shop Can Customize:</label>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Dresses"> Dresses
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="T-Shirts"> T-Shirts
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Jeans"> Jeans
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Jackets"> Jackets
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Bag"> Bag
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Sportswears"> Sportswears
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Shoes"> Shoes
-                                </div>
-                                <div class="form-group mb-0">
-                                    <input type="checkbox" name="can_customize[]" value="Jumpers"> Jumpers
-                                </div>
+                               <?php $categories = getallrecord('categories');
+                                while ($category = mysqli_fetch_assoc($categories)) {
+                                    ?>
+                                    <div class="form-group mb-0">
+                                        <input type="checkbox" name="can_customize[]" value="<?=$category['category']?>"> <?=$category['category']?>
+                                    </div>
+                                <?php } ?>
+                                
                             </div>
                         <div class="form-group mb-0">
                             <input type="checkbox" name="can_alter"> Alter

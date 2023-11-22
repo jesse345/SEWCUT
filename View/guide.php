@@ -31,7 +31,7 @@ if (!isset($_SESSION['id'])) {
             </nav><!-- End .breadcrumb-nav -->
             <div class="container">
                 <div class="text-center">
-                    <h2 class="title">eShakti Size and Fit Guide</h2><br>
+                    <h2 class="title">Sewcut Size and Fit Guide</h2><br>
                 </div>
                 <h2 class="title-sm">Design your perfect fit</h2>
                 <p>It's easy to get the perfect fit and customize any item that catches your eye at eShakti from hemllines to nechlines to sleeeves, get your favorite outfits customized<br>

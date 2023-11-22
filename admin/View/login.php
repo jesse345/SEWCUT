@@ -38,7 +38,7 @@ include("../Includes/head.includes.php");
                                     <div class="col-12">
                                         <div class="mb-4">
                                             <label class="form-label">Password</label>
-                                            <input type="text" class="form-control" name="password">
+                                            <input type="password" class="form-control" name="password">
                                         </div>
                                     </div>
                                     <div class="col-12">
