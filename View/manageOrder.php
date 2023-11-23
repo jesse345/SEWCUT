@@ -91,7 +91,7 @@ if (!isset($_SESSION['id'])) {
                                             $order_payments = mysqli_fetch_assoc(getrecord('order_payments', 'order_id', $c['id']));
                                             $productDetails = mysqli_fetch_assoc(displayDetails('product_details', 'id', $c['product_id']));
                                             $cart = mysqli_fetch_assoc(displayDetails('carts', 'id', $c['cart_id']));
-                                            $shippingInfo = mysqli_fetch_assoc(getrecord('shipping_info', 'user_id', $c['user_id']));
+                                            $shippingInfo = mysqli_fetch_assoc(getrecord('order_details', 'id', $c['id']));
                                             $count++;
                                             if($c['status'] == 'Received'){
                                                 $totalIncome += $cart['total'];
@@ -191,12 +191,12 @@ if (!isset($_SESSION['id'])) {
                                                             <div class="form-group">
                                                                 <label>Contact Number</label>
                                                                 <input type="text" class="form-control"
-                                                                    value="<?= $shippingInfo['contact'] ?>" readonly>
+                                                                    value="<?= $shippingInfo['contact_number'] ?>" readonly>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label>Address</label>
                                                                 <input type="text" class="form-control"
-                                                                    value="<?= $shippingInfo['address'] ?>" readonly>
+                                                                    value="<?= $shippingInfo['shipping_address'] ?>" readonly>
                                                             </div>
                                                             <hr>
                                                             <center>

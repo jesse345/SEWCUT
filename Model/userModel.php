@@ -226,7 +226,7 @@ function getRecentShippingAddress($table, $field, $value)
 {
     global $conn;
     connect();
-    $query = mysqli_query($conn, "SELECT * FROM $table WHERE `$field` = $value GROUP BY created_at DESC LIMIT 1;");
+    $query = mysqli_query($conn, "SELECT * FROM $table WHERE `$field` = $value GROUP BY created_at DESC LIMIT 1");
     disconnect();
     return $query;
 }

@@ -256,6 +256,34 @@ if (isset($_POST['UPDATESHIPPING'])) {
         header("Location: ../View/myPurchase.php");
         exit();
     }
-}
+} elseif (isset($_POST['ADDSHIPPINGINFO'])) {
+    $user_id = $_SESSION['id'];
+    $name = $_POST['fullname'];
+    $contact = $_POST['contact'];
+    $address = $_POST['address'];
 
+    if($user_id != '' && $name != '' && $contact != '' && $address != ''){
+    insertCart('shipping_info',
+                array('user_id','name','contact','address'),
+                array($user_id,$name,$contact,$address));
+                flash("msg", "success", "Added successfully");
+                header("Location: ../View/checkout.php?seller=" . $_GET['seller']);
+                exit();
+    }else{
+        flash("msg", "info", "Fill up all the fields");
+        header("Location: ../View/checkout.php?seller=" . $_GET['seller']);
+        exit();
+    }
 
+} elseif (isset($_POST['CHANGSHIPPING'])) {
+    $id = $_POST['shipping_info_id'];
+    $seller = $_POST['seller_id'];
+    updateUser(
+        'shipping_info',
+        array('id','created_at'),
+        array($id, $date)
+    );
+    flash("msg", "success", "Shipping Info Changed");
+    header("Location: ../View/checkout.php?seller=" . $seller);
+    exit();
+ }

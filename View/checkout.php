@@ -164,78 +164,71 @@ if (!isset($_SESSION['id'])) {
                             </div><!-- End .col-lg-9 -->
                             <aside class="col-lg-3">
                                 <div class="summary summary-cart" style="margin-top:40px;">
-                                    <!-- <form action="../Controller/orderController.php" method="POST"> -->
-                                        <h3 class="summary-title">Shipping Info</h3>
-                                        <div class="form-group">
-                                            <label>FullName</label>
-                                            <input type="text" class="form-control" name="fullname"
-                                                value="<?= ucfirst($shipping_info['name']) ?>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Contact Number</label>
-                                            <input type="text" class="form-control" name="contact_number"
-                                                value="<?= $shipping_info['contact'] ?>">
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Address</label>
-                                            <input type="text" class="form-control" name="address"
-                                                value="<?= $shipping_info['address'] ?>">
-                                        </div>
-                                        <button id="btn_changeSHIPPING" type="button" class="btn btn-success float-right" name="UPDATESHIPPING">
-                                            Change Shipping Info
+                                    <h3 class="summary-title">Shipping Info</h3>
+                                    <div class="form-group">
+                                        <label>FullName</label>
+                                        <input type="text" class="form-control" name="fullname"
+                                            value="<?= ucfirst($shipping_info['name']) ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Contact Number</label>
+                                        <input type="text" class="form-control" name="contact_number"
+                                            value="<?= $shipping_info['contact'] ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Address</label>
+                                        <input type="text" class="form-control" name="address"
+                                            value="<?= $shipping_info['address'] ?>">
+                                    </div>
+                                    <button id="btn_changeSHIPPING" type="button" class="btn btn-success">
+                                        Change Shipping Info
+                                    </button>
+                                    <hr>
+                                    <h3 class="summary-title mt-3">Cart Total</h3>
+                                    <form action="../Controller/orderController.php" method="POST">
+                                        <table class="table table-summary">
+                                            <tbody>
+                                                <tr class="summary-shipping-estimate">
+                                                    <input type="hidden" class="form-control" name="fullname"
+                                                        value="<?= ucfirst($shipping_info['name']) ?>">
+                                                    <input type="hidden" class="form-control" name="contact_number"
+                                                        value="<?= $shipping_info['contact'] ?>">
+                                                    <input type="hidden" class="form-control" name="address"
+                                                        value="<?= $shipping_info['address'] ?>">
+                                                </tr>
+                                                <tr>
+                                                    <td>Type of Payment</td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Cash On Delivery</td>
+                                                    <td><input type="radio" class="payment_type" name="payment-type" value="COD" required></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Online Payment</td>
+                                                    <td><input type="radio" class="payment_type" name="payment-type" value="onlinepayment"
+                                                            required></td>
+                                                </tr>
+                                                <tr class="summary-total">
+                                                    <td>Number of Item(s):</td>
+                                                    <td>
+                                                        <?= $count ?>
+                                                    </td>
+                                                </tr>
+                                                <tr class="summary-total" style="border-top:none">
+                                                    <td>Total:</td>
+                                                    <td>P
+                                                        <?= $subTotal ?>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block PLACE_ORDER"
+                                            name="PLACEORDER">PLACE ORDER
                                         </button>
-                                    <!-- </form> -->
-                                </div>    
-
-
-                                <div class="summary summary-cart" style="margin-top:40px;">
-                                    <h3 class="summary-title">Cart Total</h3><!-- End .summary-title -->
-                                    <table class="table table-summary">
-                                        <tbody>
-                                            <tr class="summary-shipping-estimate">
-                                                <td>Shipping Info<br> <a href="#ShippingInfo-Modal"
-                                                        data-toggle="modal">Change Shipping Info</a></td>
-                                                <input type="hidden" class="form-control" name="fullname"
-                                                    value="<?= ucfirst($shipping_info['name']) ?>">
-                                                <input type="hidden" class="form-control" name="contact_number"
-                                                    value="<?= $shipping_info['contact'] ?>">
-                                                <input type="hidden" class="form-control" name="address"
-                                                    value="<?= $shipping_info['address'] ?>">
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Type of Payment</td>
-                                                <td></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Cash On Delivery</td>
-                                                <td><input type="radio" class="payment_type" name="payment-type" value="COD" required></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Online Payment</td>
-                                                <td><input type="radio" class="payment_type" name="payment-type" value="onlinepayment"
-                                                        required></td>
-                                            </tr>
-                                            <tr class="summary-total">
-                                                <td>Number of Item(s):</td>
-                                                <td>
-                                                    <?= $count ?>
-                                                </td>
-                                            </tr>
-                                            <tr class="summary-total" style="border-top:none">
-                                                <td>Total:</td>
-                                                <td>P
-                                                    <?= $subTotal ?>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <button type="submit" class="btn btn-outline-primary-2 btn-order btn-block PLACE_ORDER"
-                                        name="PLACEORDER">PLACE ORDER</button>
-                                        <button type="button" class="btn btn-outline-primary-2 btn-order btn-block PLACE_ORDER_MODAL" style="display:none;"
-                                        name="PLACEORDER1">PLACE ORDER</button>
+                                       
                                     </form>
-                                </div><!-- End .summary -->
+                                </div>    
                             </aside><!-- End .col-lg-3 -->
                         </div><!-- End .row -->
                     </div><!-- End .container -->
@@ -257,27 +250,31 @@ if (!isset($_SESSION['id'])) {
                         <?php 
                         $count = 0;
                         while($infos = mysqli_fetch_assoc($shipping_info1)) {
-                            $count++;
-                            echo $count;
                             ?>
-                            <div class="row">
-                                <div class="col-3">
-                                    <label for="">FullName</label>
-                                    <input type="text" class="form-control" value="<?=$infos['name']?>">
+                            <form action="../Controller/orderController.php" method="POST">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label for="">FullName</label>
+                                        <input type="hidden" name="shipping_info_id" value="<?=$infos['id']?>">
+                                        <input type="hidden" name="seller_id" value="<?php echo $_GET['seller']?>">
+                                        <input type="text" class="form-control" value="<?=$infos['name']?>">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="">Contact Number</label>
+                                        <input type="text" class="form-control" value="<?=$infos['contact']?>">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="">Address</label>
+                                        <input type="text" class="form-control" value="<?=$infos['address']?>">
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="submit" name="CHANGSHIPPING" class="btn btn-info" style="margin-top:35px;">Select Shipping Info</button>
+                                    </div>
                                 </div>
-                                <div class="col-3">
-                                    <label for="">Contact Number</label>
-                                    <input type="text" class="form-control" value="<?=$infos['contact']?>">
-                                </div>
-                                <div class="col-3">
-                                    <label for="">Address</label>
-                                    <input type="text" class="form-control" value="<?=$infos['addresss']?>">
-                                </div>
-                                <div class="col-3">
-                                    <button class="btn btn-info" style="margin-top:35px;">Select Shipping Info</button>
-                                </div>
-                            </div>
+                            </form>
                         <?php } ?>
+                        <div id="add_address"></div>
+                        <button class="btn btn-info" id="btn_add_address">Add Address</button>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -293,11 +290,50 @@ if (!isset($_SESSION['id'])) {
 
     <?php
     include("../layouts/jsfile.layout.php");
+    include("toastr.php");
     ?>
   <script>
-        $("#btn_changeSHIPPING").click(function () {
+        var adding_address = $('#add_address');
+        $("#btn_add_address").click(function () {
+            var rowhtml = `
+                <form action="../Controller/orderController.php?seller=<?php echo $_GET['seller']?>" method="POST">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="">FullName</label>
+                        <input type="text" class="form-control" name="fullname">
+                    </div>
+                    <div class="col-3">
+                        <label for="">Contact Number</label>
+                        <input type="text" class="form-control" name="contact">
+                    </div>
+                    <div class="col-3">
+                        <label for="">Address</label>
+                        <input type="text" class="form-control" name="address">
+                    </div>
+                    <div class="col-3" style="margin-top:35px;">
+                        <button type="submit" name="ADDSHIPPINGINFO" class="btn btn-info" style="min-width:100px!important">Submit</button>
+                        <button class="btn btn-danger" id="remove" style="min-width:100px!important">Cancel</button>
+                    </div>
+                </div>`;
+
+            adding_address.append(rowhtml);
+        });
+        
+        adding_address.on("click", "#remove", function () {
+            const row = $(this).closest(".row");
+            if (row.length > 0) {
+                row.remove();
+            }
+        });
+        
+
+
+
+
+         $("#btn_changeSHIPPING").click(function () {
              $('#ShippingInfo').modal('show');
         });
+
 
         const fileInput = $("#image");
         const imagePreview = $("#image-preview");
