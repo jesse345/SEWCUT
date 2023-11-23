@@ -2,7 +2,7 @@
 session_start();
 include("../Model/db.php");
 include '../includes/toastr.inc.php';
-error_reporting(0);
+
 
 if (isset($_POST['CREATESHOP'])) {
     $user_id = $_SESSION['id'];
@@ -71,6 +71,7 @@ if (isset($_POST['CREATESHOP'])) {
     $hips =  empty($_POST['men_hips']) ? $_POST['hips'] : $_POST['men_hips'];
     $inseam = empty($_POST['men_inseam']) ? $_POST['inseam'] : $_POST['men_inseam'];
     $thigh = empty($_POST['men_thigh']) ? $_POST['thigh'] : $_POST['men_thigh'];
+    //OPTIONAL
     $height = empty($_POST['men_height']) ? $_POST['height'] : $_POST['men_height'];
     $bodice = empty($_POST['men_bodice']) ? $_POST['bodice'] : $_POST['men_bodice'];
     $bust = $_POST['under_bust'];
@@ -79,66 +80,123 @@ if (isset($_POST['CREATESHOP'])) {
     $address = $_POST['address'];
     $schedule = $_POST['schedule'];
 
-    $shopCustomize = CreateShop(
-        'shop_customoralter',
-        array('shop_id', 'user_id','status', 'type'),
-        array($shop_id,$user_id,$status,$type)
-    );
-    $shop_customoralter_id = mysqli_insert_id($conn);
-    
-    if($shopCustomize){
-        CreateShop(
-            'shop_info',
-            array('shop_customoralter_id','name' ,'phone', 'email','category','instruction'),
-            array($shop_customoralter_id,$name,$phone,$email,$category,$instruction)
-        );
-        $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust');
-        $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
-        $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
-
-        if($address != '' && $schedule !=''){
-            CreateShop(
-                'shop_homeservice',
-                array('shop_customoralter_id','address' ,'schedule'),
-                array($shop_customoralter_id,$address,$schedule)
+    if($address == '' && $schedule ==''){
+        if ($neck != '' && $shoulder != '' && $sleeve != '' && $chest != '' && $waist != '' && $hips != '' && $inseam != '' && $thigh != '') {
+            $shopCustomize = CreateShop(
+                'shop_customoralter',
+                array('shop_id', 'user_id','status', 'type'),
+                array($shop_id,$user_id,$status,$type)
             );
-        }
-        $targetDir = "../images/";
-        $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
-
-        foreach ($_FILES['image']['name'] as $key => $name) {
-            $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
-            $targetPath = $targetDir . basename($name);
-
-            if (in_array($fileType, $allowedTypes)) {
-                move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath);
-                insertProduct(
-                    'shop_images',
-                    array('shop_customoralter_id', 'images'),
-                    array($shop_customoralter_id, $targetPath)
+            $shop_customoralter_id = mysqli_insert_id($conn);
+            
+            if($shopCustomize){
+                CreateShop(
+                    'shop_info',
+                    array('shop_customoralter_id','name' ,'phone', 'email','category','instruction'),
+                    array($shop_customoralter_id,$name,$phone,$email,$category,$instruction)
                 );
-            } else {
-                echo "Invalid file type: $name<br>";
-            }
-        }
+                $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust');
+                $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
+                $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
+                $targetDir = "../images/";
+                $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
 
-        $shop1 = mysqli_fetch_assoc(getrecord('shops', 'id', $shop_id));
-        $getUser = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
-        $desc = $getUser['firstname'] . " " . $getUser['lastname'] . " Wants to Customize a product";
-        $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop1['user_id'], $date, 'No', 'myShop.php'));
-        $last_id = mysqli_insert_id($conn);
-        sendNotif(
-            'notification_details',
-            array('notification_id', 'title', 'Description'),
-            array($last_id, 'Product Order', $desc)
-        );
-        flash("msg", "success", "Success");
-        header("Location:../View/customAndAlter.php");
-        exit();
+                foreach ($_FILES['image']['name'] as $key => $name) {
+                    $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
+                    $targetPath = $targetDir . basename($name);
+
+                    if (in_array($fileType, $allowedTypes)) {
+                        move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath);
+                        insertProduct(
+                            'shop_images',
+                            array('shop_customoralter_id', 'images'),
+                            array($shop_customoralter_id, $targetPath)
+                        );
+                    } else {
+                        echo "Invalid file type: $name<br>";
+                    }
+                }
+
+                    $shop1 = mysqli_fetch_assoc(getrecord('shops', 'id', $shop_id));
+                    $getUser = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+                    $desc = $getUser['firstname'] . " " . $getUser['lastname'] . " Wants to Customize a product";
+                    $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop1['user_id'], $date, 'No', 'myShop.php'));
+                    $last_id = mysqli_insert_id($conn);
+                    sendNotif(
+                        'notification_details',
+                        array('notification_id', 'title', 'Description'),
+                        array($last_id, 'Product Order', $desc)
+                    );
+                
+                flash("msg", "success", "Success");
+                header("Location:../View/customAndAlter.php");
+                exit();
+            }else{
+                flash("msg", "error", "Theres in an error");
+                header("Location: " . $_SERVER['HTTP_REFERER']);
+                exit();
+            }
+        }else{
+            flash("msg", "info", "Input all the fields in Measurements.");
+           header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
     }else{
-        flash("msg", "error", "Theres in an error");
-        header("Location: " . $_SERVER['HTTP_REFERER']);
-        exit();
+        $shopCustomize = CreateShop(
+            'shop_customoralter',
+            array('shop_id', 'user_id','status', 'type'),
+            array($shop_id,$user_id,$status,$type)
+        );
+        $shop_customoralter_id = mysqli_insert_id($conn);
+        if($shopCustomize){
+                CreateShop(
+                    'shop_info',
+                    array('shop_customoralter_id','name' ,'phone', 'email','category','instruction'),
+                    array($shop_customoralter_id,$name,$phone,$email,$category,$instruction)
+                );
+                CreateShop(
+                    'shop_homeservice',
+                    array('shop_customoralter_id','address' ,'schedule'),
+                    array($shop_customoralter_id,$address,$schedule)
+                );
+                $targetDir = "../images/";
+                $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
+
+                foreach ($_FILES['image']['name'] as $key => $name) {
+                    $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
+                    $targetPath = $targetDir . basename($name);
+
+                    if (in_array($fileType, $allowedTypes)) {
+                        move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath);
+                        insertProduct(
+                            'shop_images',
+                            array('shop_customoralter_id', 'images'),
+                            array($shop_customoralter_id, $targetPath)
+                        );
+                    } else {
+                        echo "Invalid file type: $name<br>";
+                    }
+                }
+
+                    $shop1 = mysqli_fetch_assoc(getrecord('shops', 'id', $shop_id));
+                    $getUser = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+                    $desc = $getUser['firstname'] . " " . $getUser['lastname'] . " Wants to Customize a product";
+                    $notif = sendNotif('notification', array('user_id', 'date_send', 'isRead', 'redirect'), array($shop1['user_id'], $date, 'No', 'myShop.php'));
+                    $last_id = mysqli_insert_id($conn);
+                    sendNotif(
+                        'notification_details',
+                        array('notification_id', 'title', 'Description'),
+                        array($last_id, 'Product Order', $desc)
+                    );
+                
+                flash("msg", "success", "Success");
+                header("Location:../View/customAndAlter.php");
+                exit();
+        }else{
+            flash("msg", "error", "Theres in an error");
+            header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit();
+        }
     }
 
     
@@ -292,7 +350,57 @@ if (isset($_POST['CREATESHOP'])) {
         exit();
     }
 
+} elseif (isset($_POST['SETPRICE'])) {
+    $id = $_POST['id'];
+    $price = $_POST['price'];
+
+    $user_id = $_POST['user_id'];
+    $gcash_name = $_POST['gcash_name'];
+    $gcash_number = $_POST['gcash_number'];
+
+    updateUser(
+        'shop_customoralter',
+        array('id', 'price'),
+        array($id, $price)
+    );
+     updateUser(
+        'user_details',
+        array('id', 'gcash_name','gcash_number'),
+        array($user_id,$gcash_name,$gcash_number)
+    );
+    flash("msg", "success", "Price successfully set");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+} elseif (isset($_POST['PAYMENT123'])) {
+    $shop_customoralter_id = $_POST['shop_customoralter_id'];
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    $reference_order = substr(str_shuffle($characters . time() * rand()), 0, 20);
+
+    $amount = $_POST['amount'];
+    $reference_number = $_POST['reference_number'];
+    $payment_type = $_POST['payment-type'];
+
+    $targetDir = "../images/";
+    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
+
+    // Assuming you have a loop for multiple files
+    $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
+    $targetPath = $targetDir . basename($name);
+
+    insertProduct(
+        'shop_customoralter_details',
+        array('shop_customoralter_id', 'reference_order', 'receipt_image', 'amount', 'reference_number'),
+        array($shop_customoralter_id, $reference_order, $targetPath, $amount, $reference_number)
+    );
+    
+
+    updateUser(
+        'shop_customoralter',
+        array('id', 'payment_type'),
+        array($shop_customoralter_id, $payment_type)
+    );
 }
+
 
 ?>
 

@@ -116,7 +116,6 @@ if (!isset($_SESSION['id'])) {
                                         while($data = mysqli_fetch_assoc($customize)){
                                             $count++;
                                             $shopOwner = mysqli_fetch_assoc(getrecord('shops','id',$data['shop_id']));
-                                            $customer = mysqli_fetch_assoc(getrecord('user_details','id',$data['user_id']));
                                             $shopInfo = mysqli_fetch_assoc(getrecord('shop_info','shop_customoralter_id',$data['id']));
                                             $shopHomeService = getrecord('shop_homeservice','shop_customoralter_id',$data['id']);
                                             $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
@@ -131,7 +130,7 @@ if (!isset($_SESSION['id'])) {
                                                     <td>
                                                         <div class="d-flex">
                                                             <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View Details</a>
-                                                            <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
+                                                            <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat</a>
                                                              <?php if($data['status'] == 'Approved') {?>
                                                              <button class="btn btn-info mx-2">Add Feedback</button>
                                                              <?php } ?>
@@ -276,6 +275,11 @@ if (!isset($_SESSION['id'])) {
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <?php if($data['status'] == 'Pending') {?>
+                                                                    <?php if($data['price'] == ''){?>
+                                                                        <button href="#setPrice_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:5%;">Set Fee</button>
+                                                                    <?php }else{?>
+                                                                       <button href="#setPrice_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:5%;">View Fee</button>
+                                                                    <?php } ?>
                                                                     <form action="../Controller/shopController.php" method="POST">
                                                                         <input type="hidden" name="id" value="<?=$data['id']?>">
                                                                         <button type="submit" class="btn btn-info mx-2" name="BTN_APPROVE">Approve</button>
@@ -284,6 +288,7 @@ if (!isset($_SESSION['id'])) {
                                                                         <input type="hidden" name="id" value="<?=$data['id']?>">
                                                                     <button class="btn btn-danger mx-2" name="BTN_DISAPPROVE">Disapprove</button>
                                                                     </form>
+                                                                    
                                                                 <?php }elseif($data['status'] == 'Approved'){  ?>
                                                                     <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
                                                                         Close
@@ -293,6 +298,61 @@ if (!isset($_SESSION['id'])) {
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <form action="../Controller/shopController.php" method="POST">
+                                                    <div class="modal fade" id="setPrice_modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                        <div class="modal-dialog" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-body">
+                                                                    <div class="row">
+                                                                        <div class="col-7">
+                                                                            <div class="form-group">
+                                                                                <input type="hidden" name="id" value="<?php echo $data['id'] ?>">
+                                                                                <input type="text" class="form-control" name="price" value="<?=$data['price']?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-5">
+                                                                            <?php if($data['price'] == ''){?>
+                                                                                <a href="#gcash_info<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info">Set Fee</a>
+                                                                            <?php }else{ ?>
+                                                                                <a href="#gcash_info<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info">Change Fee</a>
+                                                                            <?php } ?>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal fade" id="gcash_info<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                        <div class="modal-dialog modal-sm" role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header header1">
+                                                                    <h3>Confirm Your Gcash Info</h3>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                                                                    </button>
+                                                                </div>
+                                                                    <div class="modal-body">
+                                                                        <div class="form-group">
+                                                                            <label>Gcash Name</label>
+                                                                            <input type="hidden" name="user_id" value="<?php echo $user['id'] ?>">
+                                                                            <input type="text" class="form-control" name="gcash_name"
+                                                                                value="<?php echo $user['gcash_name'] ?>">
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label>Gcash Number</label>
+                                                                            <input type="text" class="form-control" name="gcash_number"
+                                                                                value="<?php echo $user['gcash_number'] ?>">
+                                                                        </div>
+                                                                    <div class="modal-footer footer1">
+                                                                        <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                            No
+                                                                        </button>
+                                                                        <button type="submit" class="btn btn-dark products" name="SETPRICE">Yes</button>
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             <?php } ?>
                                         <?php } ?>
                                         </tbody>

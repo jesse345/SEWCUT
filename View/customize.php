@@ -157,7 +157,7 @@ if (!isset($_SESSION['id'])) {
                                         </center>
                                     </div>
                                     <div class="col-8">
-                                        <label for="">INPUT YOUR DESIRED MEASURERMENTS</label>
+                                        <label for="">INPUT YOUR DESIRED MEASUREMENTS</label>
                                         <div class="row">
                                             <div class="col-6">
                                                 <div class="form-group">

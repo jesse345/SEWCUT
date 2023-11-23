@@ -84,6 +84,8 @@ if (!isset($_SESSION['id'])) {
                                             <th style="width:15%">Shop Name</th>
                                             <th>TYPE</th>
                                             <th>STATUS</th>
+                                            <th>PAYMENT TYPE</th>
+                                            <th>FEEDBACK</th>
                                             <th>ACTIONS</th>
                                         </tr>
                                     </thead>
@@ -94,12 +96,11 @@ if (!isset($_SESSION['id'])) {
                                     while($data = mysqli_fetch_assoc($customize)){
                                         $count++;
                                         $shopOwner = mysqli_fetch_assoc(getrecord('shops','id',$data['shop_id']));
-                                        $customer = mysqli_fetch_assoc(getrecord('user_details','id',$data['user_id']));
+                                        $customer = mysqli_fetch_assoc(getrecord('user_details','id', $shopOwner['user_id']));
                                         $shopInfo = mysqli_fetch_assoc(getrecord('shop_info','shop_customoralter_id',$data['id']));
                                         $shopHomeService = getrecord('shop_homeservice','shop_customoralter_id',$data['id']);
                                         $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
                                         $dataImage = getrecord('shop_images','shop_customoralter_id',$data['id']);
-
                                             ?>
                                             <tr>
                                                 <td><?=$count?></td>
@@ -107,15 +108,29 @@ if (!isset($_SESSION['id'])) {
                                                 <td><button class="btn btn-warning"><?=$data['type']?></button></td>
                                                 <td><button class="btn btn-warning"><?=$data['status']?></button></td>
                                                 <td>
-                                                    <div class="d-flex">
-                                                        <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View Details</a>
-                                                        <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat Customer</a>
-                                                        <?php if($data['status'] == 'Pending') {?>
-                                                            <form action="../Controller/shopController.php" method="POST">
-                                                            <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
-                                                            <button type="submit" name="CANCEL" class="btn btn-danger">Cancel</a>
-                                                            </form>
-                                                        <?php } ?>
+                                                    <?php if($data['payment_type'] != '') {?>
+                                                        <button class="btn btn-warning"><?=$data['payment_type']?></button>
+                                                    <?php } ?>
+                                                </td>
+                                                <td><button class="btn btn-info">View Feedback</button></td>
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            More Actions
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info dropdown-item">View Details</a>
+                                                            <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info dropdown-item">Chat</a>
+                                                            <?php if($data['status'] == 'Pending') {?>
+                                                                <form action="../Controller/shopController.php" method="POST">
+                                                                <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
+                                                                <button type="submit" name="CANCEL" class="btn btn-danger dropdown-item">Cancel</button>
+                                                                </form>
+                                                            <?php } ?>
+                                                            <?php if($data['price'] != ''){ ?>
+                                                                    <a href="#payment-Modal<?php echo $data['id'] ?>" data-toggle="modal"  class="btn btn-info dropdown-item">Payment</a>
+                                                            <?php } ?>
+                                                        </div>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -264,6 +279,78 @@ if (!isset($_SESSION['id'])) {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <div class="modal fade" id="payment-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <form action="../Controller/shopController.php" method="POST">
+                                                            <div class="modal-body">
+                                                                <h3>Type Of Payment</h3>
+                                                                <div class="row">
+                                                                    <div class="col-4">
+                                                                        <label for="">Cash On Delivery</label>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="hidden" name="shop_customoralter_id" value="<?php echo $data['id'] ?>">
+                                                                        <input type="radio" class="payment_type" id="btn_cod" name="payment-type" value="Cash On Delivery" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-4">
+                                                                        <label for="">Online Payment</label>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <input type="radio" class="payment_type btn_online" id="btn_op" name="payment-type" value="Online Payment" required>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group" id="fee">
+                                                                    <label for="">Fee</label>
+                                                                    <input type="text" class="form-control" value="<?php echo $data['price'] ?>" readonly>
+                                                                </div>
+                                                                <div id="shop_gcash_info" style="display:none;">
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-6">
+                                                                            <div class="form-group">
+                                                                                <label for="email">Gcash Name</label>
+                                                                                <input type="text" class="form-control" value="<?= $customer['gcash_name'] ?>" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-6">
+                                                                            <div class="form-group">
+                                                                                <label for="email">Gcash Number</label>
+                                                                                <input type="text" class="form-control" value="<?= $customer['gcash_number'] ?>" readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="email">Total Fee</label>
+                                                                        <input type="text" class="form-control" name="amount" value="<?= $data['price'] ?>" readonly>
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <input type="file" name="image" id="imageInput" accept="image/*" >
+                                                                    </div>
+                                                                    <div class="preview">
+                                                                        <img id="imagePreview" src="#" alt="Image Preview" style="height: 140px; display: none;">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="email">Reference number</label>
+                                                                        <input type="text" class="form-control" name="reference_number"
+                                                                            placeholder="Enter Reference number">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                    Close
+                                                                </button>
+                                                                <button type="submit" name="PAYMENT123" class="btn btn-info">
+                                                                    Submit
+                                                                </button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         <?php } ?>
                                     
                                     </tbody>
@@ -282,6 +369,21 @@ if (!isset($_SESSION['id'])) {
     ?>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
+        $(document).on('click', '#btn_op', function () {
+            $("#shop_gcash_info").show();
+            $("#fee").hide();
+        });
+
+        $(document).on('click', '#btn_cod', function () {
+            $("#fee").show();
+            $("#shop_gcash_info").hide();
+        });
+
+
+
+
+
+
         function downloadImage() {
             html2canvas(document.querySelector('#downlad_preview')).then(function(canvas) {
                 var link = document.createElement('a');
@@ -292,6 +394,21 @@ if (!isset($_SESSION['id'])) {
                 link.click();
             });
         }
+
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        imageInput.addEventListener('change', function (e) {
+            if (e.target.files.length === 0) {
+                return;
+            }
+            let file = e.target.files[0];
+            let url = URL.createObjectURL(file);
+            imagePreview.src = url;
+
+            // Display the preview image
+            imagePreview.style.display = 'block';
+        });
     </script>
 </body>
 </html>

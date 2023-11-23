@@ -75,12 +75,18 @@ $address = sizeOrColor('address');
                                         <option value="<?php echo $add['id']?>"><?php echo $add['address']?></option>
                                         <?php endwhile; ?>
                                     </select>
-                                    <!-- <label>Address</label>
-                                    <input type="text" class="form-control" name="address"> -->
                                 </div>
                                 <div class="form-group">
                                     <label>Email</label>
                                     <input type="email" class="form-control" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gcash Name</label>
+                                    <input type="text" class="form-control" name="gcash_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Gcash Number</label>
+                                    <input type="text" class="form-control" name="gcash_number" required>
                                 </div>
                                 <div class="form-footer">
                                     <button type="submit" class="btn btn-outline-primary-2" name="register">

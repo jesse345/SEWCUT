@@ -15,6 +15,10 @@ if (isset($_POST['register'])) {
     $isLoggedIN = "Yes";
     $address = $_POST['address'];
     $repassword = $_POST['repassword'];
+
+    $gcash_name = $_POST['gcash_name'];
+    $gcash_number = $_POST['gcash_number'];
+
     $checkUsername = getrecord('users', 'username', $username);
     $checkEmail = getrecord('users', 'email', $email);
     
@@ -40,8 +44,8 @@ if (isset($_POST['register'])) {
 
         $userfield = array('username', 'email', 'password', 'isLoggedIn');
         $uservalue = array($username, $email, $password, $isLoggedIN);
-        $userdetailsfield = array('id', 'firstname', 'lastname', 'address', 'contact_number');
-        $userdetailsvalues = array($firstname, $lastname, $address, $contact);
+        $userdetailsfield = array('id', 'firstname', 'lastname', 'address', 'contact_number','gcash_name','gcash_number');
+        $userdetailsvalues = array($firstname, $lastname, $address, $contact, $gcash_name, $gcash_number);
 
         addUser('users', $userfield, $uservalue, 'user_details', $userdetailsfield, $userdetailsvalues);
         $userid = mysqli_insert_id($conn);
