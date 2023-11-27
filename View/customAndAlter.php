@@ -31,6 +31,7 @@ if (!isset($_SESSION['id'])) {
     <?php
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
     $users = mysqli_fetch_assoc(getrecord('users','id', $_SESSION['id']));
+    $shipping_info = mysqli_fetch_assoc(getRecentShippingAddress('shipping_info', 'user_id', $_SESSION['id']));
     ?>
     <div class="page-wrapper">
         <?php include("../layouts/header_layout.php"); ?>
@@ -102,6 +103,7 @@ if (!isset($_SESSION['id'])) {
                                         $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
                                         $dataImage = getrecord('shop_images','shop_customoralter_id',$data['id']);
                                         $shopFeedback = getrecord('shop_feedbacks','shop_customoralter_id',$data['id']);
+                                        $shop_customoralter_payments = getrecord('shop_customoralter_payments','shop_customoralter_id',$data['id']);
                                             ?>
                                             <tr>
                                                 <td><?=$count?></td>
@@ -114,7 +116,8 @@ if (!isset($_SESSION['id'])) {
                                                     <?php } ?>
                                                 </td>
                                                 <td>
-                                                    <?php if($data['status'] == "Approved") {?>
+                                                    <?php 
+                                                    if($data['status'] == "Approved" || $data['status'] == "Shipped") {?>
                                                         <a href="#viewFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info">View Feedback</a></td>
                                                     <?php } ?>
                                                 <td>
@@ -127,17 +130,49 @@ if (!isset($_SESSION['id'])) {
                                                             <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info dropdown-item">Chat</a>
                                                             <?php if($data['status'] == 'Pending') {?>
                                                                 <form action="../Controller/shopController.php" method="POST">
-                                                                <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
-                                                                <button type="submit" name="CANCEL" class="btn btn-danger dropdown-item">Cancel</button>
+                                                                    <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
+                                                                    <button type="submit" name="CANCEL" class="btn btn-danger dropdown-item">Cancel</button>
                                                                 </form>
                                                             <?php } ?>
-                                                            <?php if($data['price'] != ''){ ?>
+                                                            <?php if(mysqli_num_rows($shop_customoralter_payments) > 0 ) {?>
+                                                                <a href="#viewProofOfPayment-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">View Proof of Payment</abs>
+                                                            <?php } ?>  
+                                                            <?php if($data['price'] != '' && $data['payment_type'] == ''){ ?>
                                                                     <a href="#payment-Modal<?php echo $data['id'] ?>" data-toggle="modal"  class="btn btn-info dropdown-item">Payment</a>
                                                             <?php } ?>
                                                         </div>
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <div class="modal fade" id="viewProofOfPayment-Modal<?php echo $data['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">PROOF OF PAYMENT</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true"><i class="icon-close"></i></span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body p-5">
+                                                            <div class="d-block">
+                                                                <div class="form-group">
+                                                                    <label class="form-label">PAYMENT RECEIPT</label>
+                                                                    <?php while($image = mysqli_fetch_assoc($shop_customoralter_payments)) { ?>
+                                                                        <center>
+                                                                            <img src="<?php echo $image['receipt_image'] ?>" class="img-thumbnail" style="width:80%;height:250px;">
+                                                                        </center>
+                                                                    <?php } ?>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="modal fade" id="viewFeedback-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
@@ -206,7 +241,7 @@ if (!isset($_SESSION['id'])) {
                                                                 <label>Image Design</label>
                                                                 <div class="preview-item">
                                                                     <div class="row">
-                                                                        <?php while($images = mysqli_fetch_assoc( $dataImage)){?>
+                                                                        <?php while($images = mysqli_fetch_assoc($dataImage)){?>
                                                                             <div class="col-3">
                                                                                 <img src="<?php echo $images['images']; ?>">
                                                                             </div>
@@ -305,6 +340,22 @@ if (!isset($_SESSION['id'])) {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                <hr>
+                                                                <div class="row">
+                                                                    <div class="col-4">
+                                                                        <div class="form-group">
+                                                                            <label>Garment Type</label>
+                                                                            <input type="text" class="form-control" value="<?=$shopMeasurement['garment_type'] ?>"  readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-4">
+                                                                        <div class="form-group">
+                                                                            <label>Alter Type</label>
+                                                                            <input type="text" class="form-control" value="<?=$shopMeasurement['alter_type'] ?>"  readonly>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                 
                                                             <?php } ?>
                                                         </div>
                                                         <div class="modal-footer">
@@ -321,14 +372,33 @@ if (!isset($_SESSION['id'])) {
                                                     <div class="modal-content">
                                                         <form action="../Controller/shopController.php" method="POST">
                                                             <div class="modal-body">
-                                                                <h3>Type Of Payment</h3>
+                                                                <h3 class="summary-title">Shipping Info</h3>
+                                                                <div class="form-group">
+                                                                    <label>FullName</label>
+                                                                    <input type="text" class="form-control" name="fullname"
+                                                                        value="<?= ucfirst($shipping_info['name']) ?>" readonly>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Contact Number</label>
+                                                                    <input type="text" class="form-control" name="contact_number"
+                                                                        value="<?= $shipping_info['contact'] ?>" readonly> 
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Address</label>
+                                                                    <input type="text" class="form-control" name="address"
+                                                                        value="<?= $shipping_info['address'] ?>" readonly>
+                                                                </div>
+                                                                <button id="btn_changeSHIPPING" type="button" class="btn btn-info float-right mb-2">
+                                                                    Change Shipping Info
+                                                                </button>
+                                                                <h3 class="summary-title mt-10">Type Of Payment</h3>
                                                                 <div class="row">
                                                                     <div class="col-4">
                                                                         <label for="">Cash On Delivery</label>
                                                                     </div>
                                                                     <div class="col-4">
                                                                         <input type="hidden" name="shop_customoralter_id" value="<?php echo $data['id'] ?>">
-                                                                        <input type="radio" class="payment_type" id="btn_cod" name="payment-type" value="Cash On Delivery" required>
+                                                                        <input type="radio" class="payment_type" name="payment-type" value="Cash On Delivery" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
@@ -336,51 +406,19 @@ if (!isset($_SESSION['id'])) {
                                                                         <label for="">Online Payment</label>
                                                                     </div>
                                                                     <div class="col-4">
-                                                                        <input type="radio" class="payment_type btn_online" id="btn_op" name="payment-type" value="Online Payment" required>
+                                                                        <input type="radio" class="payment_type" name="payment-type" value="Online Payment" required>
                                                                     </div>
                                                                 </div>
                                                                 <div class="form-group" id="fee">
                                                                     <label for="">Fee</label>
-                                                                    <input type="text" class="form-control" value="<?php echo number_format($data['price'], 2) ?>" readonly>
-                                                                </div>
-                                                                <div id="shop_gcash_info" style="display:none;">
-                                                                    <hr>
-                                                                    <div class="row">
-                                                                        <div class="col-6">
-                                                                            <div class="form-group">
-                                                                                <label for="email">Gcash Name</label>
-                                                                                <input type="text" class="form-control" value="<?= $customer['gcash_name'] ?>" readonly>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="col-6">
-                                                                            <div class="form-group">
-                                                                                <label for="email">Gcash Number</label>
-                                                                                <input type="text" class="form-control" value="<?= $customer['gcash_number'] ?>" readonly>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="email">Total Fee</label>
-                                                                        <input type="text" class="form-control" name="amount" value="<?= number_format($data['price'],2)?>" readonly>
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <input type="file" name="image" id="imageInput" accept="image/*" >
-                                                                    </div>
-                                                                    <div class="preview">
-                                                                        <img id="imagePreview" src="#" alt="Image Preview" style="height: 140px; display: none;">
-                                                                    </div>
-                                                                    <div class="form-group">
-                                                                        <label for="email">Reference number</label>
-                                                                        <input type="text" class="form-control" name="reference_number"
-                                                                            placeholder="Enter Reference number">
-                                                                    </div>
+                                                                    <input type="text" class="form-control" value="<?= $data['price']?>" readonly>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
                                                                     Close
                                                                 </button>
-                                                                <button type="submit" name="PAYMENT123" class="btn btn-info">
+                                                                <button type="submit" name="CHOOSEPAYMENT" class="btn btn-info">
                                                                     Submit
                                                                 </button>
                                                             </div>
@@ -400,21 +438,153 @@ if (!isset($_SESSION['id'])) {
         </main>
         <?php include("../layouts/footer.layout1.php"); ?>
     </div>
+
+    <?php $shipping_info1 = getrecord('shipping_info','user_id',$_SESSION['id'])?>
+    <div class="modal fade" id="ShippingInfo" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog custom-modal"
+            role="document" style="max-width:1000px;">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="card-body" id="shippingInfos">
+                        <?php 
+                        $count = 0;
+                        while($infos = mysqli_fetch_assoc($shipping_info1)) {
+                            ?>
+                            <form action="../Controller/shopController.php" method="POST">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <label for="">FullName</label>
+                                        <input type="hidden" name="shipping_info_id" value="<?=$infos['id']?>">
+                                        <input type="text" class="form-control" value="<?=$infos['name']?>">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="">Contact Number</label>
+                                        <input type="text" class="form-control" value="<?=$infos['contact']?>">
+                                    </div>
+                                    <div class="col-3">
+                                        <label for="">Address</label>
+                                        <input type="text" class="form-control" value="<?=$infos['address']?>">
+                                    </div>
+                                    <div class="col-3" style="margin-top:35px;">
+                                        <?php if($shipping_info['id'] == $infos['id']) {?>
+                                             <div class="row">
+                                                <div class="col-6">
+                                                    <button type="button"  class="btn btn-success" >Selected</button>
+                                                </div>
+                                                <div class="col-6">
+                                                    <button type="button" class="btn btn-danger" id="btn_deletePayment" data-id="<?=$infos['id']?>">Delete</button>
+                                                </div>
+                                            </div>
+                                        <?php } else {?>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <button type="submit" name="CHANGSHIPPING" class="btn btn-info" >Select</button>
+                                                </div>
+                                                <div class="col-6">
+                                                    <button type="button" class="btn btn-danger" id="btn_deletePayment" data-id="<?=$infos['id']?>">Delete</button>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
+                                    </div>
+                                </div>
+                            </form>
+                        <?php } ?>
+                        <div id="add_address"></div>
+                        <button class="btn btn-info" id="btn_add_address">Add Address</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                        class="btn btn-danger products"
+                        data-dismiss="modal" aria-label="Close">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php 
         include("../layouts/jsfile.layout.php");
         include("toastr.php");
     ?>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
-        $(document).on('click', '#btn_op', function () {
-            $("#shop_gcash_info").show();
-            $("#fee").hide();
+        var adding_address = $('#add_address');
+        $("#btn_add_address").click(function () {
+            var rowhtml = `
+                <form action="../Controller/shopController.php?" method="POST">
+                <div class="row">
+                    <div class="col-3">
+                        <label for="">FullName</label>
+                        <input type="text" class="form-control" name="fullname">
+                    </div>
+                    <div class="col-3">
+                        <label for="">Contact Number</label>
+                        <input type="text" class="form-control" name="contact">
+                    </div>
+                    <div class="col-3">
+                        <label for="">Address</label>
+                        <input type="text" class="form-control" name="address">
+                    </div>
+                    <div class="col-3" style="margin-top:35px;">
+                         <div class="row">
+                            <div class="col-6">
+                                <button type="submit" name="ADDSHIPPINGINFO" class="btn btn-info">Submit</button>
+                            </div>
+                            <div class="col-6">
+                                <button class="btn btn-danger" id="remove">Remove</button>
+                            </div>
+                    </div>
+                </div>`;
+
+            adding_address.append(rowhtml);
+        });
+        
+        adding_address.on("click", "#remove", function () {
+            const row = $(this).closest(".row");
+            if (row.length > 0) {
+                row.remove();
+            }
+        });
+        
+
+
+        $("#btn_changeSHIPPING").click(function () {
+             $('#ShippingInfo').modal('show');
+        });
+        $("#shippingInfos").on('click', '#btn_deletePayment', function () {
+            var dataId = $(this).data('id');
+            $.ajax({
+                type: "POST",
+                url: "../Controller/shopController.php",
+                data: {
+                    DELETESHIPPINGINFO: true, 
+                    ID : dataId
+                },
+                success: function (response) {
+                    console.log(response);
+                    location.reload();
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX error:", error);
+                }
+            });
         });
 
-        $(document).on('click', '#btn_cod', function () {
-            $("#fee").show();
-            $("#shop_gcash_info").hide();
-        });
+
+
+
+
+ 
+
+
+
+
+
+
+
+
 
 
 

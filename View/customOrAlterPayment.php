@@ -24,11 +24,9 @@ if (!isset($_SESSION['id'])) {
 
 <body>
     <?php
-    $totalPayment = 0;
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
-    $data = getrecord('orders', 'reference_order', $_GET['reference_order']);
-    $order = mysqli_fetch_assoc($data);
-    $seller = mysqli_fetch_assoc(getrecord('user_details', 'id', $order['seller_id']));
+    $data = mysqli_fetch_assoc(getrecord('shop_customoralter','id',$_GET['shop_customOrAlter']));
+    $seller_data = mysqli_fetch_assoc(getRecentShippingAddress('shop_seller_paymentinfo', 'shop_customoralter_id', $data['id']));
     ?>
     <div class="page-wrapper">
         <?php include("../layouts/header_layout.php");
@@ -38,53 +36,45 @@ if (!isset($_SESSION['id'])) {
                 <div class="container">
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.php">Home</a></li>
+                        <li class="breadcrumb-item"><a href="index.php">Custom Or Alter Transaction</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Payment</li>
                     </ol>
                 </div><!-- End .container -->
             </nav>
             <div style="display: flex; justify-content: center; align-items: center;">
-                <form action="../Controller/orderController.php" method="POST" enctype="multipart/form-data">
+                <form action="../Controller/shopController.php" method="POST" enctype="multipart/form-data">
                     <!-- Your form fields here -->
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
+                                <input type="hidden" name="custom_alter_id" value="<?=$_GET['shop_customOrAlter']?>">
                                 <label for="email">Gcash Name</label>
-                                <input type="text" class="form-control" value="<?= $seller['gcash_name'] ?>" readonly>
+                                <input type="text" class="form-control" value="<?= $seller_data['gcash_name'] ?>" readonly>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="form-group">
                                 <label for="email">Gcash Number</label>
-                                <input type="text" class="form-control" value="<?= $seller['gcash_number'] ?>" readonly>
+                                <input type="text" class="form-control" value="<?= $seller_data['gcash_number'] ?>" readonly>
                             </div>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="email">Total Amount</label>
-                        <?php 
-                        mysqli_data_seek($data, 0);
-                        while($t = mysqli_fetch_assoc($data)):
-                            $cart = mysqli_fetch_assoc(getrecord('carts', 'id', $t['cart_id']));
-                            $totalPayment += $cart['total'];
-                            ?>
-                            <input type="hidden" name="order_id[]" value="<?= $t['id'] ?>">
-                            <input type="hidden" name="reference_order[]" value="<?= $_GET['reference_order'] ?>">
-                            <input type="hidden" name="total[]" value="<?= $cart['total'] ?>">
-                        <?php endwhile; ?>
-                            <input type="text" class="form-control" name="sub-total" value="<?=$totalPayment?>" readonly>
+                        <input type="text" class="form-control" name="price" value="<?=$data['price']?>" readonly>
                     </div>
                     <div class="form-group">
-                        <input type="file" name="image" id="imageInput" accept="image/*" required>
+                        <input type="file" name="image[]" id="imageInput" accept="image/*" multiple required>
                     </div>
-                    <div class="preview">
-                        <img id="imagePreview" src="#" alt="Image Preview" style="height: 140px; display: none;">
+                    <div class="preview d-flex" id="imagePreviewContainer">
+                        <!-- Preview images will be added here -->
                     </div>
                     <div class="form-group">
                         <label for="email">Reference number</label>
                         <input type="text" class="form-control" name="reference_number"
                             placeholder="Enter Reference number" required>
                     </div>
-                    <button type="submit" name="PAY" class="btn btn-primary float-right">Submit</button>
+                    <button type="submit" name="CUSTOMORALTER_PAY" class="btn btn-primary float-right">Submit</button>
                 </form>
             </div>
         </main><!-- End .main -->
@@ -94,19 +84,31 @@ if (!isset($_SESSION['id'])) {
     <?php include("../layouts/jsfile.layout.php"); ?>
 </body>
 <script>
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
+     const imageInput = document.getElementById('imageInput');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
     imageInput.addEventListener('change', function (e) {
+        // Clear existing preview images
+        imagePreviewContainer.innerHTML = '';
+
         if (e.target.files.length === 0) {
             return;
         }
-        let file = e.target.files[0];
-        let url = URL.createObjectURL(file);
-        imagePreview.src = url;
 
-        // Display the preview image
-        imagePreview.style.display = 'block';
+        // Loop through all selected files
+        for (let i = 0; i < e.target.files.length; i++) {
+            let file = e.target.files[i];
+            let url = URL.createObjectURL(file);
+
+            // Create an image element for each file
+            let imgElement = document.createElement('img');
+            imgElement.src = url;
+            imgElement.alt = 'Image Preview';
+            imgElement.style.height = '140px';
+
+            // Append the image element to the preview container
+            imagePreviewContainer.appendChild(imgElement);
+        }
     });
 </script>
 

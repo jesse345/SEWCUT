@@ -12,7 +12,6 @@ if (!isset($_SESSION['id'])) {
 
 <head>
     <?php include("../layouts/head.layout.php") ?>
-    
     <style>
         .imagePreviews img {
             max-width: 100px;
@@ -63,13 +62,18 @@ if (!isset($_SESSION['id'])) {
        .form-control:disabled, .form-control[readonly] {
             background-color:#fff!important;
        }
+       .dropdown-menu.show{
+         width:100%;
+       }
     </style>
 </head>
 
 <body>
     <?php
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+    $user1 = mysqli_fetch_assoc(getrecord('users', 'id', $_SESSION['id']));
     $shop = mysqli_fetch_assoc(getrecord('shops', 'id', $_GET['shop_id']));
+    $category = displayProduct('categories');
     ?>
     <div class="page-wrapper">
         <?php include("../layouts/header_layout.php"); ?>
@@ -111,7 +115,7 @@ if (!isset($_SESSION['id'])) {
                             <div class="col-12">
                                 <label>Name</label>
                                 <div class="form-group">
-                                    <input type="text" name="customer_name" class="form-control" >
+                                    <input type="text" name="customer_name" class="form-control" value="<?=ucfirst($user['firstname']) . ' ' . ucfirst($user['lastname'])?>">
                                 </div>
                             </div>
                         </div>
@@ -119,17 +123,17 @@ if (!isset($_SESSION['id'])) {
                             <div class="col-6">
                                 <label for="phoneNumber">Phone Number</label>
                                 <div class="form-group">
-                                    <input type="text" name="phoneNumber" class="form-control" >
+                                    <input type="text" name="phoneNumber" class="form-control" value="<?=$user['contact_number']?>">
                                 </div>
                             </div>
                             <div class="col-6">
                                 <label for="email">Email Address</label>
                                 <div class="form-group">
-                                    <input type="text" name="email" class="form-control" >
+                                    <input type="text" name="email" class="form-control" value="<?=$user1['email']?>">
                                 </div>
                             </div>
                         </div>
-                        <label class="mt-1">Please Upload Image(s) of your garments.</label><br>
+                        <label class="mt-1">Please Upload images of your garments and your desired measurement if applicable.</label><br>
                         <input type="file" name="image[]" id="fileInput" multiple>
                         <div class="imagePreviews" style="display: flex;"></div>
                         <div class="form-group mt-1">
@@ -152,8 +156,8 @@ if (!isset($_SESSION['id'])) {
                                 <div class="row">
                                     <div class="col-4">
                                         <img src="../images/measurements.png" alt="">
-                                        <center class="mt-3">
-                                        <a href="guide.php"><b><u>MEASUREMENT GUIDES</u></b></a>
+                                        <center class="mt-3 mb-3">
+                                            <a href="guide.php"><b><u>MEASUREMENT GUIDES</u></b></a>
                                         </center>
                                     </div>
                                     <div class="col-8">
@@ -162,49 +166,49 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">NECK(CM)</label>
-                                                    <input type="text" class="form-control men"  name="men_neck">
+                                                    <input type="text" class="form-control men" name="men_neck" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SHOULDER(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_shoulder">
+                                                    <input type="text" class="form-control men" name="men_shoulder" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SLEEVE(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_sleeve">
+                                                    <input type="text" class="form-control men" name="men_sleeve" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">CHEST(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_chest">
+                                                    <input type="text" class="form-control men" name="men_chest" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">WAIST(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_waist">
+                                                    <input type="text" class="form-control men" name="men_waist" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HIPS(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_hips">
+                                                    <input type="text" class="form-control men" name="men_hips" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">INSEAM(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_inseam">
+                                                    <input type="text" class="form-control men" name="men_inseam" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">THIGH(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_thigh">
+                                                    <input type="text" class="form-control men" name="men_thigh" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -213,13 +217,13 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HEIGHT FEET AND INCHES</label>
-                                                    <input type="text" class="form-control men" name="men_height">
+                                                    <input type="text" class="form-control men" name="men_height" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">BODICE LENGTH</label>
-                                                    <input type="text" class="form-control men" name="men_bodice">
+                                                    <input type="text" class="form-control men" name="men_bodice" value="0" >
                                                 </div>
                                             </div>
                                         </div>
@@ -230,7 +234,7 @@ if (!isset($_SESSION['id'])) {
                                 <div class="row">
                                     <div class="col-4">
                                         <img src="../images/measurements.png" alt="">
-                                        <center class="mt-3">
+                                        <center class="mt-3 mb-3">
                                         <a href="guide.php"><b><u>MEASUREMENT GUIDES</u></b></a>
                                         </center>
                                     </div>
@@ -240,49 +244,49 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">NECK(CM)</label>
-                                                    <input type="text" class="form-control women" name="neck">
+                                                    <input type="text" class="form-control women" name="neck" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SHOULDER(CM)</label>
-                                                    <input type="text" class="form-control women" name="shoulder">
+                                                    <input type="text" class="form-control women" name="shoulder" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SLEEVE(CM)</label>
-                                                    <input type="text" class="form-control women" name="sleeve">
+                                                    <input type="text" class="form-control women" name="sleeve" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">CHEST(CM)</label>
-                                                    <input type="text" class="form-control women" name="chest">
+                                                    <input type="text" class="form-control women" name="chest" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">WAIST(CM)</label>
-                                                    <input type="text" class="form-control women" name="waist">
+                                                    <input type="text" class="form-control women" name="waist" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HIPS(CM)</label>
-                                                    <input type="text" class="form-control women" name="hips">
+                                                    <input type="text" class="form-control women" name="hips" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">INSEAM(CM)</label>
-                                                    <input type="text" class="form-control women" name="inseam">
+                                                    <input type="text" class="form-control women" name="inseam" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">THIGH(CM)</label>
-                                                    <input type="text" class="form-control women" name="thigh">
+                                                    <input type="text" class="form-control women" name="thigh" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -291,19 +295,19 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HEIGHT FEET AND INCHES</label>
-                                                    <input type="text" class="form-control women" name="height">
+                                                    <input type="text" class="form-control women" name="height" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">BODICE LENGTH</label>
-                                                    <input type="text" class="form-control women" name="bodice">
+                                                    <input type="text" class="form-control women" name="bodice" value="0" >
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">UNDER BUST(CM)</label>
-                                                    <input type="text" class="form-control women" name="under_bust">
+                                                    <input type="text" class="form-control women" name="under_bust" value="0" >
                                                 </div>
                                             </div>
 
@@ -311,11 +315,66 @@ if (!isset($_SESSION['id'])) {
                                     </div>
                                 </div>
                             </div>
-                        </div><!-- End .tab-content -->
+                        </div>
+                        <br>
+                        <div class="d-flex float-right">
+                            <div class="dropdown mr-5">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Garment Types
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="garmentsdropdown">
+                                    <?php while($c = mysqli_fetch_assoc($category)) {?>
+                                        <div class="form-check mb-1">
+                                            <label class="form-check-label mx-5" for="radio1">
+                                                <input type="radio" class="form-check-input" id="garments" name="garmenttype" value="<?=$c['category']?>" style="margin-top:6px;"><span style="margin-left:10px;"><?=$c['category']?></span>
+                                            </label>
+                                        </div>
+                                    <?php } ?>
+                                    <div class="form-check mb-1">
+                                        <label class="form-check-label mx-5" for="radio1">
+                                            <input type="radio"  name="garmenttype" class="form-check-input"  id="garments_others" value="0" style="margin-top:6px;"><span style="margin-left:10px;">Others</span>
+                                        </label>
+                                    </div>
+                                    <input type="text" id="others" name="garmenttype_other" class="form-control" style="display:none;">
+                                </div>
+                            </div>
+                            
+                            <!-- Alteration Type Dropdown -->
+                            <div class="dropdown">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Alteration Type
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="alterdropdown">
+                                    <div class="form-check mb-1">
+                                        <label class="form-check-label mx-5" for="hemming">
+                                            <input type="radio" class="form-check-input" id="alters" name="altertype" value="Hemming" style="margin-top:6px;"><span style="margin-left:10px;">Hemming</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <label class="form-check-label mx-5" for="resizing">
+                                            <input type="radio" class="form-check-input" id="alters" name="altertype" value="Resizing" style="margin-top:6px;"><span style="margin-left:10px;">Resizing</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <label class="form-check-label mx-5" for="adjustment">
+                                            <input type="radio" class="form-check-input" id="alters" name="altertype" value="Adjustment" style="margin-top:6px;"><span style="margin-left:10px;">Adjustment</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-1">
+                                        <label class="form-check-label mx-5" for="alter_others">
+                                            <input type="radio" name="altertype" class="form-check-input" value="0" id="alter_others" style="margin-top:6px;"><span style="margin-left:10px;">Others</span>
+                                        </label>
+                                    </div>
+                                    <input type="text" id="other_alter" name="option_altertype" class="form-control" style="display:none;">
+                                </div>
+                            </div>
+
+                        </div>
+                        <br>
+                        <hr>
                         <br>
                         <button type="button" class="btn btn-secondary btn_PreviousPage2">Previous</button>
                         <div class="float-right">
-                            <button type="button" class="btn btn-success btn_Print" onclick="downloadImage()">Download</button>
                             <button type="button" class="btn btn-secondary btn_Clearform">Clear Form</button>
                             <button type="submit" class="btn btn-info btn_page2" name="ALTERSUBMIT">Submit</button>
                         </div>
@@ -331,18 +390,8 @@ if (!isset($_SESSION['id'])) {
     include("../layouts/jsfile.layout.php");
     include("toastr.php");
     ?>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
-        function downloadImage() {
-            html2canvas(document.querySelector('.mx-auto')).then(function(canvas) {
-                var link = document.createElement('a');
-                document.body.appendChild(link);
-                link.download = 'receipt.png';
-                link.href = canvas.toDataURL();
-                link.target = '_blank';
-                link.click();
-            });
-        }
+       
         $(document).ready(function() {
             $('.btn_page1').on('click', function (e) {
                 $('#page2').removeClass('d-none');
@@ -380,6 +429,24 @@ if (!isset($_SESSION['id'])) {
                     reader.readAsDataURL(files[i]);
                 }
             });
+
+
+            $('#garments_others').on('click', function (e) {
+                $("#others").show();
+            });
+            $("#garmentsdropdown").on('click', '#garments', function () {
+                $("#others").hide();
+                $("#others").val('');
+            });
+            $("#alterdropdown").on('click', '#alter_others', function () {
+                $("#other_alter").show();
+            });
+
+              $("#alterdropdown").on('click', '#alters', function () {
+                 $("#other_alter").hide();
+                 $("#other_alter").val('');
+            });
+            
         });
        
          

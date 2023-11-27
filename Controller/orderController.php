@@ -286,4 +286,4 @@ if (isset($_POST['UPDATESHIPPING'])) {
     flash("msg", "success", "Shipping Info Changed");
     header("Location: ../View/checkout.php?seller=" . $seller);
     exit();
- }
+}

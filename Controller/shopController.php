@@ -2,7 +2,8 @@
 session_start();
 include("../Model/db.php");
 include '../includes/toastr.inc.php';
-error_reporting(0);
+date_default_timezone_set('Asia/Manila');
+$date = date('Y-m-d H:i:s');
 
 if (isset($_POST['CREATESHOP'])) {
     $user_id = $_SESSION['id'];
@@ -260,6 +261,26 @@ if (isset($_POST['CREATESHOP'])) {
     $email = $_POST['email'];
     $instruction = $_POST['instruction'];
 
+
+    // ALTER 
+    if(empty($_POST['altertype'])) {
+        $altertype = $_POST['option_altertype'];
+    } else {
+        $altertype = $_POST['altertype'];
+    }
+
+    // GARMENT
+    if(empty($_POST['garmenttype'])) {
+        $garmentstype = $_POST['garmenttype_other'];
+    } else {
+        $garmentstype = $_POST['garmenttype'];
+    }
+
+    echo $garmentstype;
+    echo $altertype;
+
+
+
     // MEASUREMENTS
     $neck = empty($_POST['men_neck']) ? $_POST['neck'] : $_POST['men_neck'];
     $shoulder = empty($_POST['men_shoulder']) ? $_POST['shoulder'] : $_POST['men_shoulder'];
@@ -286,8 +307,8 @@ if (isset($_POST['CREATESHOP'])) {
             array('shop_customoralter_id','name' ,'phone', 'email','instruction'),
             array($shop_customoralter_id,$name,$phone,$email,$instruction)
         );
-        $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust');
-        $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
+        $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust','garment_type','alter_type');
+        $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust,$garmentstype,$altertype);
         $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
 
         $targetDir = "../images/";
@@ -351,54 +372,53 @@ if (isset($_POST['CREATESHOP'])) {
     }
 
 } elseif (isset($_POST['SETPRICE'])) {
-    $id = $_POST['id'];
+    $id = $_POST['shop_customOrAlter_id'];
     $price = $_POST['price'];
 
-    $user_id = $_POST['user_id'];
     $gcash_name = $_POST['gcash_name'];
     $gcash_number = $_POST['gcash_number'];
+
+
 
     updateUser(
         'shop_customoralter',
         array('id', 'price'),
-        array($id, $price)
+        array($id, number_format($price,2))
     );
-     updateUser(
-        'user_details',
-        array('id', 'gcash_name','gcash_number'),
-        array($user_id,$gcash_name,$gcash_number)
-    );
+
+    CreateShop('shop_seller_paymentinfo',
+                    array('shop_customoralter_id','gcash_name','gcash_number'),
+                    array($id,$gcash_name,$gcash_number));
+
     flash("msg", "success", "Price successfully set");
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
-} elseif (isset($_POST['PAYMENT123'])) {
+} elseif (isset($_POST['CHOOSEPAYMENT'])) {
     $shop_customoralter_id = $_POST['shop_customoralter_id'];
-    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    $reference_order = substr(str_shuffle($characters . time() * rand()), 0, 20);
-
-    $amount = $_POST['amount'];
-    $reference_number = $_POST['reference_number'];
     $payment_type = $_POST['payment-type'];
-
-    $targetDir = "../images/";
-    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
-
-    // Assuming you have a loop for multiple files
-    $fileType = pathinfo($_FILES['image']['name'][$key], PATHINFO_EXTENSION);
-    $targetPath = $targetDir . basename($name);
-
-    insertProduct(
-        'shop_customoralter_details',
-        array('shop_customoralter_id', 'reference_order', 'receipt_image', 'amount', 'reference_number'),
-        array($shop_customoralter_id, $reference_order, $targetPath, $amount, $reference_number)
-    );
-    
+    $fullname = $_POST['fullname'];
+    $contact_number = $_POST['contact_number'];
+    $address = $_POST['address'];
 
     updateUser(
         'shop_customoralter',
         array('id', 'payment_type'),
         array($shop_customoralter_id, $payment_type)
     );
+
+    insertProduct('shop_buyer_shippinginfo',
+        array('shop_customoralter_id', 'fullname', 'contact_number', 'address'),
+        array($shop_customoralter_id, $fullname, $contact_number, $address));
+
+    if ($payment_type == "Cash On Delivery") {
+        flash("msg", "success", "Payment type set to Cash on Delivery");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    } else {
+        // Redirect to the appropriate page based on your logic
+        header("Location: ../View/customOrAlterPayment.php?shop_customOrAlter=" . $shop_customoralter_id);
+        exit();
+    }
 } elseif (isset($_POST['ADDFEEDBACK'])) {
     $id = $_POST['id'];
     $user_id = $_SESSION['id'];
@@ -416,6 +436,103 @@ if (isset($_POST['CREATESHOP'])) {
         header("Location: " . $_SERVER['HTTP_REFERER']);
         exit();
     }
-}
-?>
+} elseif (isset($_POST['CHANGEPAYMENTINFO'])) {
+    $id = $_POST['shop_seller_paymentinfo_id'];
+    $gcash_name = $_POST['gcash_name'];
+    $gcash_number = $_POST['gcash_number'];
 
+    updateUser(
+        'shop_seller_paymentinfo',
+        array('id', 'gcash_name','gcash_number'),
+        array($id, $gcash_name,$gcash_number)
+    );
+    flash("msg", "success", "Payment Info successfully set");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+} elseif (isset($_POST['CUSTOMORALTER_PAY'])) {
+    $custom_alter_id = $_POST['custom_alter_id'];
+    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    $reference_order = substr(str_shuffle($characters . time() * rand()), 0, 20);
+    $amount = $_POST['price'];
+    $reference_number = $_POST['reference_number'];
+
+    $targetDir = "../images/";
+    $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
+
+    // Assuming you have a loop for multiple files
+    foreach ($_FILES['image']['name'] as $key => $name) {
+        $fileType = pathinfo($name, PATHINFO_EXTENSION);
+        $targetPath = $targetDir . basename($name);
+
+        // Check if the file type is allowed
+        if (in_array($fileType, $allowedTypes)) {
+            // Move the uploaded file to the target directory
+            if (move_uploaded_file($_FILES['image']['tmp_name'][$key], $targetPath)) {
+                // Insert data into the database
+                insertProduct(
+                    'shop_customoralter_payments',
+                    array('shop_customoralter_id', 'reference_order', 'receipt_image', 'amount', 'reference_number'),
+                    array($custom_alter_id, $reference_order, $targetPath, $amount, $reference_number)
+                );
+            } else {
+                // Handle file upload error
+                echo 'File upload failed.';
+            }
+        } else {
+            // Handle invalid file type
+            echo 'Invalid file type.';
+        }
+    }
+    flash("msg", "success", "Successfully Paid");
+    header("Location: ../View/customOrAlterReceipt.php?customOrAlter_id=" . $custom_alter_id);
+    exit();
+} elseif (isset($_POST['CHANGSHIPPING'])) {
+    $id = $_POST['shipping_info_id'];
+    $seller = $_POST['seller_id'];
+    updateUser(
+        'shipping_info',
+        array('id','created_at'),
+        array($id, $date)
+    );
+    flash("msg", "success", "Shipping Info Changed");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+} elseif (isset($_POST['ADDSHIPPINGINFO'])) {
+    $user_id = $_SESSION['id'];
+    $name = $_POST['fullname'];
+    $contact = $_POST['contact'];
+    $address = $_POST['address'];
+
+    if($name != '' && $contact != '' && $address != ''){
+
+        insertCart('shipping_info',
+                array('user_id','name','contact','address'),
+                array($user_id,$name,$contact,$address));
+        flash("msg", "success", "Added successfully");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    } else {
+        flash("msg", "info", "Fill up all the fields");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
+
+} elseif (isset($_POST['DELETESHIPPINGINFO'])) {
+    $ID = $_POST['ID'];
+    deleteUser('shipping_info', 'id', $ID);
+} elseif (isset($_POST['SHIPPRODUCT'])) {
+    $shop_customoralter_id = $_POST['id'];
+    $status = "Shipped";
+    
+    updateUser(
+            'shop_customoralter',
+            array('id', 'status'),
+            array($shop_customoralter_id, $status)
+        );
+    flash("msg", "success", "Success");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+}
+    
+
+?>

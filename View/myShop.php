@@ -104,6 +104,7 @@ if (!isset($_SESSION['id'])) {
                                                 <th style="width:2%">#</th>
                                                 <th>TYPE</th>
                                                 <th>STATUS</th>
+                                                <th>PAYMENT TYPE</th>
                                                 <th>FEEDBACK</th>
                                                 <th>ACTIONS</th>
                                             </tr>
@@ -120,6 +121,8 @@ if (!isset($_SESSION['id'])) {
                                             $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
                                             $dataImage = getrecord('shop_images','shop_customoralter_id',$data['id']);
                                             $shopFeedback = getrecord('shop_feedbacks','shop_customoralter_id',$data['id']);
+                                            $shopPaymentInfo = mysqli_fetch_assoc(getRecentShippingAddress('shop_seller_paymentinfo','shop_customoralter_id',$data['id']));
+                                            $shop_customoralter_payments = getrecord('shop_customoralter_payments','shop_customoralter_id',$data['id']);
                                             if($shopOwner['user_id'] == $_SESSION['id']){
                                                 ?>
                                                 <tr>
@@ -127,7 +130,12 @@ if (!isset($_SESSION['id'])) {
                                                     <td><button class="btn btn-warning mr-2"><?=$data['type']?></button></td>
                                                     <td><button class="btn btn-warning"><?=$data['status']?></button></td>
                                                     <td>
-                                                        <?php if($data['status'] == "Approved") {?>
+                                                        <?php if($data['payment_type'] != '') {?>
+                                                            <button class="btn btn-warning"><?=$data['payment_type']?></button>
+                                                        <?php } ?>
+                                                    </td>
+                                                    <td>
+                                                        <?php   if($data['status'] == "Approved" || $data['status'] == "Shipped") {?>
                                                             <a href="#viewFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-warning">View Feedback</a>
                                                         <?php } ?>
                                                     </td>
@@ -139,13 +147,80 @@ if (!isset($_SESSION['id'])) {
                                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                                 <a href="chat.php?user=<?=$data['user_id']?>" class="dropdown-item" style="font-size:15px">Chat</a>
                                                                 <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">View Details</a>
-                                                             <?php if($data['status'] == 'Approved') {?>
-                                                                <a href="#setFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">Add Feedback</a>
-                                                             <?php } ?>
+                                                                <?php if(mysqli_num_rows($shop_customoralter_payments) > 0 ) {?>
+                                                                    <a href="#viewProofOfPayment-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">View Proof of Payment</a>
+                                                                <?php } ?>  
+                                                                <?php if($data['price'] != '') {?>
+                                                                    <a href="#viewPaymentDetails-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">View Payment Details</a>
+                                                                <?php } ?>  
+                                                                <?php if($data['status'] == 'Approved') {?>
+                                                                    <form action="../Controller/shopController.php" method="POST">
+                                                                        <input type="hidden" name="id" value="<?php echo $data['id'] ?>">
+                                                                        <button type="submit" name="SHIPPRODUCT" class="dropdown-item" style="font-size:15px">Ship Product</button>
+                                                                    </form>
+                                                                    <a href="#setFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">Add Feedback</a>
+                                                                <?php } ?>
                                                             </div>
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <div class="modal fade" id="viewProofOfPayment-Modal<?php echo $data['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">PROOF OF PAYMENT</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true"><i class="icon-close"></i></span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body p-5">
+                                                                <div class="d-block">
+                                                                    <div class="form-group">
+                                                                        <label class="form-label">PAYMENT RECEIPT</label>
+                                                                        <?php while($image = mysqli_fetch_assoc($shop_customoralter_payments)) { ?>
+                                                                            <center>
+                                                                                <img src="<?php echo $image['receipt_image'] ?>" class="img-thumbnail" style="width:80%;height:250px;">
+                                                                            </center>
+                                                                        <?php } ?>
+                                                                    </div>
+
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="viewPaymentDetails-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h3>View Payment Details</h3>
+                                                            </div>
+                                                            <form action="../Controller/shopController.php" method="POST">
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label for="">Gcash Name</label>
+                                                                        <input type="hidden" name="shop_seller_paymentinfo_id" value="<?=$shopPaymentInfo['id']?>">
+                                                                        <input type="text" class="form-control" name="gcash_name" value="<?=$shopPaymentInfo['gcash_name']?>">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="">Gcash Number</label>
+                                                                        <input type="text" class="form-control" name="gcash_number" value="<?=$shopPaymentInfo['gcash_number']?>">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">Close</button>
+                                                                    <?php if(mysqli_num_rows($shop_customoralter_payments) == 0 ) {?>
+                                                                        <button type="submit" name="CHANGEPAYMENTINFO" class="btn btn-info">Change</button>
+                                                                    <?php } ?>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="modal fade" id="viewFeedback-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog" role="document">
                                                         <div class="modal-content">
@@ -334,6 +409,21 @@ if (!isset($_SESSION['id'])) {
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Garment Type</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['garment_type'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Alter Type</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['alter_type'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="modal-footer">
@@ -397,24 +487,24 @@ if (!isset($_SESSION['id'])) {
                                                                         <span aria-hidden="true"><i class="icon-close"></i></span>
                                                                     </button>
                                                                 </div>
-                                                                    <div class="modal-body">
-                                                                        <div class="form-group">
-                                                                            <label>Gcash Name</label>
-                                                                            <input type="hidden" name="user_id" value="<?php echo $user['id'] ?>">
-                                                                            <input type="text" class="form-control" name="gcash_name"
-                                                                                value="<?php echo $user['gcash_name'] ?>">
-                                                                        </div>
-                                                                        <div class="form-group">
-                                                                            <label>Gcash Number</label>
-                                                                            <input type="text" class="form-control" name="gcash_number"
-                                                                                value="<?php echo $user['gcash_number'] ?>">
-                                                                        </div>
-                                                                    <div class="modal-footer footer1">
-                                                                        <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
-                                                                            No
-                                                                        </button>
-                                                                        <button type="submit" class="btn btn-dark products" name="SETPRICE">Yes</button>
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <label>Gcash Name</label>
+                                                                        <input type="hidden" name="shop_customOrAlter_id" value="<?php echo $data['id'] ?>">
+                                                                        <input type="text" class="form-control" name="gcash_name"
+                                                                            value="<?php echo $user['gcash_name'] ?>">
                                                                     </div>
+                                                                    <div class="form-group">
+                                                                        <label>Gcash Number</label>
+                                                                        <input type="text" class="form-control" name="gcash_number"
+                                                                            value="<?php echo $user['gcash_number'] ?>">
+                                                                    </div>
+                                                                <div class="modal-footer footer1">
+                                                                    <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                        No
+                                                                    </button>
+                                                                    <button type="submit" class="btn btn-dark products" name="SETPRICE">Yes</button>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
