@@ -1,7 +1,6 @@
 <?php
 include("../Model/db.php");
 session_start();
-error_reporting(0);
 
 if (!isset($_SESSION['id'])) {
     header("Location: ../index.php");
@@ -112,7 +111,7 @@ if (!isset($_SESSION['id'])) {
                                         <tbody>
                                         <?php 
                                         $count = 0 ;
-                                        $customize = displayProduct('shop_customoralter');
+                                        $customize = displayCustomOrAlter('shop_customoralter');
                                         while($data = mysqli_fetch_assoc($customize)){
                                             $count++;
                                             $shopOwner = mysqli_fetch_assoc(getrecord('shops','id',$data['shop_id']));
@@ -120,23 +119,89 @@ if (!isset($_SESSION['id'])) {
                                             $shopHomeService = getrecord('shop_homeservice','shop_customoralter_id',$data['id']);
                                             $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
                                             $dataImage = getrecord('shop_images','shop_customoralter_id',$data['id']);
+                                            $shopFeedback = getrecord('shop_feedbacks','shop_customoralter_id',$data['id']);
                                             if($shopOwner['user_id'] == $_SESSION['id']){
                                                 ?>
                                                 <tr>
                                                     <td><?=$count?></td>
                                                     <td><button class="btn btn-warning mr-2"><?=$data['type']?></button></td>
                                                     <td><button class="btn btn-warning"><?=$data['status']?></button></td>
-                                                    <td><button class="btn btn-warning">View Feedback</button></td>
                                                     <td>
-                                                        <div class="d-flex">
-                                                            <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info mx-2">View Details</a>
-                                                            <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info mx-2">Chat</a>
+                                                        <?php if($data['status'] == "Approved") {?>
+                                                            <a href="#viewFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-warning">View Feedback</a>
+                                                        <?php } ?>
+                                                    </td>
+                                                    <td>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                More Actions
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a href="chat.php?user=<?=$data['user_id']?>" class="dropdown-item" style="font-size:15px">Chat</a>
+                                                                <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">View Details</a>
                                                              <?php if($data['status'] == 'Approved') {?>
-                                                             <button class="btn btn-info mx-2">Add Feedback</button>
+                                                                <a href="#setFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">Add Feedback</a>
                                                              <?php } ?>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
+                                                <div class="modal fade" id="viewFeedback-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h3>View Feedback</h3>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group">
+                                                                    <?php while($sf = mysqli_fetch_assoc($shopFeedback)){ 
+                                                                       
+                                                                        ?>
+                                                                        <div class="row">
+                                                                            <div class="col-7">
+                                                                                <textarea name="feedback" class="form-control" cols="30" rows="5" readonly><?=$sf['feedbacks']?></textarea>
+                                                                            </div>
+                                                                            <div class="col-5 my-auto">
+                                                                                <input type="text" value="<?= date('M d Y H:i:s', strtotime($sf['created_at'])) ?>" class="form-control" readonly>
+                                                                            </div>
+                                                                        </div>
+
+                                                                       
+                                                                    <?php } ?>
+                                                                   
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                    Close
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="setFeedback-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h3>Add Feedback</h3>
+                                                            </div>
+                                                            <form action="../Controller/shopController.php" method="POST">
+                                                                <div class="modal-body">
+                                                                    <div class="form-group">
+                                                                        <input type="hidden" name="id" value="<?php echo $data['id'] ?>">
+                                                                        <textarea name="feedback" class="form-control" cols="30" rows="10"></textarea>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                        Close
+                                                                    </button>
+                                                                    <button type="submit"  name="ADDFEEDBACK" class="btn btn-info">Submit</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <div class="modal fade" id="viewmore-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog custom-modal" role="document">
                                                         <div class="modal-content">
@@ -184,7 +249,6 @@ if (!isset($_SESSION['id'])) {
                                                                 <?php if(mysqli_num_rows($shopHomeService) > 0 ){
                                                                     $homeservice = mysqli_fetch_assoc($shopHomeService);
                                                                     ?>
-                                                                    
                                                                     <label>Home Service Info</label> 
                                                                     <div class="row mt-2">
                                                                         <div class="col-6">
@@ -200,7 +264,6 @@ if (!isset($_SESSION['id'])) {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
                                                                 <?php }else{?>
                                                                     <label>MEASUREMENTS</label> 
                                                                     <div class="row">
@@ -299,7 +362,7 @@ if (!isset($_SESSION['id'])) {
                                                     </div>
                                                 </div>
                                                 <form action="../Controller/shopController.php" method="POST">
-                                                    <div class="modal fade" id="setPrice_modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                    <div class="modal fade" id="setPrice_modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:10%">
                                                         <div class="modal-dialog" role="document">
                                                             <div class="modal-content">
                                                                 <div class="modal-body">
@@ -316,6 +379,9 @@ if (!isset($_SESSION['id'])) {
                                                                             <?php }else{ ?>
                                                                                 <a href="#gcash_info<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info">Change Fee</a>
                                                                             <?php } ?>
+                                                                            <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                                Close
+                                                                            </button>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -433,7 +499,6 @@ if (!isset($_SESSION['id'])) {
     <?php 
         include("../layouts/jsfile.layout.php");
         include("toastr.php");
-        include('../assets/js/prod.php');
     ?>
     
 </body>

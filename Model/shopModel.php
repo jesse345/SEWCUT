@@ -76,6 +76,7 @@ function distance1($v1, $v2)
     disconnect();
     return $resultArray;
 }
+
 function removeCustomOrAlter($id)
 {
     global $conn;
@@ -83,5 +84,15 @@ function removeCustomOrAlter($id)
     mysqli_query($conn, "DELETE FROM `shop_customoralter` WHERE `id`= '$id' ");
     disconnect();
 }
+
+function displayCustomOrAlter($table)
+{
+    global $conn;
+    connect();
+    $query = mysqli_query($conn, "SELECT * FROM $table WHERE `status` != 'DisApproved'");
+    return $query;
+    disconnect();
+}
+
 
 

@@ -2,7 +2,7 @@
 session_start();
 include("../Model/db.php");
 include '../includes/toastr.inc.php';
-
+error_reporting(0);
 
 if (isset($_POST['CREATESHOP'])) {
     $user_id = $_SESSION['id'];
@@ -399,8 +399,23 @@ if (isset($_POST['CREATESHOP'])) {
         array('id', 'payment_type'),
         array($shop_customoralter_id, $payment_type)
     );
+} elseif (isset($_POST['ADDFEEDBACK'])) {
+    $id = $_POST['id'];
+    $user_id = $_SESSION['id'];
+    $feedback = $_POST['feedback'];
+    
+    if($feedback != ''){
+        CreateShop('shop_feedbacks',
+                    array('shop_customoralter_id','user_id','feedbacks'),
+                    array($id,$user_id,$feedback));
+        flash("msg", "success", "Success");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }else{
+        flash("msg", "info", "Input Something");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();
+    }
 }
-
-
 ?>
 

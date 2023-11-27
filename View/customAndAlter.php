@@ -101,6 +101,7 @@ if (!isset($_SESSION['id'])) {
                                         $shopHomeService = getrecord('shop_homeservice','shop_customoralter_id',$data['id']);
                                         $shopMeasurement = mysqli_fetch_assoc(getrecord('shop_measurerments','shop_customoralter_id',$data['id']));
                                         $dataImage = getrecord('shop_images','shop_customoralter_id',$data['id']);
+                                        $shopFeedback = getrecord('shop_feedbacks','shop_customoralter_id',$data['id']);
                                             ?>
                                             <tr>
                                                 <td><?=$count?></td>
@@ -112,7 +113,10 @@ if (!isset($_SESSION['id'])) {
                                                         <button class="btn btn-warning"><?=$data['payment_type']?></button>
                                                     <?php } ?>
                                                 </td>
-                                                <td><button class="btn btn-info">View Feedback</button></td>
+                                                <td>
+                                                    <?php if($data['status'] == "Approved") {?>
+                                                        <a href="#viewFeedback-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info">View Feedback</a></td>
+                                                    <?php } ?>
                                                 <td>
                                                     <div class="dropdown">
                                                         <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -134,6 +138,39 @@ if (!isset($_SESSION['id'])) {
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <div class="modal fade" id="viewFeedback-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h3>View Feedback</h3>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="form-group">
+                                                                <?php while($sf = mysqli_fetch_assoc($shopFeedback)){ 
+                                                                    
+                                                                    ?>
+                                                                    <div class="row">
+                                                                        <div class="col-7">
+                                                                            <textarea name="feedback" class="form-control" cols="30" rows="5" readonly><?=$sf['feedbacks']?></textarea>
+                                                                        </div>
+                                                                        <div class="col-5 my-auto">
+                                                                            <input type="text" value="<?= date('M d Y H:i:s', strtotime($sf['created_at'])) ?>" class="form-control" readonly>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    
+                                                                <?php } ?>
+                                                                
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                Close
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="modal fade" id="viewmore-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                                                 <div class="modal-dialog custom-modal" role="document">
                                                     <div class="modal-content">
@@ -304,7 +341,7 @@ if (!isset($_SESSION['id'])) {
                                                                 </div>
                                                                 <div class="form-group" id="fee">
                                                                     <label for="">Fee</label>
-                                                                    <input type="text" class="form-control" value="<?php echo $data['price'] ?>" readonly>
+                                                                    <input type="text" class="form-control" value="<?php echo number_format($data['price'], 2) ?>" readonly>
                                                                 </div>
                                                                 <div id="shop_gcash_info" style="display:none;">
                                                                     <hr>
@@ -324,7 +361,7 @@ if (!isset($_SESSION['id'])) {
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="email">Total Fee</label>
-                                                                        <input type="text" class="form-control" name="amount" value="<?= $data['price'] ?>" readonly>
+                                                                        <input type="text" class="form-control" name="amount" value="<?= number_format($data['price'],2)?>" readonly>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <input type="file" name="image" id="imageInput" accept="image/*" >
