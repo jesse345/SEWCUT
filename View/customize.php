@@ -175,7 +175,7 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SLEEVE(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_sleeve">
+                                                    <input type="text" class="form-control men" value="0" name="men_sleeve">
                                                 </div>
                                             </div>
                                             <div class="col-6">
