@@ -388,9 +388,9 @@ if (!isset($_SESSION['id'])) {
                                                                     <input type="text" class="form-control" name="address"
                                                                         value="<?= $shipping_info['address'] ?>" readonly>
                                                                 </div>
-                                                                <button id="btn_changeSHIPPING" type="button" class="btn btn-info float-right mb-2">
+                                                                <a href="#ShippingInfo" data-toggle="modal" type="button" class="btn btn-info float-right mb-2">
                                                                     Change Shipping Info
-                                                                </button>
+                                                                </a>
                                                                 <h3 class="summary-title mt-10">Type Of Payment</h3>
                                                                 <div class="row">
                                                                     <div class="col-4">
@@ -513,29 +513,27 @@ if (!isset($_SESSION['id'])) {
         $("#btn_add_address").click(function () {
             var rowhtml = `
                 <form action="../Controller/shopController.php?" method="POST">
-                <div class="row">
-                    <div class="col-3">
-                        <label for="">FullName</label>
-                        <input type="text" class="form-control" name="fullname">
-                    </div>
-                    <div class="col-3">
-                        <label for="">Contact Number</label>
-                        <input type="text" class="form-control" name="contact">
-                    </div>
-                    <div class="col-3">
-                        <label for="">Address</label>
-                        <input type="text" class="form-control" name="address">
-                    </div>
-                    <div class="col-3" style="margin-top:35px;">
-                         <div class="row">
-                            <div class="col-6">
-                                <button type="submit" name="ADDSHIPPINGINFO" class="btn btn-info">Submit</button>
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="">FullName</label>
+                            <input type="text" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-3">
+                            <label for="">Contact Number</label>
+                            <input type="text" class="form-control" name="contact">
+                        </div>
+                        <div class="col-3">
+                            <label for="">Address</label>
+                            <input type="text" class="form-control" name="address">
+                        </div>
+                        <div class="col-3">
+                            <div class="d-flex" style="margin-top:35px;">
+                                <button type="submit" name="ADDSHIPPINGINFO" class="btn btn-info" s>Submit</button>
+                                <button class="btn btn-danger" id="remove">Cancel</button>
                             </div>
-                            <div class="col-6">
-                                <button class="btn btn-danger" id="remove">Remove</button>
-                            </div>
+                        </div>
                     </div>
-                </div>`;
+                </form>`;
 
             adding_address.append(rowhtml);
         });
@@ -546,12 +544,7 @@ if (!isset($_SESSION['id'])) {
                 row.remove();
             }
         });
-        
 
-
-        $("#btn_changeSHIPPING").click(function () {
-             $('#ShippingInfo').modal('show');
-        });
         $("#shippingInfos").on('click', '#btn_deletePayment', function () {
             var dataId = $(this).data('id');
             $.ajax({
@@ -571,25 +564,6 @@ if (!isset($_SESSION['id'])) {
                 }
             });
         });
-
-
-
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         function downloadImage() {
             html2canvas(document.querySelector('#downlad_preview')).then(function(canvas) {

@@ -69,6 +69,7 @@ if (!isset($_SESSION['id'])) {
 <body>
     <?php
     $user = mysqli_fetch_assoc(getrecord('user_details', 'id', $_SESSION['id']));
+    $address = mysqli_fetch_assoc(getrecord('address', 'id', $user['address']));
     $user1 = mysqli_fetch_assoc(getrecord('users', 'id', $_SESSION['id']));
     $shop = mysqli_fetch_assoc(getrecord('shops', 'id', $_GET['shop_id']));
     ?>
@@ -162,13 +163,13 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">NECK(CM)</label>
-                                                    <input type="text" class="form-control men"  name="men_neck">
+                                                    <input type="text" class="form-control men" value="0" name="men_neck">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SHOULDER(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_shoulder">
+                                                    <input type="text" class="form-control men" value="0" name="men_shoulder">
                                                 </div>
                                             </div>
                                             <div class="col-6">
@@ -180,31 +181,31 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">CHEST(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_chest">
+                                                    <input type="text" class="form-control men" value="0" name="men_chest">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">WAIST(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_waist">
+                                                    <input type="text" class="form-control men" value="0" name="men_waist">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HIPS(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_hips">
+                                                    <input type="text" class="form-control men" value="0" name="men_hips">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">INSEAM(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_inseam">
+                                                    <input type="text" class="form-control men" value="0" name="men_inseam">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">THIGH(CM)</label>
-                                                    <input type="text" class="form-control men" name="men_thigh">
+                                                    <input type="text" class="form-control men" value="0" name="men_thigh">
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -213,13 +214,13 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HEIGHT FEET AND INCHES</label>
-                                                    <input type="text" class="form-control men" name="men_height">
+                                                    <input type="text" class="form-control men" value="0" name="men_height">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">BODICE LENGTH</label>
-                                                    <input type="text" class="form-control men" name="men_bodice">
+                                                    <input type="text" class="form-control men" value="0" name="men_bodice">
                                                 </div>
                                             </div>
                                         </div>
@@ -240,49 +241,49 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">NECK(CM)</label>
-                                                    <input type="text" class="form-control women" name="neck">
+                                                    <input type="text" class="form-control women" value="0" name="neck">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SHOULDER(CM)</label>
-                                                    <input type="text" class="form-control women" name="shoulder">
+                                                    <input type="text" class="form-control women" value="0" name="shoulder">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">SLEEVE(CM)</label>
-                                                    <input type="text" class="form-control women" name="sleeve">
+                                                    <input type="text" class="form-control women" value="0" name="sleeve">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">CHEST(CM)</label>
-                                                    <input type="text" class="form-control women" name="chest">
+                                                    <input type="text" class="form-control women" value="0" name="chest">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">WAIST(CM)</label>
-                                                    <input type="text" class="form-control women" name="waist">
+                                                    <input type="text" class="form-control women" value="0" name="waist">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HIPS(CM)</label>
-                                                    <input type="text" class="form-control women" name="hips">
+                                                    <input type="text" class="form-control women" value="0" name="hips">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">INSEAM(CM)</label>
-                                                    <input type="text" class="form-control women" name="inseam">
+                                                    <input type="text" class="form-control women" value="0" name="inseam">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">THIGH(CM)</label>
-                                                    <input type="text" class="form-control women" name="thigh">
+                                                    <input type="text" class="form-control women" value="0" name="thigh">
                                                 </div>
                                             </div>
                                             <div class="col-12">
@@ -291,19 +292,19 @@ if (!isset($_SESSION['id'])) {
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">HEIGHT FEET AND INCHES</label>
-                                                    <input type="text" class="form-control women" name="height">
+                                                    <input type="text" class="form-control women" value="0" name="height">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">BODICE LENGTH</label>
-                                                    <input type="text" class="form-control women" name="bodice">
+                                                    <input type="text" class="form-control women" value="0" name="bodice">
                                                 </div>
                                             </div>
                                             <div class="col-6">
                                                 <div class="form-group">
                                                     <label style="margin-bottom:0;">UNDER BUST(CM)</label>
-                                                    <input type="text" class="form-control women" name="under_bust">
+                                                    <input type="text" class="form-control women" value="0" name="under_bust">
                                                 </div>
                                             </div>
 
@@ -314,7 +315,7 @@ if (!isset($_SESSION['id'])) {
                              <div class="tab-pane fade" id="tab-11" role="tabpanel" aria-labelledby="tab-11-tab">
                                 <div class="form-group">
                                     <label for="">Address:</label>
-                                    <input type="text" name="address" class="form-control address" placeholder="Enter your Address">
+                                    <input type="text" name="address" class="form-control address" value="<?=$address['address']?>">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Schedule</label>

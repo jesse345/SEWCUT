@@ -26,6 +26,9 @@ if (!isset($_SESSION['id'])) {
         .form-control{
             border:1px solid #000;
         }
+        .btn {
+            min-width: 100px;
+        }
     </style>
 </head>
 
@@ -180,9 +183,9 @@ if (!isset($_SESSION['id'])) {
                                         <input type="text" class="form-control" name="address"
                                             value="<?= $shipping_info['address'] ?>">
                                     </div>
-                                    <button id="btn_changeSHIPPING" type="button" class="btn btn-success">
+                                    <a href="#ShippingInfo" data-toggle="modal" type="button" class="btn btn-success">
                                         Change Shipping Info
-                                    </button>
+                                    </a>
                                     <hr>
                                     <h3 class="summary-title mt-3">Cart Total</h3>
                                     <form action="../Controller/orderController.php" method="POST">
@@ -239,9 +242,7 @@ if (!isset($_SESSION['id'])) {
         <?php include("../layouts/footer.layout1.php"); ?>
     </div>
     <?php $shipping_info1 = getrecord('shipping_info','user_id',$_SESSION['id'])?>
-    <div class="modal fade"
-        id="ShippingInfo"
-        tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="ShippingInfo" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog custom-modal"
             role="document" style="max-width:1000px;">
             <div class="modal-content">
@@ -296,25 +297,28 @@ if (!isset($_SESSION['id'])) {
         var adding_address = $('#add_address');
         $("#btn_add_address").click(function () {
             var rowhtml = `
-                <form action="../Controller/orderController.php?seller=<?php echo $_GET['seller']?>" method="POST">
-                <div class="row">
-                    <div class="col-3">
-                        <label for="">FullName</label>
-                        <input type="text" class="form-control" name="fullname">
+                <form action="../Controller/shopController.php?" method="POST">
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="">FullName</label>
+                            <input type="text" class="form-control" name="fullname">
+                        </div>
+                        <div class="col-3">
+                            <label for="">Contact Number</label>
+                            <input type="text" class="form-control" name="contact">
+                        </div>
+                        <div class="col-3">
+                            <label for="">Address</label>
+                            <input type="text" class="form-control" name="address">
+                        </div>
+                        <div class="col-3">
+                            <div class="d-flex" style="margin-top:35px;">
+                                <button type="submit" name="ADDSHIPPINGINFO" class="btn btn-info" style="margin-right:10px;">Submit</button>
+                                <button class="btn btn-danger" id="remove">Cancel</button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-3">
-                        <label for="">Contact Number</label>
-                        <input type="text" class="form-control" name="contact">
-                    </div>
-                    <div class="col-3">
-                        <label for="">Address</label>
-                        <input type="text" class="form-control" name="address">
-                    </div>
-                    <div class="col-3" style="margin-top:35px;">
-                        <button type="submit" name="ADDSHIPPINGINFO" class="btn btn-info" style="min-width:100px!important">Submit</button>
-                        <button class="btn btn-danger" id="remove" style="min-width:100px!important">Cancel</button>
-                    </div>
-                </div>`;
+                </form>`;
 
             adding_address.append(rowhtml);
         });

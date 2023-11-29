@@ -433,10 +433,12 @@ if (!isset($_SESSION['id'])) {
                                                                     <?php }else{?>
                                                                        <button href="#setPrice_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:5%;">View Fee</button>
                                                                     <?php } ?>
-                                                                    <form action="../Controller/shopController.php" method="POST">
-                                                                        <input type="hidden" name="id" value="<?=$data['id']?>">
-                                                                        <button type="submit" class="btn btn-info mx-2" name="BTN_APPROVE">Approve</button>
-                                                                    </form>
+                                                                    <?php if($data['price'] != '') {?>
+                                                                        <form action="../Controller/shopController.php" method="POST">
+                                                                            <input type="hidden" name="id" value="<?=$data['id']?>">
+                                                                            <button type="submit" class="btn btn-info mx-2" name="BTN_APPROVE">Approve</button>
+                                                                        </form>
+                                                                    <?php } ?>
                                                                     <form action="../Controller/shopController.php" method="POST">
                                                                         <input type="hidden" name="id" value="<?=$data['id']?>">
                                                                     <button class="btn btn-danger mx-2" name="BTN_DISAPPROVE">Disapprove</button>
