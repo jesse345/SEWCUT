@@ -231,7 +231,7 @@ $categoryCounts = getCountByCategory();
                                                 <tr>
                                                     <td>
                                                         <div class="td-content customer-name"><img
-                                                                src="../../<?=$user['user_img']?>"
+                                                                src="../<?=$user['user_img']?>"
                                                                 alt="avatar"><span><?=ucfirst($user['firstname']). ' ' . ucfirst($user['lastname'])?></span></div>
                                                     </td>
                                                     <td>

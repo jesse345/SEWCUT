@@ -47,30 +47,6 @@ if (!isset($_SESSION['id'])) {
                                         <p class="text-muted">
                                             <?php echo $notif['Description'] ?>
                                         </p>
-                                        <?php
-                                        $time = strtotime($notification['date_send']);
-                                        $currentTimestamp = time();
-                                        $minutes_ago = floor(($currentTimestamp - $time) / 60);
-                                        // $minutes_ago = floor((time() - $time) / 60) + 360;
-                                        $hours_ago = floor($minutes_ago / 60);
-                                        $days_ago = floor($hours_ago / 24);
-
-                                        ?>
-                                        <p class="text-muted">
-                                            <small>
-                                                <?php
-                                                if ($minutes_ago < 60) {
-                                                    echo $minutes_ago . " minutes ago";
-                                                } else {
-                                                    if ($hours_ago < 24) {
-                                                        echo $hours_ago . " hours ago";
-                                                    } else {
-                                                        echo $days_ago . " days ago";
-                                                    }
-                                                }
-                                                ?>
-                                            </small>
-                                        </p>
                                     </div>
                                 </div>
                                 <div class="dropdown">

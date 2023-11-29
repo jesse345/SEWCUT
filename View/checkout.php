@@ -141,13 +141,13 @@ if (!isset($_SESSION['id'])) {
                                                     </div><!-- End .product -->
                                                 </td>
                                                 <td class="price-col">
-                                                    <?= $productPrice['price'] ?>
+                                                    <?= number_format($productPrice['price'],2) ?>
                                                 </td>
                                                 <td class="price-quantity">
                                                     <?= $c['quantity'] ?>
                                                 </td>
                                                 <td>
-                                                    <?= $c['total'] ?>
+                                                    <?= number_format($c['total'],2) ?>
                                                 </td>
                                             </tr>
                                             <form action="../Controller/orderController.php" method="POST">
@@ -221,7 +221,7 @@ if (!isset($_SESSION['id'])) {
                                                 <tr class="summary-total" style="border-top:none">
                                                     <td>Total:</td>
                                                     <td>P
-                                                        <?= $subTotal ?>
+                                                        <?= number_format($subTotal,2) ?>
                                                     </td>
                                                 </tr>
                                             </tbody>

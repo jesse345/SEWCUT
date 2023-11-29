@@ -6,19 +6,13 @@
                     <li>
                         <a href="#">Links</a>
                         <ul>
-                            <li><a href="tel:#"><i class="icon-phone"></i>Call: +0123 456 789</a></li>
+                            <li><a href="tel:#"><i class="icon-phone"></i>Call: 0921 8455 684</a></li>
                         </ul>
                     </li>
                 </ul><!-- End .top-menu -->
             </div><!-- End .header-left -->
 
             <div class="header-right">
-                <div class="social-icons social-icons-color">
-                    <a href="#" class="social-icon social-facebook" title="Facebook" target="_blank"><i class="icon-facebook-f"></i></a>
-                    <a href="#" class="social-icon social-twitter" title="Twitter" target="_blank"><i class="icon-twitter"></i></a>
-                    <a href="#" class="social-icon social-pinterest" title="Instagram" target="_blank"><i class="icon-pinterest-p"></i></a>
-                    <a href="#" class="social-icon social-instagram" title="Pinterest" target="_blank"><i class="icon-instagram"></i></a>
-                </div><!-- End .soial-icons -->
                 <ul class="top-menu top-link-menu" style="margin-right:10px;">
                     <li>
                         <ul>
@@ -38,18 +32,6 @@
     </div>
     <div class="header-middle">
         <div class="container">
-            <div class="header-left">
-                <div class="header-search header-search-extended header-search-visible d-none d-lg-block">
-                    <a href="#" class="search-toggle" role="button"><i class="icon-search"></i></a>
-                    <form action="#" method="get">
-                        <div class="header-search-wrapper search-wrapper-wide">
-                            <label for="q" class="sr-only">Search</label>
-                            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                            <input type="search" class="form-control" name="q" id="q" placeholder="Search product ..." required>
-                        </div><!-- End .header-search-wrapper -->
-                    </form>
-                </div><!-- End .header-search -->
-            </div>
             <div class="header-center">
                 <a href="index.html" class="logo">
                     <img src="../assets/images/demos/demo-6/sewcutblack1.png" alt="Molla Logo" width="150" height="20">

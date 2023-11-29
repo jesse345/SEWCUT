@@ -79,7 +79,7 @@ if (!isset($_SESSION['admin_id'])) {
                                                              <?= $subscription_record['amount'] ?>
                                                     </td>
                                                     <td>
-                                                        <img src="../../<?= $subscription_record['receipt_img'] ?>" class="img-responsive" style="height:150px;width:200px;" alt="">
+                                                        <img src="../<?= $subscription_record['receipt_img'] ?>" class="img-responsive" style="height:150px;width:200px;" alt="">
                                                     </td>
                                                     <td>
                                                         <?= $subscription_record['created_at'] ?>

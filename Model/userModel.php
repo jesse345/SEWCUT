@@ -154,7 +154,7 @@ function countAllSubscribers()
 {
     global $conn;
     connect();
-    $query = mysqli_query($conn, "SELECT COUNT(*) AS subscribers FROM `subscription`");
+    $query = mysqli_query($conn, "SELECT COUNT(DISTINCT user_id) AS subscribers FROM `subscription`");
     $row = mysqli_fetch_assoc($query);
     disconnect();
     return $row;

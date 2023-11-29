@@ -29,8 +29,6 @@
 
                         <ul class="widget-list">
                             <li><a href="#">Payment Methods</a></li>
-                            <li><a href="#">Money-back guarantee!</a></li>
-                            <li><a href="#">Returns</a></li>
                             <li><a href="#">Shipping</a></li>
                             <li><a href="#">Terms and conditions</a></li>
                             <li><a href="#">Privacy Policy</a></li>
@@ -44,9 +42,9 @@
 
                         <ul class="widget-list">
                             <li><a href="#">Sign In</a></li>
+                            <li><a href="#">Sign Up</a></li>
                             <li><a href="#">View Cart</a></li>
                             <li><a href="#">My Wishlist</a></li>
-                            <li><a href="#">Track My Order</a></li>
                             <li><a href="#">Help</a></li>
                         </ul><!-- End .widget-list -->
                     </div><!-- End .widget -->
@@ -57,7 +55,7 @@
 
     <div class="footer-bottom">
         <div class="container">
-            <p class="footer-copyright">Copyright © 2019 Sewcut Store. All Rights Reserved.</p><!-- End .footer-copyright -->
+            <p class="footer-copyright">Copyright © 2023 Sewcut Store. All Rights Reserved.</p><!-- End .footer-copyright -->
         </div><!-- End .container -->
     </div><!-- End .footer-bottom -->
 </footer><!-- End .footer -->

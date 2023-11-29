@@ -156,39 +156,45 @@ if (!isset($_SESSION['id'])) {
                                                         <?= $buyer['status'] ?>
                                                     </button>
                                                     <?php }else{ ?>
-                                                        <button class="btn btn-info">
+                                                        <button class="btn btn-warning">
                                                             <?= $buyer['status'] ?>
                                                         </button>
                                                     <?php } ?>
                                                 </td>
                                                 <td>
-                                                    <?= $cart['total'] ?>
+                                                    <?= number_format($cart['total'],2) ?>
                                                 </td>
                                                 <td>
-                                                    <form action="../Controller/orderController.php" method="POST">
-                                                        <a href="#viewmore-Modal<?php echo $buyer['id'] ?>"
-                                                            data-toggle="modal" class="btn btn-success">View More</a>
-                                                        <a href="chat.php?user=<?php echo $buyer['seller_id']?>" class="btn btn-primary">Chat Seller</a>
-                                                        <input type="hidden" value="<?php echo $buyer['id'] ?>"
-                                                            name="order_id">
-                                                        <?php if ($buyer['status'] == 'Pending') { ?>
-                                                            <button type="submit" name="CANCELORDER" class="btn btn-danger">Cancel Order</button>
-                                                        <?php } elseif ($buyer['status'] == 'DisApprove') { ?>
-                                                            <button type="submit" name="DELETEORDER" class="btn btn-danger">Delete Order</button>
-                                                        <?php } elseif ($buyer['status'] == 'Shipped') { ?>
-                                                            <button type="submit" name="RECEIVED" class="btn btn-warning">Receive Product</button>
-                                                        <?php } elseif ($buyer['status'] == 'Received') { ?>
-                                                            <button type="button" href="#rate-Modal<?php echo $buyer['id'] ?>"
-                                                            data-toggle="modal" class="btn btn-warning">
-                                                                    <?php
-                                                                        $check = mysqli_fetch_assoc(userProductReviews($_SESSION['id'], $buyer['product_id'],$buyer['id']));
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            More Actions
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <form action="../Controller/orderController.php" method="POST">
+                                                                <a href="#viewmore-Modal<?php echo $buyer['id'] ?>"
+                                                                    data-toggle="modal" class="btn btn-success dropdown-item">View More</a>
+                                                                <a href="chat.php?user=<?php echo $buyer['seller_id']?>" class="btn dropdown-item">Chat</a>
+                                                                <input type="hidden" value="<?php echo $buyer['id'] ?>"
+                                                                    name="order_id">
+                                                                <?php if ($buyer['status'] == 'Pending') { ?>
+                                                                    <button type="submit" name="CANCELORDER" class="btn btn-danger dropdown-item">Cancel Order</button>
+                                                                <?php } elseif ($buyer['status'] == 'DisApprove') { ?>
+                                                                    <button type="submit" name="DELETEORDER" class="btn btn-danger dropdown-item">Delete Order</button>
+                                                                <?php } elseif ($buyer['status'] == 'Shipped') { ?>
+                                                                    <button type="submit" name="RECEIVED" class="btn btn-warning dropdown-item">Receive Product</button>
+                                                                <?php } elseif ($buyer['status'] == 'Received') { ?>
+                                                                    <button type="button" href="#rate-Modal<?php echo $buyer['id'] ?>"
+                                                                    data-toggle="modal" class="btn btn-warning dropdown-item">
+                                                                            <?php
+                                                                                $check = mysqli_fetch_assoc(userProductReviews($_SESSION['id'], $buyer['product_id'],$buyer['id']));
+                                                                                echo $check > 0 ? "View your review" : " Leave Review";
+                                                                            ?>
+                                                                    </button>
+                                                                <?php } ?>
+                                                            </form>
+                                                        </div>
+                                                    </div>
 
-                                                                        echo $check > 0 ? "View your review" : " Leave Review";
-                                                                    ?>
-                                                                
-                                                            </button>
-                                                        <?php } ?>
-                                                    </form>
                                                 </td>
                                             </tr>
                                             <!-- VIEW MORE MODAL -->

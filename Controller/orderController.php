@@ -91,7 +91,7 @@ if (isset($_POST['UPDATESHIPPING'])) {
         
         if ($time_in_hours < 24) {
             removeOrder($order_id);
-            flash("msg", "success", "Order Cancel");
+            flash("msg", "success", "Order Cancelled");
             header("Location: ../View/myPurchase.php");
             exit();
         } else {

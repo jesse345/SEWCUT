@@ -109,9 +109,17 @@ if (!isset($_SESSION['id'])) {
                                                         <?php } ?>
                                                     </td>
                                                     <td>
-                                                        <a href="#viewmore-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-info products">View Details</a>
-                                                        <a href="#update-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-success products">Update</a>
-                                                        <a href="#delete-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-danger products">Delete</a>
+                                                        <div class="dropdown">
+                                                            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                More Actions
+                                                            </button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                <a href="#viewmore-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-info products dropdown-item">View Details</a>
+                                                                <a href="#update-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-success products dropdown-item">Update</a>
+                                                                <a href="#delete-Modal<?php echo $product['id'] ?>" data-toggle="modal" class="btn btn-danger products dropdown-item">Delete</a>
+                                                            </div>
+                                                        </div>
+                                                        
                                                     </td>
                                                 </tr>
                                                  <!-- VIEW MORE MODAL -->
