@@ -231,6 +231,14 @@ function getRecentShippingAddress($table, $field, $value)
     return $query;
 }
 
+function reports($user_id){
+    global $conn;
+    connect();
+    $query = mysqli_query($conn, "SELECT * FROM `reports` WHERE seller_id = $user_id GROUP BY suspension_date DESC LIMIT 1");
+    disconnect();
+    return $query;
+}
+
 
 
 ?>

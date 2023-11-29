@@ -64,7 +64,8 @@ if (!isset($_SESSION['admin_id'])) {
                                         <?php
                                         $count = 0;
                                         while ($user1 = mysqli_fetch_assoc($user)):
-                                            $user_details = mysqli_fetch_assoc(getrecord('user_details',''))
+                                            $report_by = mysqli_fetch_assoc(getrecord('user_details','id',$user1['user_id']));
+                                            $reported_user = mysqli_fetch_assoc(getrecord('user_details','id',$user1['seller_id']));
                                             $count++;
                                             ?>
                                             <tr>
@@ -72,10 +73,10 @@ if (!isset($_SESSION['admin_id'])) {
                                                     <?=$count?>
                                                 </td>
                                                 <td>
-                                                    <?=$user1['user_id']?>
+                                                    <?=ucfirst($report_by['firstname']) . ' ' .ucfirst($report_by['lastname'])?>
                                                 </td>
                                                 <td>
-                                                    <?=$user1['seller_id']?>
+                                                    <?=ucfirst($reported_user['firstname']) . ' ' .ucfirst($reported_user['lastname'])?>
                                                 </td>
                                                 <td>
                                                     <?=$user1['reason']?>
@@ -86,7 +87,11 @@ if (!isset($_SESSION['admin_id'])) {
                                                 <td class="text-center">
                                                     <div class="action-btns">
                                                         <a data-bs-toggle="modal"
-                                                            data-bs-target="#DeleteModal<?= $user1['id'] ?>" class="btn btn-danger">Suspend</a>
+                                                            data-bs-target="#DeleteModal<?= $user1['id'] ?>" class="btn btn-danger">Suspend
+                                                        </a>
+                                                        <?php if($user1['suspension_date'] != '0000-00-00 00:00:00'){?>
+                                                            <button class="btn btn-info">Revert</button>
+                                                        <?php } ?>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -103,9 +108,10 @@ if (!isset($_SESSION['admin_id'])) {
                                                                 <svg> ... </svg>
                                                             </button>
                                                         </div>
-                                                        <form  method="POST">
+                                                        <form action="../Controller/reportController.php" method="POST">
                                                             <div class="modal-body">
-                                                                
+                                                                <input type="hidden" name="id" value="<?= $user1['id'] ?>">
+                                                               <input type="number" name="days" class="form-control" placeholder="Input How many Days" min="0" oninput="validity.valid||(value='');">
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button class="btn btn btn-light-dark"
@@ -113,7 +119,7 @@ if (!isset($_SESSION['admin_id'])) {
                                                                         class="flaticon-cancel-12"></i>
                                                                     Discard</button>
                                                                 <button class="btn btn btn-primary"
-                                                                    name="DELETE">Delete</button>
+                                                                    name="REPORT">Report</button>
                                                             </div>
                                                         </form>
                                                     </div>

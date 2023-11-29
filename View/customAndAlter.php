@@ -75,6 +75,9 @@ if (!isset($_SESSION['id'])) {
                                     <li class="nav-item">
                                         <a href="mySubscription.php" class="nav-link">Manage Subscription</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="transactionReport.php" class="nav-link">Transaction Report</a>
+                                    </li>
                                 </ul>
                             </aside>
                             <div class="col-10">
@@ -133,6 +136,11 @@ if (!isset($_SESSION['id'])) {
                                                                     <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
                                                                     <button type="submit" name="CANCEL" class="btn btn-danger dropdown-item">Cancel</button>
                                                                 </form>
+                                                            <?php }elseif($data['status'] == 'Shipped') {?>
+                                                                    <form action="../Controller/shopController.php" method="POST">
+                                                                        <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
+                                                                        <button type="submit" name="RECEIVE" class="btn btn-danger dropdown-item">Receive</button>
+                                                                    </form>
                                                             <?php } ?>
                                                             <?php if(mysqli_num_rows($shop_customoralter_payments) > 0 ) {?>
                                                                 <a href="#viewProofOfPayment-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="dropdown-item" style="font-size:15px">View Proof of Payment</abs>

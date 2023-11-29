@@ -532,7 +532,19 @@ if (isset($_POST['CREATESHOP'])) {
     flash("msg", "success", "Success");
     header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
+} elseif (isset($_POST['RECEIVE'])) {
+    $id =  $_POST['custom_alterid'];
+    $status = "Received";
+
+    updateUser(
+        'shop_customoralter',
+        array('id', 'status'),
+        array($id, $status)
+    );
+    flash("msg", "success", "Received");
+    header("Location: ../View/customAndAlter.php");
+    exit();
 }
-    
+   
 
 ?>

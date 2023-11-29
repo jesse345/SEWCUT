@@ -98,8 +98,7 @@ if (isset($_POST['REJECT'])) {
                         alert('Accepted Successfully');
                         window.location.href = '../View/subscribe.php';
                     </script>";
-        } 
-        elseif($subscription['type'] == "Advance") {
+        } elseif($subscription['type'] == "Advance") {
             $sixMonths = (3 * 30 * 24 * 60 * 60) * 2; 
             $dateexpire = $currentDateTime+ $sixMonths; 
             $a = $timeLeft + $dateexpire;

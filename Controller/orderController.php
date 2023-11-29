@@ -286,4 +286,21 @@ if (isset($_POST['UPDATESHIPPING'])) {
     flash("msg", "success", "Shipping Info Changed");
     header("Location: ../View/checkout.php?seller=" . $seller);
     exit();
+} elseif (isset($_POST['REPORT'])) {
+    $user_id = $_SESSION['id'];
+    $seller_id = $_POST['seller_id'];
+    $reason = $_POST['reason'];
+
+    if ($reason != '') {
+        insertCart('reports',
+                    array('user_id','seller_id','reason'),
+                    array($user_id,$seller_id,$reason));
+        flash("msg", "success", "Success");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();        
+    } else {
+        flash("msg", "info", "Input Reason");
+        header("Location: " . $_SERVER['HTTP_REFERER']);
+        exit();  
+    }
 }

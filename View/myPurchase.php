@@ -22,7 +22,6 @@ if (!isset($_SESSION['id'])) {
         flex-direction: row-reverse;
         justify-content: center;
     }
-
     .rating > input {
         display: none;
     }
@@ -52,22 +51,6 @@ if (!isset($_SESSION['id'])) {
 
     .rating:hover > input:checked ~ label:before {
         opacity: 0.4;
-    }
-    .ui-w-40 {
-        width: 40px !important;
-        height: auto;
-    }
-
-    .ui-product-color {
-        display: inline-block;
-        overflow: hidden;
-        margin: 0.144em;
-        width: 0.875rem;
-        height: 0.875rem;
-        border-radius: 10rem;
-        -webkit-box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
-        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15) inset;
-        vertical-align: middle;
     }
 </style>
 <body>
@@ -115,6 +98,9 @@ if (!isset($_SESSION['id'])) {
                                     </li>
                                     <li class="nav-item">
                                         <a href="mySubscription.php" class="nav-link">Manage Subscription</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="transactionReport.php" class="nav-link">Transaction Report</a>
                                     </li>
                                 </ul>
                             </aside>
@@ -190,6 +176,8 @@ if (!isset($_SESSION['id'])) {
                                                                                 echo $check > 0 ? "View your review" : " Leave Review";
                                                                             ?>
                                                                     </button>
+                                                                    <a href="#report-Modal<?php echo $buyer['id'] ?>"
+                                                                    data-toggle="modal"  class="btn btn-warning dropdown-item">Report</a>
                                                                 <?php } ?>
                                                             </form>
                                                         </div>
@@ -257,18 +245,26 @@ if (!isset($_SESSION['id'])) {
                                                         <div class="modal-body">
                                                             <form action="../Controller/FeedbackController.php?product_id=<?php echo $buyer['product_id'] ?>" method="POST">
                                                                 <input type="hidden" name="order_id" value="<?=$buyer['id']?>">
+                                                                <style>
+                                                                    .disabled {
+                                                                        pointer-events: none;
+                                                                    }
+                                                                </style>
                                                                 <div class="form-group">
                                                                     <label for="rating">Rate the product *</label>
                                                                     <div class="d-flex">
                                                                         <div class="text-primary rating">
                                                                             <?php
-                                                                            if ($check > 0) {
-                                                                                for ($j = 0; $j < $check['rate']; $j++) {
+                                                                                if ($check > 0) {
+                                                                                    for ($j = 0; $j < 5 - $check['rate']; $j++) {
                                                                                 ?>
-                                                                                    <i class="fa fa-star-o" style="font-size:24px"></i>
-                                                                                <?php }
-                                                                                
-                                                                            } else {
+                                                                                        <i class="far fa-star" style="font-size: 2rem;"></i>
+                                                                                    <?php }
+                                                                                    for ($i = 0; $i < $check['rate']; $i++) {
+                                                                                    ?>
+                                                                                        <i class="fas fa-star" style="font-size: 2rem;"></i>
+                                                                                    <?php }
+                                                                                } else {
                                                                                 ?>
                                                                                 <input type="radio" name="rating" value="5" id="5" required>
                                                                                 <label for="5">☆</label>
@@ -306,6 +302,26 @@ if (!isset($_SESSION['id'])) {
                                                             </form>
                                                         </div>
 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal fade" id="report-Modal<?php echo $buyer['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <div class="modal-content p-5">
+                                                        <form action="../Controller/orderController.php" method="POST">
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="seller_id" value="<?=$buyer['seller_id']?>">
+                                                                <label for="">Reason</label>
+                                                                <textarea name="reason" class="form-control" cols="30" rows="10"></textarea>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger products"
+                                                                    data-dismiss="modal" aria-label="Close">
+                                                                    Discard
+                                                                </button>
+                                                                <button type="submit" name="REPORT" class="btn btn-info">Report</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>

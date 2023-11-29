@@ -67,6 +67,9 @@ if (!isset($_SESSION['id'])) {
                                     <li class="nav-item">
                                         <a href="mySubscription.php" class="nav-link">Manage Subscription</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a href="transactionReport.php" class="nav-link">Transaction Report</a>
+                                    </li>
                                 </ul>
                             </aside>
                             <div class="col-10">
@@ -125,7 +128,7 @@ if (!isset($_SESSION['id'])) {
                                                         <a class="btn btn-info dropdown-item" href="#viewmore-Modal<?php echo $c['id'] ?>"
                                                         data-toggle="modal">View Details
                                                         </a>
-                                                            <a href="chat.php?user=<?php echo $c['user_id']?>" class="btn dropdown-item">Chat Seller</a>
+                                                            <a href="chat.php?user=<?php echo $c['user_id']?>" class="btn dropdown-item">Chat</a>
                                                         <?php if($c['status'] != 'Approve' && $c['status'] != 'Shipped' && $c['status'] != 'Received'){?>
                                                             <form action="../Controller/orderController.php" method="POST">
                                                                 <input type="hidden" name="order_id" value="<?php echo $c['id'] ?>">
@@ -217,13 +220,13 @@ if (!isset($_SESSION['id'])) {
                                                 </div>
                                             </div>
                                         <?php endwhile; ?>
-                                        <tr>
+                                        <!-- <tr>
                                             <td colspan="5"></td>
                                             <td>Total Income:</td>
                                             <td>
                                                 <b>P <?=$totalIncome?></b>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
