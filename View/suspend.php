@@ -1,12 +1,29 @@
 <?php
+include("../Model/db.php");
+session_start();
+
+if (!isset($_SESSION['id'])) {
+    header("Location: ../index.php");
+    exit();
+}
 error_reporting(0);
 $report = mysqli_fetch_assoc(reports($_SESSION['id']));
 $currentDateTime = time();
 
-if(strtotime($report['suspension_date']) > $currentDateTime)
-    header("location:../View/suspend.php");
+if(strtotime($report['suspension_date']) < $currentDateTime)
+    header("location:../View/index.php");
 ?>
-<header class="header header-6">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <?php include("../layouts/head.layout.php")?>
+</head>
+<body>
+    <?php
+    $user = mysqli_fetch_assoc(getrecord('user_details','id',$_SESSION['id']));
+    ?>
+    <div class="page-wrapper">
+        <header class="header header-6">
     <div class="header-top">
         <div class="container">
             <div class="header-left">
@@ -21,37 +38,15 @@ if(strtotime($report['suspension_date']) > $currentDateTime)
             </div><!-- End .header-left -->
 
             <div class="header-right">
-                <?php if (isset($_SESSION['id'])) { ?>
-                    <?php
-                    $unread = mysqli_num_rows(unRead($_SESSION['id'])) ?>
-                    <a href="../View/notification.php" class="mr-4">
-                        Notifications
-                        <?php echo $unread > 0 ? "($unread)" : '' ?>
-                    </a>
-                <?php } ?>
-                <a href="../View/chat.php" class="mr-4">Chat</a>
                 <div class="header-dropdown">
-                    <a href="#"><i class="icon-user"> </i>
-                        <?php echo ucfirst($user['firstname']) . " " . ucfirst($user['lastname']) ?>
-                    </a>
-                    <div class="header-menu">
-                        <ul>
-                            <li><a href="myAccount.php">My Account</a></li>
-                            <li><a href="myProduct.php">My Products</a></li>
-                            <li><a href="manageOrder.php">Orders</a></li>
-                            <li><a href="myPurchase.php">My Purchase</a></li>
-                            <li><a href="myShop.php">My Shop</a></li>
-                            <li><a href="mySubscription.php">My Subscription</a></li>
-                            <li><a href="transactionReport.php">Transaction Report</a></li>
-                            <form action="../Controller/userController.php" method="POST">
-                                <li><a><button type="submit" name="LOGOUT"
-                                            style="border:none;background-color:transparent;">Logout</button></a></li>
-                            </form>
-
-                        </ul>
-                    </div><!-- End .header-menu -->
-                </div><!-- End .header-dropdown -->
-            </div><!-- End .header-right -->
+                    <form action="../Controller/userController.php" method="POST">
+                            <a><button type="submit" name="LOGOUT"
+                                        style="border:none;background-color:transparent;">Logout</button></a>
+                    </form>
+                   
+                    
+                </div>
+            </div>
         </div>
     </div>
     <div class="header-middle">
@@ -60,11 +55,9 @@ if(strtotime($report['suspension_date']) > $currentDateTime)
                 <a href="homepage.php" class="logo">
                     <img src="../assets/images/demos/demo-6/sewcutlogo.png" alt="Molla Logo" width="150" height="20">
                 </a>
-            </div><!-- End .header-left -->
-
-
+            </div>
             <div class="header-right">
-                <a href="../View/wishlist.php" class="wishlist-link">
+                <a href="#" class="wishlist-link">
                     <i class="icon-heart-o"></i>
                     <?php $count = countWishlist($_SESSION['id']) ?>
                     <span class="wishlist-count">
@@ -72,9 +65,8 @@ if(strtotime($report['suspension_date']) > $currentDateTime)
                     </span>
                     <span class="wishlist-txt">My Wishlist</span>
                 </a>
-
                 <div class="dropdown cart-dropdown">
-                    <a href="../View/cart.php" class="dropdown-toggle">
+                    <a href="#" class="dropdown-toggle">
                         <i class="icon-shopping-cart"></i>
                         <?php $countCart = countCart($_SESSION['id']) ?>
                         <span class="cart-count">
@@ -116,3 +108,47 @@ if(strtotime($report['suspension_date']) > $currentDateTime)
         </div><!-- End .container -->
     </div><!-- End .header-bottom -->
 </header><!-- End .header -->
+        <main class="main">
+        	<div class="error-content text-center" style="background-image: url(assets/images/backgrounds/error-bg.jpg)">
+            	<div class="container">
+            		<h1 class="error-title">Suspended</h1>
+                    <?php
+                   
+                    if ($report['suspension_date'] != '0000-00-00 00:00:00') {
+                        // Get the current timestamp
+                        $currentTime = time();
+
+                        // Convert the suspension date to a timestamp
+                        $suspensionTime = strtotime($report['suspension_date']);
+
+                        // Calculate the time difference
+                        $timeDifference = $suspensionTime - $currentTime;
+
+                        // Calculate remaining days, hours, minutes, and seconds
+                        $remainingDays = floor($timeDifference / (24 * 3600));
+                        $remainingHours = floor(($timeDifference % (24 * 3600)) / 3600);
+                        $remainingMinutes = floor(($timeDifference % 3600) / 60);
+                        $remainingSeconds = $timeDifference % 60;
+
+                        // Display the time left
+                        if ($remainingDays > 0) {
+                            echo "Time Left: $remainingDays days, $remainingHours hours, $remainingMinutes minutes, $remainingSeconds seconds";
+                        } else {
+                            echo "Time Left: $remainingHours hours, $remainingMinutes minutes, $remainingSeconds seconds";
+                        }
+                    }
+                    ?>
+
+
+
+                                                     
+            		<p>We are sorry, the page you've requested is not available.</p>
+            	</div>
+        	</div>
+        </main>
+        <br>
+        <?php include("../layouts/footer.layout1.php"); ?>
+    </div>
+    <?php include("../layouts/jsfile.layout.php"); ?>
+</body>
+</html>

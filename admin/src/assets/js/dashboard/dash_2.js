@@ -422,8 +422,8 @@ window.addEventListener("load", function () {
                     width: 15,
                     colors: '#0e1726'
                 },  
-                series: [1, 1, 1, 1],
-                labels: ['T-Shirt', 'Bags', 'Dress', 'Jeans'],
+                series: [1, 1, 1, 2],
+                labels: ['T-Shirt', 'Suits', 'Dress', 'Others'],
 
                 responsive: [
                     {

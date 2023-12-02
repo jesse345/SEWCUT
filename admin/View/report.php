@@ -3,6 +3,7 @@ include('../../Model/db.php');
 include("../Includes/head.includes.php");
 session_start();
 $user = getallrecord('reports');
+$currentDateTime = time();
 
 if (!isset($_SESSION['admin_id'])) {
     header("Location: login.php");
@@ -49,6 +50,7 @@ if (!isset($_SESSION['admin_id'])) {
                                 </div>
                             </div>
                             <div class="table-responsive">
+                                <?php ?>                 
                                 <table class="table table-bordered mt-5 text-center">
                                     <thead>
                                         <tr>
@@ -56,7 +58,7 @@ if (!isset($_SESSION['admin_id'])) {
                                             <th style="width:15%">Report By</th>
                                             <th style="width:15%">Reported User</th>
                                             <th>Reason</th>
-                                            <th>Created Date</th>
+                                            <th>Duration</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -67,64 +69,115 @@ if (!isset($_SESSION['admin_id'])) {
                                             $report_by = mysqli_fetch_assoc(getrecord('user_details','id',$user1['user_id']));
                                             $reported_user = mysqli_fetch_assoc(getrecord('user_details','id',$user1['seller_id']));
                                             $count++;
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <?=$count?>
-                                                </td>
-                                                <td>
-                                                    <?=ucfirst($report_by['firstname']) . ' ' .ucfirst($report_by['lastname'])?>
-                                                </td>
-                                                <td>
-                                                    <?=ucfirst($reported_user['firstname']) . ' ' .ucfirst($reported_user['lastname'])?>
-                                                </td>
-                                                <td>
-                                                    <?=$user1['reason']?>
-                                                </td>
-                                                <td>
-                                                    <?=$user1['created_at']?>
-                                                </td>
-                                                <td class="text-center">
-                                                    <div class="action-btns">
-                                                        <a data-bs-toggle="modal"
-                                                            data-bs-target="#DeleteModal<?= $user1['id'] ?>" class="btn btn-danger">Suspend
-                                                        </a>
-                                                        <?php if($user1['suspension_date'] != '0000-00-00 00:00:00'){?>
-                                                            <button class="btn btn-info">Revert</button>
-                                                        <?php } ?>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            <!-- Suspend -->
-                                            <div class="modal fade" id="DeleteModal<?= $user1['id'] ?>" tabindex="-1"
-                                                role="dialog" aria-labelledby="DeleteLabel" aria-hidden="true">
-                                                <div class="modal-dialog" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="DeleteLabel">Suspend User
-                                                            </h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close">
-                                                                <svg> ... </svg>
-                                                            </button>
+
+                                           
+                                                ?>
+                                                <tr>
+                                                    <td>
+                                                        <?=$count?>
+                                                    </td>
+                                                    <td>
+                                                        <?=ucfirst($report_by['firstname']) . ' ' .ucfirst($report_by['lastname'])?>
+                                                    </td>
+                                                    <td>
+                                                        <?=ucfirst($reported_user['firstname']) . ' ' .ucfirst($reported_user['lastname'])?>
+                                                    </td>
+                                                    <td>
+                                                        <?=$user1['reason']?>
+                                                    </td>
+                                                    <td>
+                                                        <?php
+                                                        if ($user1['suspension_date'] != '0000-00-00 00:00:00') {
+                                                            // Get the current timestamp
+                                                            $currentTime = time();
+
+                                                            // Convert the suspension date to a timestamp
+                                                            $suspensionTime = strtotime($user1['suspension_date']);
+
+                                                            // Calculate the time difference
+                                                            $timeDifference = $suspensionTime - $currentTime;
+
+                                                            // Calculate remaining days, hours, minutes, and seconds
+                                                            $remainingDays = floor($timeDifference / (24 * 3600));
+                                                            $remainingHours = floor(($timeDifference % (24 * 3600)) / 3600);
+                                                            $remainingMinutes = floor(($timeDifference % 3600) / 60);
+                                                            $remainingSeconds = $timeDifference % 60;
+
+                                                            // Display the time left
+                                                            if ($remainingDays > 0) {
+                                                                echo "Time Left: $remainingDays days, $remainingHours hours, $remainingMinutes minutes, $remainingSeconds seconds";
+                                                            } else {
+                                                                echo "Time Left: $remainingHours hours, $remainingMinutes minutes, $remainingSeconds seconds";
+                                                            }
+                                                        }
+                                                        ?>
+
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <div class="action-btns">
+                                                            <?php if($user1['suspension_date'] == '0000-00-00 00:00:00'){?>
+                                                                <a data-bs-toggle="modal" data-bs-target="#DeleteModal<?= $user1['id'] ?>" class="btn btn-danger">Suspend</a>
+                                                            <?php } ?>
+                                                            <?php if($user1['suspension_date'] != '0000-00-00 00:00:00'){?>
+                                                                <form action="../Controller/reportController.php" method="POST">
+                                                                    <input type="hidden" name="id" value="<?=$user1['id']?>">
+                                                                    <button name="REVERT" class="btn btn-info">Revert</button>
+                                                                </form>
+                                                            <?php } ?>
                                                         </div>
-                                                        <form action="../Controller/reportController.php" method="POST">
-                                                            <div class="modal-body">
-                                                                <input type="hidden" name="id" value="<?= $user1['id'] ?>">
-                                                               <input type="number" name="days" class="form-control" placeholder="Input How many Days" min="0" oninput="validity.valid||(value='');">
+                                                    </td>
+                                                </tr>
+                                                <!-- Suspend -->
+                                                <div class="modal fade" id="DeleteModal<?= $user1['id'] ?>" tabindex="-1"
+                                                    role="dialog" aria-labelledby="DeleteLabel" aria-hidden="true">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="DeleteLabel">Suspend User
+                                                                </h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                    aria-label="Close">
+                                                                    <svg> ... </svg>
+                                                                </button>
                                                             </div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn btn-light-dark"
-                                                                    data-bs-dismiss="modal"><i
-                                                                        class="flaticon-cancel-12"></i>
-                                                                    Discard</button>
-                                                                <button class="btn btn btn-primary"
-                                                                    name="REPORT">Report</button>
-                                                            </div>
-                                                        </form>
+                                                            <form action="../Controller/reportController.php" method="POST">
+                                                                <div class="modal-body">
+                                                                    <input type="hidden" name="id" value="<?= $user1['id'] ?>">
+                                                                <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input type="radio" class="form-check-input" name="days" value="3">3 days
+                                                                        </label>
+                                                                        </div>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input type="radio" class="form-check-input" name="days" value="7"> 7 days
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input type="radio" class="form-check-input" name="days" value="14"> 14 days
+                                                                        </label>
+                                                                    </div>
+                                                                    <div class="form-check">
+                                                                        <label class="form-check-label">
+                                                                            <input type="radio" class="form-check-input" name="days" value="30"> 30 days
+                                                                        </label>
+                                                                    </div>
+                                                                    
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button class="btn btn btn-light-dark"
+                                                                        data-bs-dismiss="modal"><i
+                                                                            class="flaticon-cancel-12"></i>
+                                                                        Discard</button>
+                                                                    <button class="btn btn btn-primary"
+                                                                        name="REPORT">Report</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                           
                                         <?php endwhile; ?>
                                     </tbody>
                                 </table>

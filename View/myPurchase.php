@@ -17,41 +17,149 @@ if (!isset($_SESSION['id'])) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <style>
-    .rating {
-        display: flex;
-        flex-direction: row-reverse;
-        justify-content: center;
+    .ratedstar{
+        color:black;
+        font-size:30px;
     }
-    .rating > input {
-        display: none;
+    .star-group {
+        display: grid;
+        font-size: clamp(1.5em, 10vw, 5em);
+        grid-auto-flow: column;
     }
 
-    .rating > label {
-        position: relative;
-        width: 1em;
-        font-size: 3rem;
-        color: #007bff;
+    /* reset native input styles */
+    .star {
+        -webkit-appearance: none;
+        align-items: center;
+        appearance: none;
         cursor: pointer;
+        display: grid;
+        font: inherit;
+        height: 1.15em;
+        justify-items: center;
+        margin: 0;
+        place-content: center;
+        position: relative;
+        width: 1.15em;
     }
 
-    .rating > label::before {
-        content: "\2605";
+    @media (prefers-reduced-motion: no-preference) {
+        .star {
+            transition: all 0.25s;
+        }
+
+        .star:before,
+        .star:after {
+            transition: all 0.25s;
+        }
+    }
+
+    .star:before,
+    .star:after {
+        color: var(--star-primary-color);
         position: absolute;
+    }
+
+    .star:before {
+        content: "☆";
+    }
+
+    .star:after {
+        content: "✦";
+        font-size: 25%;
         opacity: 0;
+        right: 20%;
+        top: 20%;
     }
 
-    .rating > label:hover:before,
-    .rating > label:hover ~ label:before {
-        opacity: 1 !important;
+    /* The checked radio button and each radio button preceding */
+    .star:checked:before,
+    .star:has(~ .star:checked):before {
+        content: "★";
     }
 
-    .rating > input:checked ~ label:before {
+    #two:checked:after,
+    .star:has(~ #two:checked):after {
         opacity: 1;
+        right: 14%;
+        top: 10%;
     }
 
-    .rating:hover > input:checked ~ label:before {
-        opacity: 0.4;
+    #three:checked:before,
+    .star:has(~ #three:checked):before {
+        transform: var(--enlarge);
     }
+
+    #three:checked:after,
+    .star:has(~ #three:checked):after {
+        opacity: 1;
+        right: 8%;
+        top: 2%;
+        transform: var(--enlarge);
+    }
+
+    #four:checked:before,
+    .star:has(~ #four:checked):before {
+        text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+        transform: var(--enlarge);
+    }
+
+    #four:checked:after,
+    .star:has(~ #four:checked):after {
+        opacity: 1;
+        right: 8%;
+        top: 2%;
+        transform: var(--enlarge);
+    }
+
+    #five:checked:before,
+    .star:has(~ #five:checked):before {
+        text-shadow: 0.05em 0.033em 0px var(--star-secondary-color);
+        transform: var(--enlarge);
+    }
+
+    #five:checked:after,
+    .star:has(~ #five:checked):after {
+        opacity: 1;
+        right: 8%;
+        text-shadow: 0.14em 0.075em 0px var(--star-secondary-color);
+        top: 2%;
+        transform: var(--enlarge);
+    }
+
+    .star-group:has(> #five:checked) {
+        #one {
+            transform: rotate(-15deg);
+        }
+
+        #two {
+            transform: translateY(-20%) rotate(-7.5deg);
+        }
+
+        #three {
+            transform: translateY(-30%);
+        }
+
+        #four {
+            transform: translateY(-20%) rotate(7.5deg);
+        }
+
+        #five {
+            transform: rotate(15deg);
+        }
+    }
+
+    .star:focus {
+        outline: none;
+    }
+
+    .star:focus-visible {
+        border-radius: 8px;
+        outline: 2px dashed var(--star-primary-color);
+        outline-offset: 8px;
+        transition: all 0s;
+    }
+
 </style>
 <body>
     <?php
@@ -245,41 +353,26 @@ if (!isset($_SESSION['id'])) {
                                                         <div class="modal-body">
                                                             <form action="../Controller/FeedbackController.php?product_id=<?php echo $buyer['product_id'] ?>" method="POST">
                                                                 <input type="hidden" name="order_id" value="<?=$buyer['id']?>">
-                                                                <style>
-                                                                    .disabled {
-                                                                        pointer-events: none;
-                                                                    }
-                                                                </style>
                                                                 <div class="form-group">
-                                                                    <label for="rating">Rate the product *</label>
-                                                                    <div class="d-flex">
-                                                                        <div class="text-primary rating">
-                                                                            <?php
-                                                                                if ($check > 0) {
-                                                                                    for ($j = 0; $j < 5 - $check['rate']; $j++) {
-                                                                                ?>
-                                                                                        <i class="far fa-star" style="font-size: 2rem;"></i>
-                                                                                    <?php }
-                                                                                    for ($i = 0; $i < $check['rate']; $i++) {
-                                                                                    ?>
-                                                                                        <i class="fas fa-star" style="font-size: 2rem;"></i>
-                                                                                    <?php }
-                                                                                } else {
-                                                                                ?>
-                                                                                <input type="radio" name="rating" value="5" id="5" required>
-                                                                                <label for="5">☆</label>
-                                                                                <input type="radio" name="rating" value="4" id="4" required>
-                                                                                <label for="4">☆</label>
-                                                                                <input type="radio" name="rating" value="3" id="3" required>
-                                                                                <label for="3">☆</label>
-                                                                                <input type="radio" name="rating" value="2" id="2" required>
-                                                                                <label for="2">☆</label>
-                                                                                <input type="radio" name="rating" value="1" id="1" required>
-                                                                                <label for="1">☆</label>
-                                                                            <?php } ?>
+                                                                    
+                                                                     <?php
+                                                                    if ($check > 0) { ?>
+                                                                        <label for="rating">Product Rated</label><br>
+                                                                        <?php
+                                                                        for ($j = 0; $j <  $check['rate']; $j++) {
+                                                                        ?>
+                                                                            <span class="fa fa-star checked ratedstar"></span>
+                                                                        <?php }
+                                                                    } else { ?>
+                                                                        <label for="rating">Rate the product *</label>
+                                                                        <div class="star-group" style="margin-top: 36px;">
+                                                                            <input type="radio" class="star" id="one" name="rating" value="1" checked>
+                                                                            <input type="radio" class="star" id="two" name="rating" value="2" >
+                                                                            <input type="radio" class="star" id="three" name="rating" value="3" >
+                                                                            <input type="radio" class="star" id="four" name="rating" value="4" >
+                                                                            <input type="radio" class="star" id="five" name="rating" value="5" >
                                                                         </div>
-                                                                    </div>
-
+                                                                    <?php } ?>
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <label for="message">Your Review *</label>

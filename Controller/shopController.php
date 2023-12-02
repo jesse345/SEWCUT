@@ -545,6 +545,4 @@ if (isset($_POST['CREATESHOP'])) {
     header("Location: ../View/customAndAlter.php");
     exit();
 }
-   
-
 ?>

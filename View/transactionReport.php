@@ -70,16 +70,66 @@ if (!isset($_SESSION['id'])) {
                                 </ul>
                             </aside>
                             <div class="col-10">   
-                                <table class="table table-hover text-center mt-5">
+                                <button class="btn btn-success float-right mb-2" onclick="downloadImage()">Download</button>
+                                <table class="table table-hover text-center mt-2" id="tableContent">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>#</th>
-                                            <th>NAME</th>
+                                            <th>ORDER BY</th>
                                             <th>TYPE</th>
-                                            <th>PRICE</th>
+                                            <th>PRODUCT NAME</th>
+                                            <th>TOTAL PRICE</th>
+                                            <TH>STATUS</TH>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <?php 
+                                        $order_count = 0;
+                                        $totalIncome = 0;
+                                        $order = getrecord('orders', 'seller_id', $_SESSION['id']);
+                                        while ($ord = mysqli_fetch_assoc($order)) {
+                                            if($ord['status'] == 'Received'){
+                                                $totalIncome += $ord['total'];
+                                                $order_count++;
+                                                $order_by = mysqli_fetch_assoc(getrecord('user_details','id',$ord['user_id']));
+                                                $product = mysqli_fetch_assoc(getrecord('product_details','id',$ord['product_id']));?>
+                                                <tr>
+                                                    <td><?=$order_count?></td>
+                                                    <td><?=ucfirst($order_by['firstname']) . ' ' .ucfirst($order_by['lastname']) ?></td>
+                                                    <td>ORDERS</td>
+                                                    <td><?=$product['product_name'] ?></td>
+                                                     <td><button class="btn btn-info">Successful</button></td>
+                                                    <td><?=number_format($ord['total'],2) ?></td>
+                                                   
+                                                </tr>
+                                          <?php } ?>
+                                        <?php } ?>
+                                        <?php 
+                                        $custom_alter = getallrecord('shop_customoralter');
+                                        while($cOr = mysqli_fetch_assoc($custom_alter)){
+                                            $order_count++;
+                                            $order_by1 = mysqli_fetch_assoc(getrecord('user_details','id',$cOr['user_id']));
+                                            $shop = mysqli_fetch_assoc(getrecord('shops','id',$cOr['shop_id']));
+                                            if($shop['user_id'] == $_SESSION['id']){
+                                                if($cOr['status'] == 'Received'){
+                                                    $totalIncome += $cOr['price'];
+                                                    ?>
+                                                    <tr>
+                                                        <td><?=$order_count?></td>
+                                                        <td><?=ucfirst($order_by1['firstname']) . ' ' .ucfirst($order_by1['lastname']) ?></td>
+                                                        <td><?=strtoupper($cOr['type'])?></td>
+                                                        <td></td>
+                                                        <td><button class="btn btn-info">Successful</button></td>
+                                                        <td><?=$cOr['price']?></td>
+                                                        
+                                                    </tr>
+                                                <?php } ?>
+                                            <?php } ?>
+                                        <?php } ?>
+                                        <tr>
+                                            <td colspan="5"></td>
+                                            <td>Total Income: <b><?=number_format($totalIncome,2)?></b></td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -95,6 +145,20 @@ if (!isset($_SESSION['id'])) {
     include("../layouts/jsfile.layout.php");
     include("toastr.php");
     ?>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script>
+        function downloadImage() {
+            html2canvas(document.querySelector('#tableContent')).then(function(canvas) {
+                var link = document.createElement('a');
+                document.body.appendChild(link);
+                link.download = 'receipt.png';
+                link.href = canvas.toDataURL();
+                link.target = '_blank';
+                link.click();
+            });
+        }
+
+    </script>
 
 </body>
 </html>
