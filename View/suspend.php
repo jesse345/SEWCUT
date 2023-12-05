@@ -142,7 +142,7 @@ if(strtotime($report['suspension_date']) < $currentDateTime)
 
 
                                                      
-            		<p>We are sorry, the page you've requested is not available.</p>
+            		<p>You are suspended for breaking our terms and services.</p>
             	</div>
         	</div>
         </main>

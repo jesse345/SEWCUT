@@ -104,7 +104,7 @@ if (!isset($_SESSION['admin_id'])) {
                                                                 <circle cx="12" cy="12" r="3"></circle>
                                                             </svg>
                                                         </a>
-                                                        <a data-bs-toggle="modal"
+                                                        <!-- <a data-bs-toggle="modal"
                                                             data-bs-target="#EditModal<?= $user1['id'] ?>"
                                                             class="action-btn btn-edit bs-tooltip me-2" title="Edit">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -131,7 +131,7 @@ if (!isset($_SESSION['admin_id'])) {
                                                                 <line x1="10" y1="11" x2="10" y2="17"></line>
                                                                 <line x1="14" y1="11" x2="14" y2="17"></line>
                                                             </svg>
-                                                        </a>
+                                                        </a> -->
                                                     </div>
                                                 </td>
                                             </tr>
