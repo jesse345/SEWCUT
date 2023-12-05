@@ -2,10 +2,10 @@
 include("../Model/db.php");
 session_start();
 include '../includes/toastr.inc.php';
-
 include("sendEmailController.php");
 
-if (isset($_POST['register'])) {
+if (isset($_POST['REGISTER'])) {
+    echo "here";
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $username = $_POST['username'];

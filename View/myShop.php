@@ -412,21 +412,23 @@ if (!isset($_SESSION['id'])) {
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                    <hr>
-                                                                    <div class="row">
-                                                                        <div class="col-4">
-                                                                            <div class="form-group">
-                                                                                <label>Garment Type</label>
-                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['garment_type'] ?>"  readonly>
+                                                                    <?php if($data['type'] == 'Alter') {?>
+                                                                        <hr>
+                                                                        <div class="row">
+                                                                            <div class="col-4">
+                                                                                <div class="form-group">
+                                                                                    <label>Garment Type</label>
+                                                                                    <input type="text" class="form-control" value="<?=$shopMeasurement['garment_type'] ?>"  readonly>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col-4">
+                                                                                <div class="form-group">
+                                                                                    <label>Alter Type</label>
+                                                                                    <input type="text" class="form-control" value="<?=$shopMeasurement['alter_type'] ?>"  readonly>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
-                                                                        <div class="col-4">
-                                                                            <div class="form-group">
-                                                                                <label>Alter Type</label>
-                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['alter_type'] ?>"  readonly>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                    <?php } ?>
                                                                 <?php } ?>
                                                             </div>
                                                             <div class="modal-footer">

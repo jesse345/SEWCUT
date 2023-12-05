@@ -88,7 +88,7 @@ if (!isset($_SESSION['admin_id'])) {
                                                         <input type="hidden" name="type" value="<?= $subscription_record['type'] ?>">
                                                         <input type="hidden" name="subscription_id" value=" <?= $subscription_record['id'] ?>">
                                                         <td>
-                                                            <button type="submit" name="REJECT" style="background-color:transparent;border:none;"><span class="badge badge-light-danger">Rejected</span></button>
+                                                            <button type="submit" name="REJECT" style="background-color:transparent;border:none;"><span class="badge badge-light-danger">Reject</span></button>
                                                             <button type="submit" name="ACCEPT" style="background-color:transparent;border:none;"><span class="badge badge-light-success">Accept</span></button>
                                                         </td>
                                                     </form>

@@ -131,7 +131,7 @@ if (!isset($_SESSION['id'])) {
                                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                             <a href="#viewmore-Modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info dropdown-item">View Details</a>
                                                             <a href="chat.php?user=<?=$data['user_id']?>" class="btn btn-info dropdown-item">Chat</a>
-                                                            <?php if($data['status'] == 'Pending') {?>
+                                                            <?php if($data['status'] == 'Pending' && $data['payment_type'] == '') {?>
                                                                 <form action="../Controller/shopController.php" method="POST">
                                                                     <input type="hidden" name="custom_alterid" value="<?php echo $data['id'] ?>">
                                                                     <button type="submit" name="CANCEL" class="btn btn-danger dropdown-item">Cancel</button>
@@ -148,10 +148,34 @@ if (!isset($_SESSION['id'])) {
                                                             <?php if($data['price'] != '' && $data['payment_type'] == ''){ ?>
                                                                     <a href="#payment-Modal<?php echo $data['id'] ?>" data-toggle="modal"  class="btn btn-info dropdown-item">Payment</a>
                                                             <?php } ?>
+                                                            <?php if($data['status'] == 'DisApproved' || $data['status'] == 'Received') {?>
+                                                                <a href="#report-Modal<?php echo $data['id'] ?>"
+                                                                    data-toggle="modal" class="btn btn-info dropdown-item">Report</a>
+                                                            <?php } ?>  
                                                         </div>
                                                     </div>
                                                 </td>
                                             </tr>
+                                            <div class="modal fade" id="report-Modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                    <div class="modal-content p-5">
+                                                        <form action="../Controller/orderController.php" method="POST">
+                                                            <div class="modal-body">
+                                                                <input type="hidden" name="seller_id" value="<?=$shopOwner['user_id']?>">
+                                                                <label for="">Reason</label>
+                                                                <textarea name="reason" class="form-control" cols="30" rows="10"></textarea>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger products"
+                                                                    data-dismiss="modal" aria-label="Close">
+                                                                    Discard
+                                                                </button>
+                                                                <button type="submit" name="REPORT" class="btn btn-info">Report</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="modal fade" id="viewProofOfPayment-Modal<?php echo $data['id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-lg modal-dialog-centered">
                                                     <div class="modal-content">
@@ -348,22 +372,23 @@ if (!isset($_SESSION['id'])) {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                                <hr>
-                                                                <div class="row">
-                                                                    <div class="col-4">
-                                                                        <div class="form-group">
-                                                                            <label>Garment Type</label>
-                                                                            <input type="text" class="form-control" value="<?=$shopMeasurement['garment_type'] ?>"  readonly>
+                                                                <?php if($data['type'] == 'Alter') {?>
+                                                                    <hr>
+                                                                    <div class="row">
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Garment Type</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['garment_type'] ?>"  readonly>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-4">
+                                                                            <div class="form-group">
+                                                                                <label>Alter Type</label>
+                                                                                <input type="text" class="form-control" value="<?=$shopMeasurement['alter_type'] ?>"  readonly>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-4">
-                                                                        <div class="form-group">
-                                                                            <label>Alter Type</label>
-                                                                            <input type="text" class="form-control" value="<?=$shopMeasurement['alter_type'] ?>"  readonly>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                 
+                                                                <?php } ?>
                                                             <?php } ?>
                                                         </div>
                                                         <div class="modal-footer">
@@ -435,7 +460,6 @@ if (!isset($_SESSION['id'])) {
                                                 </div>
                                             </div>
                                         <?php } ?>
-                                    
                                     </tbody>
                                 </table>
                             </div>

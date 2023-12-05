@@ -315,7 +315,7 @@ if (!isset($_SESSION['id'])) {
                              <div class="tab-pane fade" id="tab-11" role="tabpanel" aria-labelledby="tab-11-tab">
                                 <div class="form-group">
                                     <label for="">Address:</label>
-                                    <input type="text" name="address" class="form-control address" value="<?=$address['address']?>">
+                                    <input type="text" name="address" class="form-control address" id="myAddress">
                                 </div>
                                 <div class="form-group">
                                     <label for="">Schedule</label>
@@ -344,16 +344,7 @@ if (!isset($_SESSION['id'])) {
     ?>
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <script>
-        // function downloadImage() {
-        //     html2canvas(document.querySelector('.mx-auto')).then(function(canvas) {
-        //         var link = document.createElement('a');
-        //         document.body.appendChild(link);
-        //         link.download = 'receipt.png';
-        //         link.href = canvas.toDataURL();
-        //         link.target = '_blank';
-        //         link.click();
-        //     });
-        // }
+    var address = '<?php echo $address['address']; ?>';
         $(document).ready(function() {
             $('.btn_page1').on('click', function (e) {
                 $('#page2').removeClass('d-none');
@@ -369,18 +360,19 @@ if (!isset($_SESSION['id'])) {
                 $('.form-control').val('');
             });
             $('#tab-10-tab').on('click', function (e) {
-                $('.men').val('');
+                $('.men').val(0);
                 $('.address').val('');
-
+    
             });
             $('#tab-9-tab').on('click', function (e) {
-                $('.women').val('');
+                $('.women').val(0);
                 $('.address').val('');
                 
             });
             $('#tab-11-tab').on('click', function (e) {
-                $('.women').val('');
-                $('.men').val('');
+                $('.women').val(0);
+                $('.men').val(0);
+                $('#myAddress').val(address);
             });
 
 
