@@ -64,11 +64,11 @@
                             <path d="M2 2l7.586 7.586"></path>
                             <circle cx="11" cy="11" r="2"></circle>
                         </svg>
-                        <span>Manage Reports</span>
+                        <span>Report Complaints</span>
                     </div>
                 </a>
             </li>
-            <li class="menu">
+            <!-- <li class="menu">
                 <a href="#elements" data-bs-toggle="collapse" aria-expanded="false" class="dropdown-toggle collapsed">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-zap"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
@@ -93,7 +93,7 @@
                     </li>
                     
                 </ul>
-            </li>
+            </li> -->
             <li class="menu">
                 <a href="managePayment.php" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
@@ -103,11 +103,11 @@
                             <line x1="12" y1="1" x2="12" y2="23"></line>
                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                         </svg>
-                        <span>Manage Payment</span>
+                        <span>Setup Gcash</span>
                     </div>
                 </a>
             </li>
-            <li class="menu">
+            <!-- <li class="menu">
                 <a href="alter.php" aria-expanded="false" class="dropdown-toggle">
                     <div class="">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
@@ -132,7 +132,7 @@
                         <span>Garment Type</span>
                     </div>
                 </a>
-            </li>
+            </li> -->
             <form action="../Controller/loginController.php" method="POST">
                 <li class="menu">
                     <a aria-expanded="false" class="dropdown-toggle">

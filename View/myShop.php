@@ -412,6 +412,12 @@ if (!isset($_SESSION['id'])) {
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <?php if($shopMeasurement['fabric_type'] != ''){?>
+                                                                    <div class="form-group">
+                                                                        <label>Fabric Type</label>
+                                                                        <input type="text" class="form-control" value="The customer has their own personal fabric."  readonly>
+                                                                    </div>
+                                                                <?php } ?>
                                                                     <?php if($data['type'] == 'Alter') {?>
                                                                         <hr>
                                                                         <div class="row">

@@ -58,6 +58,7 @@ if (!isset($_SESSION['admin_id'])) {
                                             <th style="width:15%">Report By</th>
                                             <th style="width:15%">Reported User</th>
                                             <th>Reason</th>
+                                            <th>Date Reported</th>
                                             <th>Duration</th>
                                             <th>Action</th>
                                         </tr>
@@ -84,6 +85,9 @@ if (!isset($_SESSION['admin_id'])) {
                                                     </td>
                                                     <td>
                                                         <?=$user1['reason']?>
+                                                    </td>
+                                                    <td>
+                                                        <?=$user1['created_at']?>
                                                     </td>
                                                     <td>
                                                         <?php

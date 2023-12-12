@@ -79,6 +79,7 @@ if (!isset($_SESSION['id'])) {
                                             <th>TYPE</th>
                                             <th>PRODUCT NAME</th>
                                             <th>TOTAL PRICE</th>
+                                            <th>RECEIVED DATE</th>
                                             <TH>STATUS</TH>
                                         </tr>
                                     </thead>
@@ -98,7 +99,8 @@ if (!isset($_SESSION['id'])) {
                                                     <td><?=ucfirst($order_by['firstname']) . ' ' .ucfirst($order_by['lastname']) ?></td>
                                                     <td>ORDERS</td>
                                                     <td><?=$product['product_name'] ?></td>
-                                                     <td><button class="btn btn-info">Successful</button></td>
+                                                    <td><button class="btn btn-info">Successful</button></td>
+                                                    <td><?=$ord['receive_at'] ?></td>
                                                     <td><?=number_format($ord['total'],2) ?></td>
                                                    
                                                 </tr>
@@ -120,6 +122,7 @@ if (!isset($_SESSION['id'])) {
                                                         <td><?=strtoupper($cOr['type'])?></td>
                                                         <td></td>
                                                         <td><button class="btn btn-info">Successful</button></td>
+                                                        <td><?=$cOr['receive_at'] ?></td>
                                                         <td><?=$cOr['price']?></td>
                                                         
                                                     </tr>

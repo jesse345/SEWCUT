@@ -434,12 +434,12 @@ if (!isset($_SESSION['id'])) {
                                                 <label>Color <span style="color:red">*</span></label>
                                                 <select class="form-control" name="color[]" required>
                                                     <option value="" selected>Select Color</option>
-                                                    
                                                     <?php 
                                                     mysqli_data_seek($color, 0);
                                                     while($c = mysqli_fetch_assoc($color)):?>
                                                         <option value="<?php echo $c['color_name']?>"><?php echo $c['color_name']?></option>
                                                 <?php endwhile; ?>
+                                                        <option id="Opt-color"><span>Others</span></option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-3 col-lg-3">
@@ -556,6 +556,12 @@ if (!isset($_SESSION['id'])) {
         include("toastr.php");
         include('../assets/js/prod.php');
     ?>
-    
+    <!-- <script>
+        $(document).ready(function() {
+            $('#Opt-color').on('click', function (e) {
+               alert(1);
+            });
+        });
+    </script> -->
 </body>
 </html>

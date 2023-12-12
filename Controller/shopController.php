@@ -81,6 +81,11 @@ if (isset($_POST['CREATESHOP'])) {
     $address = $_POST['address'];
     $schedule = $_POST['schedule'];
 
+    $fabrictype = $_POST['fabrictype'];
+    if(empty($fabrictype)){
+        $fabrictype = $_POST['fabrictypeothers'];
+    }
+
     if($address == '' && $schedule ==''){
         if ($neck != '' && $shoulder != '' && $sleeve != '' && $chest != '' && $waist != '' && $hips != '' && $inseam != '' && $thigh != '') {
             $shopCustomize = CreateShop(
@@ -96,8 +101,8 @@ if (isset($_POST['CREATESHOP'])) {
                     array('shop_customoralter_id','name' ,'phone', 'email','category','instruction'),
                     array($shop_customoralter_id,$name,$phone,$email,$category,$instruction)
                 );
-                $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust');
-                $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust);
+                $shopmeasurement_field = array('shop_customoralter_id','neck','shoulder','sleeve','chest','waist','hips','inseam','thigh','height','bodice','bust','fabric_type');
+                $shopmeasurement_value = array($shop_customoralter_id,$neck,$shoulder,$sleeve,$chest,$waist,$hips,$inseam,$thigh,$height,$bodice,$bust,$fabrictype);
                 $shop_measurements= CreateShop('shop_measurerments',$shopmeasurement_field, $shopmeasurement_value);
                 $targetDir = "../images/";
                 $allowedTypes = ['jpg', 'jpeg', 'png', 'gif', 'mp4', 'avi', 'mov'];
@@ -538,8 +543,8 @@ if (isset($_POST['CREATESHOP'])) {
 
     updateUser(
         'shop_customoralter',
-        array('id', 'status'),
-        array($id, $status)
+        array('id', 'status','receive_at'),
+        array($id, $status,$date)
     );
     flash("msg", "success", "Received");
     header("Location: ../View/customAndAlter.php");

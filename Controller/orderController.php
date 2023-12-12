@@ -236,7 +236,7 @@ if (isset($_POST['UPDATESHIPPING'])) {
     $getOrder = mysqli_fetch_assoc(getrecord('orders', 'id', $order_id));
 
     if($getOrder){
-        updateUser('orders', array('id', 'status','isAccept'), array($order_id, 'Received','Yes'));
+        updateUser('orders', array('id', 'status','isAccept','receive_at'), array($order_id, 'Received','Yes',$date));
 
         $desc = 'Your Order with reference Order of ' . $getOrder['reference_order'] . ' was Received';
         $notif = sendNotif('notification', 

@@ -108,6 +108,8 @@ if (!isset($_SESSION['admin_id'])) {
                                                 <th scope="col">User ID</th>
                                                 <th scope="col">Type</th>
                                                 <th>Status</th>
+                                                <th>Date Start</th>
+                                                <th>Date Expire</th>
                                                 <th scope="col">Date Created</th>
                                                 
                                             </tr>
@@ -124,6 +126,12 @@ if (!isset($_SESSION['admin_id'])) {
                                                     </td>
                                                     <td>
                                                          <span class="badge badge-light-success"><?= $subscription_record['status'] ?></span>
+                                                    </td>
+                                                    <td>
+                                                        <?= $subscription_record['date_start'] ?>
+                                                    </td>
+                                                    <td>
+                                                        <?= $subscription_record['date_expire'] ?>
                                                     </td>
                                                     <td>
                                                         <?= $subscription_record['created_at'] ?>

@@ -155,6 +155,17 @@ if (!isset($_SESSION['id'])) {
                                         <img src="../images/measurements.png" alt="">
                                         <center class="mt-3">
                                         <a href="guide.php"><b><u>MEASUREMENT GUIDES</u></b></a>
+                                        <!-- <div class="dropdown show mt-1" id="fabric_types">
+                                            <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                Fabric Types
+                                            </a>
+
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                <a class="btn dropdown-item" href="#">Action</a>
+                                                <a class="btn dropdown-item" href="#">Another action</a>
+                                                <a class="btn dropdown-item" href="#">Something else here</a>
+                                            </div>
+                                            </div> -->
                                         </center>
                                     </div>
                                     <div class="col-8">
@@ -323,7 +334,47 @@ if (!isset($_SESSION['id'])) {
                                 </div>
                             </div>
                         </div><!-- End .tab-content -->
-                        <br>
+                        <div class="float-right">
+                            <div style="margin-left:21px;margin-top:15px;">
+                                <input type="checkbox" class="form-check-input" id="cbx_fabric" style="margin-top: 7px" name="fabrictype" value="OwnByCustomer">
+                                <span style="margin-left: 7px "><b>I have a fabric</b></span>
+                            </div>
+                            <div class="dropdown show mt-1" id="fabric_types">
+                                <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Fabric Types
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="fabricdropdown">
+                                    <div class="form-check mb-1">
+                                        <label class="form-check-label mx-5 " style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Cotton" style="margin-top:6px;"><span style="margin-left:10px;">Cotton</span>
+                                        </label>
+                                        <label class="form-check-label mx-5" style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Chiffon" style="margin-top:6px;"><span style="margin-left:10px;">Chiffon</span>
+                                        </label>
+                                        <label class="form-check-label mx-5" style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Denim" style="margin-top:6px;"><span style="margin-left:10px;">Denim</span>
+                                        </label>
+                                        <label class="form-check-label mx-5" style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Lace" style="margin-top:6px;"><span style="margin-left:10px;">Lace</span>
+                                        </label>
+                                        <label class="form-check-label mx-5" style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Linen" style="margin-top:6px;"><span style="margin-left:10px;">Linen</span>
+                                        </label>
+                                        <label class="form-check-label mx-5" style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Silk" style="margin-top:6px;"><span style="margin-left:10px;">Silk</span>
+                                        </label>
+                                        <label class="form-check-label mx-5" style="width:100%;">
+                                            <input type="radio" class="form-check-input" id="fabrics" name="fabrictype" value="Wool" style="margin-top:6px;"><span style="margin-left:10px;">Wool</span>
+                                        </label>
+                                        <label class="form-check-label mx-5">
+                                            <input type="radio"  name="fabrictype" class="form-check-input"  id="fabrictype_others" value="0" style="margin-top:6px;"><span style="margin-left:10px;">Others</span>
+                                        </label>
+                                        <input type="text" id="other_fabric" name="fabrictypeothers" class="form-control" style="display:none;width:90%;margin-left:5%">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br><br><br><br>
                         <button type="button" class="btn btn-secondary btn_PreviousPage2">Previous</button>
                         <div class="float-right">
                             <!-- <button type="button" class="btn btn-success btn_Print" onclick="downloadImage()">Download</button> -->
@@ -393,7 +444,23 @@ if (!isset($_SESSION['id'])) {
                     reader.readAsDataURL(files[i]);
                 }
             });
+            
+            $('#cbx_fabric').on('change', function() {
+                $('#fabric_types').toggle();
+            });
+
+
+            $("#fabricdropdown").on('click', '#fabrictype_others', function () {
+                $("#other_fabric").show();
+            });
+            $("#fabricdropdown").on('click', '#fabrics', function () {
+                $("#other_fabric").hide();
+            });
         });
+
+
+
+        
        
          
     </script>
