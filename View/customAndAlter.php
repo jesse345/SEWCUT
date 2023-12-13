@@ -396,6 +396,12 @@ if (!isset($_SESSION['id'])) {
                                                                     </div>
                                                                 <?php } ?>
                                                             <?php } ?>
+                                                            <?php if($data['expected_date_of_completion'] != '') {?>
+                                                                <div class="form-group">
+                                                                    <label>Expected Date To Finish</label>
+                                                                    <input type="text" class="form-control" value="<?=$data['expected_date_of_completion'] ?>"  readonly>
+                                                                </div>
+                                                            <?php } ?>
                                                         </div>
                                                         <div class="modal-footer">
                                                              <button type="button" class="btn btn-success btn_Print" onclick="downloadImage()">Download</button>

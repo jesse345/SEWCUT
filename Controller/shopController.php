@@ -383,8 +383,6 @@ if (isset($_POST['CREATESHOP'])) {
     $gcash_name = $_POST['gcash_name'];
     $gcash_number = $_POST['gcash_number'];
 
-
-
     updateUser(
         'shop_customoralter',
         array('id', 'price'),
@@ -548,6 +546,32 @@ if (isset($_POST['CREATESHOP'])) {
     );
     flash("msg", "success", "Received");
     header("Location: ../View/customAndAlter.php");
+    exit();
+} elseif (isset($_POST['SETDATE'])) {
+    $id = $_POST['id'];
+    $expected_date = $_POST['expected_date'];
+
+    updateUser(
+        'shop_customoralter',
+        array('id', 'expected_date_of_completion'),
+        array($id,$expected_date)
+    );
+
+    flash("msg", "success", "Expected Date successfully set");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
+    exit();
+} elseif (isset($_POST['CHANGEDATE'])) {
+    $id = $_POST['id'];
+    $expected_date = $_POST['expected_date'];
+
+    updateUser(
+        'shop_customoralter',
+        array('id', 'expected_date_of_completion'),
+        array($id,$expected_date)
+    );
+
+    flash("msg", "success", "Successfully Change Expected Date");
+    header("Location: " . $_SERVER['HTTP_REFERER']);
     exit();
 }
 ?>

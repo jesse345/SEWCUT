@@ -441,9 +441,16 @@ if (!isset($_SESSION['id'])) {
                                                                 <?php if($data['status'] == 'Pending') {?>
                                                                     <?php if($data['price'] == ''){?>
                                                                         <button href="#setPrice_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:5%;">Set Fee</button>
+                                                                        
                                                                     <?php }else{?>
                                                                        <button href="#setPrice_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:5%;">View Fee</button>
+                                                                       
                                                                     <?php } ?>
+                                                                     <?php if($data['expected_date_of_completion'] == ''){?>
+                                                                        <button href="#setDate_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:20%;">Set Expected End Date</button>
+                                                                      <?php }else{?>
+                                                                       <button href="#setDate_modal<?php echo $data['id'] ?>" data-toggle="modal" class="btn btn-info" style="position:absolute;left:20%;">View Expected End Date</button>
+                                                                      <?php } ?>
                                                                     <?php if($data['price'] != '') {?>
                                                                         <form action="../Controller/shopController.php" method="POST">
                                                                             <input type="hidden" name="id" value="<?=$data['id']?>">
@@ -460,6 +467,36 @@ if (!isset($_SESSION['id'])) {
                                                                         Close
                                                                     </button>
                                                                 <?php } ?>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="setDate_modal<?php echo $data['id'] ?>" tabindex="-1" role="dialog" aria-hidden="true" style="margin-top:10%">
+                                                    <div class="modal-dialog" role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    <form action="../Controller/shopController.php" method="POST">
+                                                                        <div class="col-7">
+                                                                            <label for="">Set Expected Date of Completion</label>
+                                                                            <div class="form-group">
+                                                                                <input type="hidden" name="id" value="<?php echo $data['id'] ?>">
+                                                                                <input type="date" class="form-control" name="expected_date" value="<?=$data['expected_date_of_completion']?>">
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-5">
+                                                                            <label for=""></label>
+                                                                            <?php if($data['expected_date_of_completion'] == ''){?>
+                                                                                <button type="submit" name="SETDATE" class="btn btn-info">Set Date</button>
+                                                                            <?php }else{ ?>
+                                                                                <button type="submit" name="CHANGEDATE" class="btn btn-info">Change Date</button>
+                                                                            <?php } ?>
+                                                                            <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
+                                                                                Close
+                                                                            </button>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
