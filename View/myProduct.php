@@ -14,30 +14,6 @@ if (!isset($_SESSION['id'])) {
     <title>My Product</title>
     <link rel="stylesheet" href="../assets/css/myProduct.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <style>
-        .custom_dropdown {
-            position: relative;
-        }
-
-        .custom_dropdown-list {
-            display: none;
-            position: absolute;
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            border: 1px solid #ccc;
-            background-color: #fff;
-        }
-
-        .custom_dropdown-list li {
-            padding: 8px 12px;
-            cursor: pointer;
-        }
-
-        .custom_dropdown-list li:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 <body>
     <?php
@@ -90,7 +66,21 @@ if (!isset($_SESSION['id'])) {
                                             <button name="BINDGCASH" class="btn btn-dark float-right" style="margin-top: 5px;">Add Product</button>
                                         </form>
                                     <?php } else{ ?>
-                                        <a href="#addProduct-modal" data-toggle="modal" class="btn btn-dark float-right" >Add Product</a>
+                                        <div class="d-flex float-right">
+                                            <a href="#addProduct-modal" data-toggle="modal" class="btn btn-dark mr-2" >Add Product</a>
+                                            <div class="dropdown show">
+                                                <a class="btn btn-info dropdown-toggle text-white" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    Custom
+                                                </a>
+
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                                    <a class="dropdown-item" href="#color-modal" data-toggle="modal">Color</a>
+                                                    <a class="dropdown-item" href="#size-modal" data-toggle="modal">Size</a>
+                                                    <a class="dropdown-item" href="#category-modal" data-toggle="modal">Category</a>
+                                                    <a class="dropdown-item" href="#brand-modal" data-toggle="modal">Brand</a>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <?php } ?>
                                 <?php } else { ?>
                                     <a href="subscription.php" class="btn btn-dark float-right" >Add product</a>
@@ -423,9 +413,79 @@ if (!isset($_SESSION['id'])) {
         <br>
         <?php include("../layouts/footer.layout1.php"); ?>
     </div>
+    <div class="modal fade" id="color-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="../Controller/ProductController.php" method="POST">
+                        <input type="text" name="colon_name" class="form-control" placeholder="Enter Custom Color">
+                        <button class="btn btn-info float-right" name="ADDCOLOR">Submit</button>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="size-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="../Controller/ProductController.php" method="POST">
+                        <input type="text" name="size" class="form-control" placeholder="Enter Custom Size">
+                        <button class="btn btn-info float-right" name="ADDSIZE">Submit</button>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="category-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="../Controller/ProductController.php" method="POST">
+                        <input type="text" name="category_name" class="form-control" placeholder="Enter Custom Category">
+                        <button class="btn btn-info float-right" name="ADDCATEGORY">Submit</button>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="brand-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="../Controller/ProductController.php" method="POST">
+                        <input type="text" name="brand_name" class="form-control" placeholder="Enter Custom Brand">
+                        <button class="btn btn-info float-right" name="ADDBRAND">Submit</button>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-     <!-- ADD PRODUCT MODAL -->
-     <form action="../Controller/ProductController.php" method="POST" enctype="multipart/form-data">
+
+
+    <!-- ADD PRODUCT MODAL -->
+    <form action="../Controller/ProductController.php" method="POST" enctype="multipart/form-data">
         <div class="modal fade" id="addProduct-modal" tabindex="-1" role="dialog" aria-hidden="true">
             <div class="modal-dialog custom-modal add-modal" role="document">
                 <div class="modal-content">
@@ -456,27 +516,23 @@ if (!isset($_SESSION['id'])) {
                                         <div class="row">
                                             <div class="col-sm-3 col-lg-3">
                                                 <label>Color <span style="color:red">*</span></label>
-                                                <div class="custom_dropdown">
-                                                <input type="text" id="inputDropdown_color" name="color[]" class="form-control">
-                                                    <ul id="dropdownList_color" class="custom_dropdown-list" style="width:196px;margin-top:-20px;">
-                                                        <?php 
-                                                        mysqli_data_seek($color, 0);
-                                                        while($c = mysqli_fetch_assoc($color)):?>
-                                                            <li><?php echo $c['color_name']?></li>
-                                                        <?php endwhile; ?>
-                                                    </ul>
-                                                </div>
+                                                <select class="form-control" name="color[]" required>
+                                                    <option value="" selected>Select Color</option>
+                                                    <?php 
+                                                    mysqli_data_seek($color, 0);
+                                                    while($c = mysqli_fetch_assoc($color)):?>
+                                                        <option value="<?php echo $c['color_name']?>"><?php echo $c['color_name']?></option>
+                                                    <?php endwhile; ?>
+                                                </select>
                                             </div>
                                             <div class="col-sm-3 col-lg-3">
                                                 <label>Size <span style="color:red">*</span></label>
-                                                <div class="custom_dropdown">
-                                                <input type="text" id="inputDropdown_size" name="size[]" class="form-control" placeholder="Input Size">
-                                                    <ul id="dropdownList_size" class="custom_dropdown-list" style="width:196px;margin-top:-20px;">
-                                                        <?php while($s = mysqli_fetch_assoc($size)):?>
-                                                        <li><?php echo $s['size']?></li>
-                                                        <?php endwhile; ?>
-                                                    </ul>
-                                                </div>
+                                                <select class="form-control" name="size[]" required>
+                                                    <option value="" selected>Select Size</option>
+                                                    <?php while($s = mysqli_fetch_assoc($size)):?>
+                                                        <option value="<?php echo $s['size']?>"><?php echo $s['size']?></option>
+                                                <?php endwhile; ?>
+                                                </select>
                                             </div>
                                             <div class="col-sm-3 col-lg-2">
                                                 <label>Price <span style="color:red">*</span></label>
@@ -495,35 +551,25 @@ if (!isset($_SESSION['id'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label>Category<span style="color:red">*</span></label>
-                                        <div class="custom_dropdown">
-                                            <input type="text" id="inputDropdown_category" name="category" class="form-control" placeholder="Input Category">
-                                            <ul id="dropdownList_category" class="custom_dropdown-list" style="width:196px;margin-top:-20px;">
-                                               <?php
-                                                mysqli_data_seek($category, 0);
-                                                while($c = mysqli_fetch_assoc($category)):?>
-                                                <li><?php echo $c['category']?></li>
-                                                <?php endwhile; ?>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="col-6">
-                                        <label>Brand <span style="color:red">*</span></label>
-                                        <div class="custom_dropdown">
-                                            <input type="text" id="inputDropdown_brand" name="brand" class="form-control" placeholder="Input Brand">
-                                            <ul id="dropdownList_brand" class="custom_dropdown-list" style="width:196px;margin-top:-20px;">
-                                                <?php 
-                                                mysqli_data_seek($brand, 0);
-                                                while($b = mysqli_fetch_assoc($brand)):?>
-                                                <li><?php echo $b['brand_name']?></li>
-                                                <?php endwhile; ?>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <label for="">Category<span style="color:red">*</span></label>
+                            <select class="form-control" name="category" require>
+                                <option value="" selected>Select Category</option>
+                                <?php
+                                mysqli_data_seek($category, 0);
+                                while($c = mysqli_fetch_assoc($category)):?>
+                                    <option value="<?php echo $c['category']?>"><?php echo $c['category']?></option>
+                                <?php endwhile; ?>
+                            </select>
+                            <label>Brand <span style="color:red">*</span></label>
+                        <select class="form-control" name="brand" required>
+                                <option value="" selected>Select Brand</option>
+                                <?php 
+                                mysqli_data_seek($brand, 0);
+                                while($b = mysqli_fetch_assoc($brand)):?>
+                                    <option value="<?php echo $b['brand_name']?>"><?php echo $b['brand_name']?></option>
+                                <?php endwhile; ?>
+                            </select>
+                        
                             <div class="card-body">
                                 <label>Upload Image<span style="color:red">*</span></label><br>
                                 <input type="file" name="image[]" id="fileInput" multiple required>
@@ -538,6 +584,7 @@ if (!isset($_SESSION['id'])) {
                                 </div>
                                 <div class="video-container"></div>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="comment">Additional Information</label>
                                 <textarea class="form-control" rows="5" name="add_info"></textarea>
@@ -547,9 +594,7 @@ if (!isset($_SESSION['id'])) {
                             <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
                                 Close
                             </button>
-                            <button href="#gcash_info" type="button" data-toggle="modal" class="btn btn-dark products" id="add_product_btn" >
-                                ADD
-                            </button>
+                        <button href="#gcash_info" type="button" data-toggle="modal" class="btn btn-dark products" id="add_product_btn" >ADD</button>
                         </div>
                         
                         </div>
@@ -589,98 +634,12 @@ if (!isset($_SESSION['id'])) {
         </div>
     </form>
 
+    
+
     <?php 
         include("../layouts/jsfile.layout.php");
         include("toastr.php");
         include('../assets/js/prod.php');
     ?>
-  
-
-    <script>
-        // COLOR 
-        $(document).ready(function () {
-            const $inputDropdown_color = $('#inputDropdown_color');
-            const $dropdownList_color = $('#dropdownList_color');
-
-            $inputDropdown_color.click(function () {
-                $dropdownList_color.css('display', 'block');
-            });
-
-            $dropdownList_color.on('click', 'li', function (e) {
-                $inputDropdown_color.val($(this).text());
-                $dropdownList_color.css('display', 'none');
-            });
-
-            $(document).click(function (e) {
-                if (!$dropdownList_color.is(e.target) && !$inputDropdown_color.is(e.target)) {
-                    $dropdownList_color.css('display', 'none');
-                }
-            });
-
-            // SIZE
-            const $inputDropdown_size = $('#inputDropdown_size');
-            const $dropdownList_size = $('#dropdownList_size');
-
-            $inputDropdown_size.click(function () {
-                $dropdownList_size.css('display', 'block');
-            });
-
-            $dropdownList_size.on('click', 'li', function (e) {
-                $inputDropdown_size.val($(this).text());
-                $dropdownList_size.css('display', 'none');
-            });
-
-            $(document).click(function (e) {
-                if (!$dropdownList_size.is(e.target) && !$inputDropdown_size.is(e.target)) {
-                    $dropdownList_size.css('display', 'none');
-                }
-            });
-
-
-            // CATEGORY
-            const $inputDropdown_category = $('#inputDropdown_category');
-            const $dropdownList_category = $('#dropdownList_category');
-
-            $inputDropdown_category.click(function () {
-                $dropdownList_category.css('display', 'block');
-            });
-
-            $dropdownList_category.on('click', 'li', function (e) {
-                $inputDropdown_category.val($(this).text());
-                $dropdownList_category.css('display', 'none');
-            });
-
-            $(document).click(function (e) {
-                if (!$dropdownList_category.is(e.target) && !$inputDropdown_category.is(e.target)) {
-                    $dropdownList_category.css('display', 'none');
-                }
-            });
-
-
-            // BRAND
-            const $inputDropdown_brand = $('#inputDropdown_brand');
-            const $dropdownList_brand = $('#dropdownList_brand');
-
-            $inputDropdown_brand.click(function () {
-                $dropdownList_brand.css('display', 'block');
-            });
-
-            $dropdownList_brand.on('click', 'li', function (e) {
-                $inputDropdown_brand.val($(this).text());
-                $dropdownList_brand.css('display', 'none');
-            });
-
-            $(document).click(function (e) {
-                if (!$dropdownList_brand.is(e.target) && !$inputDropdown_brand.is(e.target)) {
-                    $dropdownList_brand.css('display', 'none');
-                }
-            });
-
-
-
-
-        });
-    </script>
-
 </body>
 </html>

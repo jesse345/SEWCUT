@@ -6,6 +6,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 
 if (!empty($_SESSION['id'])) {
+    
     if (isset($_POST['ADDPRODUCT'])) {
         $category = $_POST['category'];
         $product_name = $_POST['product_name'];
@@ -163,7 +164,58 @@ if (!empty($_SESSION['id'])) {
             header("Location: ../View/myProduct.php");
             exit();
         }
-    } 
+    } elseif (isset($_POST['ADDCOLOR'])) {
+        $colon_name = $_POST['colon_name'];
+        insertProduct(
+                'colors',
+                array('color_name'),
+                array($colon_name)
+            );
+        flash("msg", "success", "Successfully Added");
+        header("Location: ../View/myProduct.php");
+        exit();
+    } elseif (isset($_POST['ADDSIZE'])) {
+        $size = $_POST['size'];
+        insertProduct(
+                'sizes',
+                array('size'),
+                array($size)
+            );
+        flash("msg", "success", "Successfully Added");
+        header("Location: ../View/myProduct.php");
+        exit();
+    } elseif (isset($_POST['ADDCATEGORY'])) {
+        $category_name = $_POST['category_name'];
+        insertProduct(
+                'categories',
+                array('category'),
+                array($category_name)
+            );
+        flash("msg", "success", "Successfully Added");
+        header("Location: ../View/myProduct.php");
+        exit();
+    } elseif (isset($_POST['ADDBRAND'])) {
+        $brand_name = $_POST['brand_name'];
+        insertProduct(
+                'brands',
+                array('brand_name'),
+                array($brand_name)
+            );
+        flash("msg", "success", "Successfully Added");
+        header("Location: ../View/myProduct.php");
+        exit();
+    } elseif (isset($_POST['ADDGARMENT'])) {
+        $garment = $_POST['garment'];
+        insertProduct(
+                'categories',
+                array('category'),
+                array($garment)
+            );
+        flash("msg", "success", "Successfully Added");
+        header("Location: ../View/myshop.php");
+        exit();
+    }
+
 } else {
     echo "<script>
             alert('Login First');

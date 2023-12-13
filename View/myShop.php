@@ -604,28 +604,37 @@ if (!isset($_SESSION['id'])) {
                         <div class="form-group mb-0">
                             <input type="checkbox" id="customize" name="can_customize"> Customize
                         </div>
-                            <div class="form-group" id="show_customize" style="margin-left:40px;">
-                                <label style="margin-bottom:0;">Shop Can Customize:</label>
-                               <?php $categories = getallrecord('categories');
-                                while ($category = mysqli_fetch_assoc($categories)) {
-                                    ?>
-                                    <div class="form-group mb-0">
-                                        <input type="checkbox" name="can_customize[]" value="<?=$category['category']?>"> <?=$category['category']?>
-                                    </div>
-                                <?php } ?>
-                                
-                            </div>
+                        <div class="form-group" id="show_customize" style="margin-left:40px;">
+                            <label style="margin-bottom:0;">Shop Can Customize:</label>
+                            <?php $categories = getallrecord('categories');
+                            while ($category = mysqli_fetch_assoc($categories)) {
+                                ?>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="<?=$category['category']?>"> <?=$category['category']?>
+                                </div>
+                            <?php } ?>
+                        </div>
                         <div class="form-group mb-0">
                             <input type="checkbox" name="can_alter"> Alter
+                        </div>
+                        <div class="form-group" id="show_customize" style="margin-left:40px;">
+                            <label style="margin-bottom:0;">Garment Types:</label>
+                            <?php $categories = getallrecord('categories');
+                            while ($category = mysqli_fetch_assoc($categories)) {
+                                ?>
+                                <div class="form-group mb-0">
+                                    <input type="checkbox" name="can_customize[]" value="<?=$category['category']?>"> <?=$category['category']?>
+                                </div>
+                            <?php } ?>
                         </div>
                         <div class="form-group">
                             <input type="checkbox" name="homeservice"> Do Home Service
                         </div>
-                    
-                        
-
                     </div>
                     <div class="modal-footer">
+                        <a href="#garment-modal" data-toggle="modal" class="btn btn-info float-right">
+                            ADD Garment Type
+                        </a>
                         <button type="button" class="btn btn-danger products" data-dismiss="modal" aria-label="Close">
                             Close
                         </button>
@@ -636,6 +645,25 @@ if (!isset($_SESSION['id'])) {
             </div>
         </div>
     </div>
+     <div class="modal fade" id="garment-modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"><i class="icon-close"></i></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="../Controller/ProductController.php" method="POST">
+                        <input type="text" name="garment" class="form-control" placeholder="Enter Custom Garment">
+                        <button class="btn btn-info float-right" name="ADDGARMENT">Submit</button>
+                   </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <?php 
         include("../layouts/jsfile.layout.php");
         include("toastr.php");
